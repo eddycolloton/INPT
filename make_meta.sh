@@ -52,10 +52,10 @@ Staging Driectory is $SDir"
 done
 
 #Prompts user input for path to hard drive (or other carrier), defines that path as "$Volume"
-cowsay -p -W 31 "Input the path to the volume - Should begin with '/Volume/' (use tab complete to help)"
+cowsay -p -W 31 "Input the path to the volume - Should begin with '/Volumes/' (use tab complete to help)"
 read -e Volume
 while [[ -z "$Volume" ]] ; do 
-	echo -e "Input the path to the volume - Should begin with '/Volume/' (use tab complete to help)" && read -e Volume 
+	echo -e "Input the path to the volume - Should begin with '/Volumes/' (use tab complete to help)" && read -e Volume 
 done
 echo "The volume path is $Volume"
 
