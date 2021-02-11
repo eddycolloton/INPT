@@ -44,6 +44,8 @@ echo "The device path is $Device"
 
 #Prompts user that disktype is being run? Not sure about this...
 echo -e "\n*************************************************\n
+The following prompts will ask about running command line applications. The responses to the prompts will be saved, and applications will be run once all prompts have been answered.
+\n*************************************************\n
 Run disktype on $Device (Choose a number 1-2)"
 select Disktype_option in "yes" "no"
 do
@@ -57,9 +59,24 @@ break;;
 	esac
 done  
 
+#Prompts user to tranfer files to Staging Driectory
+echo -e "\n*************************************************\n
+Copy all files from the volume to the staging directory?"
+select Meta_option in "yes" "no"
+do
+	case $Meta_option in
+		yes) Run_Copyit=1
+			break;;
+		no) Run_Copyit=0
+break;;
+	esac
+done  
+
 #Prompts user to run metadata tools
 echo -e "\n*************************************************\n
-Run metadata tools (tree, siegfried, MediaInfo, Exiftool, framemd5, and qctools) on $Volume (Choose a number 1-2)"
+This is the final prompt, applications will run after this response!
+\n*************************************************\n
+Run metadata tools (tree, siegfried, MediaInfo, Exiftool, framemd5, and qctools) on files copied to $SDir (Choose a number 1-2)"
 select Meta_option in "yes" "no"
 do
 	case $Meta_option in
@@ -77,8 +94,12 @@ if [ $Run_disktype = 1 ]
 then disktype
 fi
 
+if [ $Run_Copyit = 1 ] 
+then CopyitVolumeStaging
+fi
+
 if [ $Run_meta = 1 ] 
 then RunTree; RunSF; RunMI; RunExif; Make_Framemd5; Make_QCT 
 fi
  
-figlet Fin.  
+figlet Fin. 
