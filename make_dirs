@@ -10,16 +10,15 @@ select ArtFile_option in "yes" "no" "quit"
 do
 	case $ArtFile_option in
 		yes) echo -e "\n*************************************************\n
-Input path to Artwork File. \nThe directory name should be: \n'Accession Number_Artwork Title' "
-		#Asks for user input, allows for tab completion of path
-			read -e ArtFile 
-			##Takes user input. might be ok with either a "/" or no "/"?? Is that possible?
-			#Assigns user input to the ArtFile variable
+Input path to Artwork File! \nNavigate to the Artwork Files on the T:/ drive in Finder. 
+Next, find the Artwork File, and click through to the directory named: \n'Accession Number_Artwork Title' 
+(it is often inside a directory named 'time-based media')
+'Drag and drop' the 'Accession Number_Artwork Title' directory into terminal"
 			while [[ -z "$ArtFile" ]] ; do 
-					echo -e "\n*************************************************\n
-Input path to Artwork File. \nThe directory name should be: \n'Accession Number_Artwork Title' " &&
-read -e ArtFile
-				done
+			read -e ArtFile
+#Asks for user input, allows for tab completion of path. might be ok with either a "/" or no "/"?? 
+#Assigns user input to the ArtFile variable
+		done
 			echo -e "\n*************************************************\n
 The Artwork File is $ArtFile"
 			break;;
@@ -35,7 +34,8 @@ select SDir_option in "yes" "no" "quit"
 do
 	case $SDir_option in
 		yes) echo -e "\n*************************************************\n
-Input path to Staging Directory"
+Input path to Staging Directory on TBMA Drobo
+It should be named 'Accession-Number_Artist's Last Name'"
 		#Asks for user input, allows for tab completion of path
 			read -e SDir 
 			#Takes user input. might be ok with either a "/" or no "/"?? Is that possible?
@@ -56,18 +56,6 @@ while [[ -z "$Volume" ]] ; do
 	echo -e "Input the path to the volume - Should begin with '/Volumes/' (use tab complete to help)" && read -e Volume 
 done
 echo "The volume path is $Volume"
-
-#Uses the function defined at the top to copy media from the (now defined) variable Volume to the (now defined) variable Staging Directory
-cowsay -s "Copy all files from the volume to the staging directory?"
-select Copy_option in "yes" "no" "quit"
-do
-	case $Copy_option in
-		yes) CopyitVolumeStaging
-			break;;
-		no) break;;
-		quit) exit 1 ;;
-		esac
-	done
 
 #Going straight into disktype seemed weird, decided to add a prompt here...
 cowsay -b "Move on to metadata creation? Next step is to identify the device path to run disktype"
