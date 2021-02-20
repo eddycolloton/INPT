@@ -4,7 +4,7 @@
 #It requires inputs gathered from the make_dirs_config.sh though, so it's not really a stand a lone script. make_dirs has to be run first.
 
 #User prompts will call the functions from the config file
-source make_meta.config
+source HMSG_auto.config
 
 #if statement that checks for the variables assigned in the make_dirs script, and if they're not there, redirect to that script?
 if [ -z "${ArtFile+x}" ]; 
