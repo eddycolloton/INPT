@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source HMSG_auto/make_meta.config
+source HMSG_auto/HMSG_auto.config
 
 figlet Automation!
 
