@@ -62,9 +62,9 @@ done
 #Prompts user to tranfer files to Staging Driectory
 echo -e "\n*************************************************\n
 Copy all files from the volume to the staging directory?"
-select Meta_option in "yes" "no"
+select Run_Copyit in "yes" "no"
 do
-	case $Meta_option in
+	case $Run_Copyit in
 		yes) Run_Copyit=1
 			break;;
 		no) Run_Copyit=0
