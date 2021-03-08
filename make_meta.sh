@@ -31,16 +31,51 @@ if [ -z "${SDir+x}" ];
 done;
 else echo "Staging Directory is set to '$SDir'"; fi
 
-#Prompts user input for path to hard drive (or other carrier), defines that path as "$Device"
-diskutil list
-echo -e "\n*************************************************\n
-Input the path to the device - Should be '/dev/disk#' "
-read -e Device
-while [[ -z "$Device" ]] ; do
-	echo -e "\n*************************************************\n
-Input the path to the device - Should be '/dev/disk#' " && read -e Device
+FindConditionDir
+#searches the ArtFile for the Condition Report, and assigns it to the $reportdir variable
+
+FindTechDir
+#searches the ArtFile for the Technical Info_Specs directory, and assigns it to the $techdir variable
+
+cowsay "Whoa, lots of info up there! Did you see all of it?"
+#maybe change this to run after the techdir function, and just prompt the user to look through the output of the last few functions
+select ackno_cr in "yes" "quit"
+do
+	case $ackno_cr in
+		yes) echo "Moving on..."
+			break;;
+		quit) exit 1 ;;
+	esac
 done
-echo "The device path is $Device"
+
+#Prompts user to tranfer files to Staging Driectory
+cowsay -s "Copy all files from the volume to the staging directory?"
+select Run_Copyit in "yes" "no, only certain directories" "none"
+do
+	case $Run_Copyit in
+		yes) Run_Copyit=1
+			break;;
+		"no, only certain directories") MultiSelect=1 && DeleteList && MultiSelection 
+			break;;
+		none) Run_Copyit=0
+	esac
+done  
+
+if [[ $MultiSelect = 1 ]];
+	#this worked
+	then 
+	echo -e "\n*************************************************\n
+Copy $DirsList to ${SDir}?"
+	select Run_MultiCopy in "yes" "no"
+		do
+		case $Run_MultiCopy in
+			yes) Run_MultiCopy=1
+			break;;
+			no) Run_MultiCopy=0
+			break;;
+		esac
+	done
+fi  
 
 #Prompts user that disktype is being run? Not sure about this...
 echo -e "\n*************************************************\n
@@ -96,6 +131,10 @@ fi
 
 if [ $Run_Copyit = 1 ] 
 then CopyitVolumeStaging
+fi
+
+if [[ $Run_MultiCopy=1 ]] 
+then CopyitSelected
 fi
 
 if [ $Run_meta = 1 ] 
