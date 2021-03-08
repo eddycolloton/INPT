@@ -1,6 +1,6 @@
 # HMSG_auto
 
-This shell script is intended to automate several steps frequently performed by media conservators at the Hirshhorn Museum and Sculpture Garden (HMSG). 
+These shell scripts are intended to automate several steps frequently performed by media conservators at the Hirshhorn Museum and Sculpture Garden (HMSG). 
 
 When files are delivered to the museum on an external hard drive (or other digital carrier), the conservators generate metadata on the drive and its contents, then move the files to local storage where they are further assessed before being ingest into the Smithsonian Digital Asset Management System.  The metadata created prior to ingest is stored in multiple locations in the museum’s records: sidecar files on a shared drive on the museum's servers (the Artwork File), on local storage (the Staging Directory), and in the appendix to a condition report (appendix) which is attached to the museum’s collection management system upon completion of the report. 
 
