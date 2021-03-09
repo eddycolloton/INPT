@@ -110,7 +110,7 @@ break;;
 	esac
 done
 
-if [[ $Run_meta=1 ]]; 
+if [[ $Run_meta=0 ]]; 
 	then echo -e "\n*************************************************\n
 Run tree on $Volume (Choose a number 1-2)"
 select Tree_option in "yes" "no"
@@ -127,7 +127,7 @@ done
 fi  
 
 
-if [[ $Run_meta=1 ]]; then
+if [[ $Run_meta=0 ]]; then
 #Prompts user to run siegfried file format id
 echo -e "\n*************************************************\n
 Run siegfried on $SDir (Choose a number 1-2)"
@@ -145,7 +145,7 @@ done
 fi
 
 
-if [[ $Run_meta=1 ]]; then
+if [[ $Run_meta=0 ]]; then
 #Prompts user to run mediainfo 
 echo -e "\n*************************************************\n
 Run MediaInfo on video files in $SDir (Choose a number 1-2)"
@@ -163,7 +163,7 @@ done
 fi
 
 
-if [[ $Run_meta=1 ]]; then
+if [[ $Run_meta=0 ]]; then
 #Prompts user to run exiftool
 echo -e "\n*************************************************\n
 Run Exiftool on image files in $SDir (Choose a number 1-2)"
@@ -180,7 +180,7 @@ break;;
 done    
 fi
 
-if [[ $Run_meta=1 ]]; then
+if [[ $Run_meta=0 ]]; then
 #Prompts user to make framemd5 text files for videos
 echo -e "\n*************************************************\n
 Create framemd5 text files for each of the video files in $SDir (Choose a number 1-2)"
@@ -197,7 +197,7 @@ break;;
 done  
 fi
 
-if [[ $Run_meta=1 ]]; then
+if [[ $Run_meta=0 ]]; then
 #Prompts user to make QCTools reports for ech video file in the staging directory
 echo -e "
 \n*************************************************\n
