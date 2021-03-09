@@ -61,7 +61,7 @@ do
 	esac
 done  
 
-if [[ $MultiSelect = 1 ]];
+if [[ "$MultiSelect" -eq "1" ]];
 	#this worked
 	then 
 	echo -e "\n*************************************************\n
@@ -110,7 +110,7 @@ break;;
 	esac
 done
 
-if [[ $Run_meta=0 ]]; 
+if [[ "$Run_meta" -eq "0"  ]]; 
 	then echo -e "\n*************************************************\n
 Run tree on $Volume (Choose a number 1-2)"
 select Tree_option in "yes" "no"
@@ -127,7 +127,7 @@ done
 fi  
 
 
-if [[ $Run_meta=0 ]]; then
+if [[ "$Run_meta" -eq "0"  ]]; then
 #Prompts user to run siegfried file format id
 echo -e "\n*************************************************\n
 Run siegfried on $SDir (Choose a number 1-2)"
@@ -145,7 +145,7 @@ done
 fi
 
 
-if [[ $Run_meta=0 ]]; then
+if [[ "$Run_meta" -eq "0"  ]]; then
 #Prompts user to run mediainfo 
 echo -e "\n*************************************************\n
 Run MediaInfo on video files in $SDir (Choose a number 1-2)"
@@ -163,7 +163,7 @@ done
 fi
 
 
-if [[ $Run_meta=0 ]]; then
+if [[ "$Run_meta" -eq "0"  ]]; then
 #Prompts user to run exiftool
 echo -e "\n*************************************************\n
 Run Exiftool on image files in $SDir (Choose a number 1-2)"
@@ -180,7 +180,7 @@ break;;
 done    
 fi
 
-if [[ $Run_meta=0 ]]; then
+if [[ "$Run_meta" -eq "0" ]]; then
 #Prompts user to make framemd5 text files for videos
 echo -e "\n*************************************************\n
 Create framemd5 text files for each of the video files in $SDir (Choose a number 1-2)"
@@ -197,7 +197,7 @@ break;;
 done  
 fi
 
-if [[ $Run_meta=0 ]]; then
+if [[ "$Run_meta" -eq "0" ]]; then
 #Prompts user to make QCTools reports for ech video file in the staging directory
 echo -e "
 \n*************************************************\n
@@ -229,7 +229,7 @@ if [ $Run_Copyit = 1 ]
 then CopyitVolumeStaging
 fi
 
-if [[ $Run_MultiCopy=1 ]] 
+if [[ "$Run_MultiCopy" = "1" ]] 
 then CopyitSelected
 fi
 
@@ -238,27 +238,27 @@ then RunTree; RunSF; RunMI; RunExif; Make_Framemd5; Make_QCT
 fi
  
 
-if [ $Run_tree = 1 ]
+if [ "$Run_tree" = "1" ]
 then RunTree
 fi
 
-if [ $Run_sf = 1 ]
+if [ "$Run_sf" = "1" ]
 	then RunSF
 fi
 
-if [ $Run_mediainfo = 1 ]
+if [ "$Run_mediainfo" = "1" ]
 then RunMI
 fi
 
-if [ $Run_exif = 1 ]
+if [ "$Run_exif" = "1" ]
 then RunExif
 fi
 
-if [ $Run_framemd5 = 1 ]
+if [ "$Run_framemd5" = "1" ]
 	then Make_Framemd5
 fi
 
-if [ $Run_QCTools = 1 ]
+if [ "$Run_QCTools" = "1" ]
 	then Make_QCT
 fi
 
