@@ -4,7 +4,6 @@ source HMSG_auto/HMSG_auto.config
 
 figlet Automation!
 
-
 echo -e "\n*************************************************\n
 Input artist's first name"
 	read -e ArtistFirstName
