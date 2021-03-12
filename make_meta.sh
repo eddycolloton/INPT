@@ -65,7 +65,7 @@ if [[ "$MultiSelect" -eq "1" ]];
 	#this worked
 	then 
 	echo -e "\n*************************************************\n
-Copy $DirsList to ${SDir}?"
+Copy $DirsList to:\n ${SDir}?"
 	select Run_MultiCopy in "yes" "no"
 		do
 		case $Run_MultiCopy in
