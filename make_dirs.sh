@@ -15,7 +15,7 @@ Input artist's last name"
 	echo -e "\n Artist name is $ArtistFirstName $ArtistLastName"
 cowsay -W 30 "Enter a number to set the path to the Artwork File on the T:\ drive:"
 #prompt for select command
-IFS=$'\n'; select artdir in $(find /path/to/artworkfiles/ -type d -iname "*$ArtistLastName*") "Input path" "Create Artwork File" ; do
+IFS=$'\n'; select artdir in $(find /path/to/artworkfiles/ -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Artwork File" ; do
 #lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
   	if [[ $artdir = "Input path" ]]
   	then while [[ -z "$ArtFile" ]] ; do 
@@ -39,7 +39,7 @@ done;
 
 cowsay "Enter a number to set the path to the Staging Directory on the TBMA DroBo:"
 #Prompts for either identifying the staging directory or creating one using the function defined earlier. Defines that path as "$SDir"
-IFS=$'\n'; select SDir_option in $(find /Volumes/TBMA\ Drobo/Time\ Based\ Media\ Artwork/ -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
+IFS=$'\n'; select SDir_option in $(find /Volumes/TBMA\ Drobo/Time\ Based\ Media\ Artwork/ -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
 	if [[ $SDir_option = "Input path" ]]
   	then while [[ -z "$SDir" ]] ; do 
 		read -e SDir 
@@ -88,4 +88,4 @@ while [[ -z "$Volume" ]] ; do
 done
 echo "The volume path is $Volume"
 
-source make_meta_local.sh
+source make_meta.sh
