@@ -37,7 +37,7 @@ FindConditionDir
 FindTechDir
 #searches the ArtFile for the Technical Info_Specs directory, and assigns it to the $techdir variable
 
-cowsay "Whoa, lots of info up there! Did you see all of it?"
+cowsay "You've now set the path to the Staging Directory on the TBMA DroBo and the Artwork Folder on the T:\ Drive, and identified the Condition Report and Technical Info directories. Ready to move on?"
 #maybe change this to run after the techdir function, and just prompt the user to look through the output of the last few functions
 select ackno_cr in "yes" "quit"
 do
