@@ -221,11 +221,11 @@ fi
 #The following if statements will check the variable assignements from above to run the desired functions.
 #Next step is to change these functions in to bash scripts I think
 
-if [ $Run_disktype = 1 ] 
+if [[ "$Run_disktype" = "1" ]] 
 then disktype
 fi
 
-if [ $Run_Copyit = 1 ] 
+if [[ "$Run_Copyit" = "1" ]] 
 then CopyitVolumeStaging
 fi
 
@@ -233,32 +233,32 @@ if [[ "$Run_MultiCopy" = "1" ]]
 then CopyitSelected
 fi
 
-if [ $Run_meta = 1 ] 
+if [[ "$Run_meta" = "1" ]] 
 then RunTree; RunSF; RunMI; RunExif; Make_Framemd5; Make_QCT 
 fi
  
 
-if [ "$Run_tree" = "1" ]
+if [[ "$Run_tree" = "1" ]]
 then RunTree
 fi
 
-if [ "$Run_sf" = "1" ]
+if [[ "$Run_sf" = "1" ]]
 	then RunSF
 fi
 
-if [ "$Run_mediainfo" = "1" ]
+if [[ "$Run_mediainfo" = "1" ]]
 then RunMI
 fi
 
-if [ "$Run_exif" = "1" ]
+if [[ "$Run_exif" = "1" ]]
 then RunExif
 fi
 
-if [ "$Run_framemd5" = "1" ]
+if [[ "$Run_framemd5" = "1" ]]
 	then Make_Framemd5
 fi
 
-if [ "$Run_QCTools" = "1" ]
+if [[ "$Run_QCTools" = "1" ]]
 	then Make_QCT
 fi
 
