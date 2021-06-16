@@ -23,6 +23,7 @@ IFS=$'\n'; select artdir in $(find /path/to/artworkfiles/ -maxdepth 1 -type d -i
 		#Asks for user input and assigns it to variable
 		FindAccessionNumber
 		#searches the Artwork File for the accession number, and assigns it to the $accession variable
+		sleep 1
   		done
   	elif [[ $artdir = "Create Artwork File" ]]
   	then MakeArtworkFile 
@@ -33,6 +34,7 @@ IFS=$'\n'; select artdir in $(find /path/to/artworkfiles/ -maxdepth 1 -type d -i
 		echo -e "\n*************************************************\n\nThe Artwork File is $ArtFile\n"
 		FindAccessionNumber
 		#searches the Artwork File for the accession number, and assigns it to the $accession variable
+		sleep 1
 	fi
 break			
 done;
@@ -47,6 +49,7 @@ IFS=$'\n'; select SDir_option in $(find /Volumes/TBMA\ Drobo/Time\ Based\ Media\
 		echo -e "\n*************************************************\n\n
 Staging Driectory is $SDir \n\n*************************************************\n"
 #Confirms that the SDir variable is defined 
+		sleep 1
 		done
 	elif [[ $SDir_option = "Create Staging Directory" ]]
   	then MakeStagingDirectory
@@ -55,6 +58,7 @@ Staging Driectory is $SDir \n\n*************************************************
 		SDir=$SDir_option
 		#assigns variable to the users selection from the select menu
 		echo -e "\n*************************************************\n\nthe Staging Directory is $SDir \n\n*************************************************\n"
+	sleep 1
 	fi
 break			
 done;
