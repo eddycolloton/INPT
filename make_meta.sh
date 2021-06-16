@@ -4,7 +4,7 @@
 #It requires inputs gathered from the make_dirs_config.sh though, so it's not really a stand a lone script. make_dirs has to be run first.
 
 #User prompts will call the functions from the config file
-source HMSG_auto.config
+source `dirname "$0"`/HMSG_auto.config    #this sets the path for the config file, which should be nested next to the script 
 
 #if statement that checks for the variables assigned in the make_dirs script, and if they're not there, redirect to that script?
 if [ -z "${ArtFile+x}" ]; 
@@ -30,23 +30,6 @@ if [ -z "${SDir+x}" ];
 			esac
 done;
 else echo "Staging Directory is set to '$SDir'"; fi
-
-FindConditionDir
-#searches the ArtFile for the Condition Report, and assigns it to the $reportdir variable
-
-FindTechDir
-#searches the ArtFile for the Technical Info_Specs directory, and assigns it to the $techdir variable
-
-cowsay "You've now set the path to the Staging Directory on the TBMA DroBo and the Artwork Folder on the T:\ Drive, and identified the Condition Report and Technical Info directories. Ready to move on?"
-#maybe change this to run after the techdir function, and just prompt the user to look through the output of the last few functions
-select ackno_cr in "yes" "quit"
-do
-	case $ackno_cr in
-		yes) echo "Moving on..."
-			break;;
-		quit) exit 1 ;;
-	esac
-done
 
 #Prompts user to tranfer files to Staging Driectory
 cowsay -s "Copy all files from the volume to the staging directory?"
