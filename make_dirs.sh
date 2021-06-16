@@ -88,4 +88,29 @@ while [[ -z "$Volume" ]] ; do
 done
 echo "The volume path is $Volume"
 
+FindConditionDir
+#searches the ArtFile for the Condition Report, and assigns it to the $reportdir variable
+sleep 2
+
+FindTechDir
+#searches the ArtFile for the Technical Info_Specs directory, and assigns it to the $techdir variable
+sleep 2
+
+logName=`date '+%Y-%m-%d-%H.%M.%S'`_"$ArtistLastName"_"$accession"  #the log will be named after the Date (YYYY-MM-DD)
+logName+='.log'
+logPath="${techdir}/${logName}"
+logCreate "${logPath}"
+echo -e "The log has been created using the file name $logPath \n \n"
+#The log commands are from loglog: https://github.com/amiaopensource/loglog/blob/main/bash_logging.config
+sleep 1
+
+logNewLine "make_dirs.sh complete:
+----------------------->The artist name is $ArtistFirstName $ArtistLastName
+----------------------->The title of the work is $title
+----------------------->The accession number is $accession
+----------------------->The artwork folder is $ArtFile
+----------------------->The staging directory is $SDir
+----------------------->The device path is $Device
+----------------------->The volume path is $Volume"
+
 source make_meta.sh
