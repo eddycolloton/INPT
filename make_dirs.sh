@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source HMSG_auto/HMSG_auto.config
+source `dirname "$0"`/HMSG_auto.config    #this sets the path for the config file, which should be nested next to the script 
 
 figlet Automation!
 
