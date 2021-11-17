@@ -213,7 +213,7 @@ then CopyitVolumeStaging
 fi
 
 if [[ "$Run_MultiCopy" = "1" ]] 
-then CopyitSelected
+then CopyitSelected && DeleteList
 fi
 
 if [[ "$Run_meta" = "1" ]] 
