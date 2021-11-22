@@ -30,7 +30,6 @@ IFS=$'\n'; select artdir in $(find /path/to/artworkfiles/ -maxdepth 1 -type d -i
 	else
 		ArtFile=$artdir
 		#assigns variable to the users selection from the select menu
-		#NEED TO CHANGE! THIS ASSIGNS ART FILE TO PARENT DIRECTORY, SHOULD BE "title_accession" DIR!
 		echo -e "\n*************************************************\n\nThe Artwork File is $ArtFile\n"
 		FindAccessionNumber
 		#searches the Artwork File for the accession number, and assigns it to the $accession variable
