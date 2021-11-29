@@ -41,6 +41,7 @@ do
 		"no, only certain directories") MultiSelect=1 && DeleteList && MultiSelection 
 			break;;
 		none) Run_Copyit=0 && Run_MultiCopy=0
+			break;;
 	esac
 done  
 
