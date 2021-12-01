@@ -10,7 +10,7 @@ The workflow is currently organized in the following steps:
 1. Determine if the Artwork File or Staging Directory exists, and establish the path to those locations
 2. Create a checksum manifest, copy the files from the drive, and confirm that the checksums match
 3. Generate metadata describing the external drive/carrier
-4. Generate metadata describing the files (now on the Staging Directory)
+4. Generate metadata describing the files (now in the Staging Directory)
 
 The shell script has the following dependencies. Each of these is a CLI application that is available from the package manager Homebrew, and each is called by the script:
 * Cowsay
@@ -18,6 +18,7 @@ The shell script has the following dependencies. Each of these is a CLI applicat
 * Exiftool
 * Ffmpeg
 * Figlet
+* Md5deep
 * Mediainfo
 * QCTools for CLI, aka QCLI
 * Siegfried
