@@ -32,13 +32,18 @@ done;
 else echo "Staging Directory is set to '$SDir'"; fi
 
 #Prompts user to tranfer files to Staging Driectory
+#The following select loops set vairable to either "1" or "0". This allows the script to store the user's selection without running the function till the end. 
+#At the end fo the script there are if statements that will run the different functions based on the stored answers from the user  
 cowsay -s "Copy all files from the volume to the staging directory?"
-select Run_Copyit in "yes" "no, only certain directories" "none"
+select Run_Copyit in "yes" "no, only certain directories" "no, specific files" "none"
 do
 	case $Run_Copyit in
 		yes) Run_Copyit=1 && Run_MultiCopy=0
 			break;;
 		"no, only certain directories") MultiSelect=1 && DeleteList && MultiSelection 
+			#Runs DeleteList just in case an exisiting list is already in the ArtFile, because the MultiSelection function will create a new one.
+			break;;
+		"no, specific files") IndvFiles=1 && DeleteList && SelectFiles
 			break;;
 		none) Run_Copyit=0 && Run_MultiCopy=0
 			break;;
@@ -61,11 +66,27 @@ Copy $DirsList to:\n ${SDir}?"
 	done
 fi  
 
+if [[ "$IndvFiles" -eq "1" ]];
+	then 
+	echo -e "\n*************************************************\n
+Copy $FileList to:\n ${SDir}?"
+	select Run_FileCopy in "yes" "no"
+		do
+		case $Run_FileCopy in
+			yes) Run_FileCopy=1
+			break;;
+			no) Run_FileCopy=0
+			break;;
+		esac
+	done
+fi  
+
 #Prompts user that disktype is being run? Not sure about this...
 echo -e "\n*************************************************\n
 The following prompts will ask about running command line applications. The responses to the prompts will be saved, and applications will be run once all prompts have been answered.
-\n*************************************************\n
-Run disktype on $Device (Choose a number 1-2)"
+\n*************************************************\n"
+sleep 1
+echo -e "Run disktype on $Device (Choose a number 1-2)"
 select Disktype_option in "yes" "no"
 do
 	case $Disktype_option in
@@ -82,8 +103,9 @@ done
 echo -e "\n*************************************************\n
 If you select "yes," this will be the final prompt and applications will run after this response!\n
 Otherwise, you will be asked about each tool individually.
-\n*************************************************\n
-Run metadata tools (tree, siegfried, MediaInfo, Exiftool, framemd5, and qctools) on files copied to $SDir (Choose a number 1-2)"
+\n*************************************************\n"
+sleep 1
+echo -e "Run metadata tools (tree, siegfried, MediaInfo, Exiftool, framemd5, and qctools) on files copied to $SDir (Choose a number 1-2)"
 select Meta_option in "yes" "no"
 do
 	case $Meta_option in
@@ -211,6 +233,10 @@ fi
 
 if [[ "$Run_Copyit" = "1" ]] 
 then CopyitVolumeStaging
+fi
+
+if [[ "$Run_FileCopy" = "1" ]]
+then RunIndvMD5 && CopyFiles && DeleteList
 fi
 
 if [[ "$Run_MultiCopy" = "1" ]] 
