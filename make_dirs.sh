@@ -4,6 +4,8 @@ source `dirname "$0"`/HMSG_auto.config    #this sets the path for the config fil
 
 figlet Automation!
 
+FindArtworkFilePath
+
 echo -e "\n*************************************************\n
 Input artist's first name"
 	read -e ArtistFirstName
@@ -15,7 +17,7 @@ Input artist's last name"
 	echo -e "\n Artist name is $ArtistFirstName $ArtistLastName"
 cowsay -W 30 "Enter a number to set the path to the Artwork File on the T:\ drive:"
 #prompt for select command
-IFS=$'\n'; select artdir in $(find /path/to/artworkfiles/ -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Artwork File" ; do
+IFS=$'\n'; select artdir in $(find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Artwork File" ; do
 #lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
   	if [[ $artdir = "Input path" ]]
   	then while [[ -z "$ArtFile" ]] ; do 
