@@ -21,8 +21,12 @@ IFS=$'\n'; select artdir in $(find "${ArtFilePath%/}" -maxdepth 1 -type d -iname
 #lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
   	if [[ $artdir = "Input path" ]]
   	then while [[ -z "$ArtFile" ]] ; do 
-		read -e ArtFile
+		read -e ArtFileInput
 		#Asks for user input and assigns it to variable
+		ArtFile="$(echo -e "${ArtFileInput}" | sed -e 's/[[:space:]]*$//')"
+		#Strips a trailing space from the input. 
+		#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
+		#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
 		FindAccessionNumber
 		#searches the Artwork File for the accession number, and assigns it to the $accession variable
 		sleep 1
@@ -45,8 +49,12 @@ cowsay "Enter a number to set the path to the Staging Directory on the TBMA DroB
 IFS=$'\n'; select SDir_option in $(find /Volumes/TBMA\ Drobo/Time\ Based\ Media\ Artwork -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
 	if [[ $SDir_option = "Input path" ]]
   	then while [[ -z "$SDir" ]] ; do 
-		read -e SDir 
+		read -e SDirInput 
 		#Takes user input. might be ok with either a "/" or no "/"?? Is that possible?
+		SDir="$(echo -e "${SDirInput}" | sed -e 's/[[:space:]]*$//')"
+		#Strips a trailing space from the input. 
+		#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
+		#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
 		echo -e "\n*************************************************\n\n
 Staging Driectory is $SDir \n\n*************************************************\n"
 #Confirms that the SDir variable is defined 
