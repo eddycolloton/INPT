@@ -21,6 +21,7 @@ IFS=$'\n'; select artdir in $(find "${ArtFilePath%/}" -maxdepth 1 -type d -iname
 #lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
   	if [[ $artdir = "Input path" ]]
   	then while [[ -z "$ArtFile" ]] ; do 
+		echo "Input path to Artwork File:"
 		read -e ArtFileInput
 		#Asks for user input and assigns it to variable
 		ArtFile="$(echo -e "${ArtFileInput}" | sed -e 's/[[:space:]]*$//')"
@@ -49,6 +50,7 @@ cowsay "Enter a number to set the path to the Staging Directory on the TBMA DroB
 IFS=$'\n'; select SDir_option in $(find /Volumes/TBMA\ Drobo/Time\ Based\ Media\ Artwork -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
 	if [[ $SDir_option = "Input path" ]]
   	then while [[ -z "$SDir" ]] ; do 
+		echo "Input path to Staging Directory:"
 		read -e SDirInput 
 		#Takes user input. might be ok with either a "/" or no "/"?? Is that possible?
 		SDir="$(echo -e "${SDirInput}" | sed -e 's/[[:space:]]*$//')"
