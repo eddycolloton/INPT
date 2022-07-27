@@ -146,7 +146,6 @@ echo 'Volume="'"$Volume"'"' >> "${varfilePath}"
 echo 'techdir="'"$techdir"'"' >> "${varfilePath}"
 echo 'sidecardir="'"$sidecardir"'"' >> "${varfilePath}"
 echo 'reportdir="'"$reportdir"'"' >> "${varfilePath}"
-echo 'configLogPath="'"$configLogPath"'"' >> "${varfilePath}"
 
 echo -e "The varfile has been created using the file name $varfilePath \n \n"
 
