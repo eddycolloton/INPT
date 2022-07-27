@@ -131,4 +131,23 @@ logNewLine "make_dirs.sh complete:
 ----------------------->The device path is $Device
 ----------------------->The volume path is $Volume"
 
+varfileName=`date '+%Y-%m-%d-%H.%M.%S'`_"$ArtistLastName"_"$accession"  #the file that stores the variables will be named after the the date, artists last name, and the accession number
+varfileName+='.varfile'
+varfilePath="${techdir}/${varfileName}"
+touch "${varfilePath}"
+echo 'ArtistFirstName="'"$ArtistFirstName"'"' >> "${varfilePath}"
+echo 'ArtistLastName="'"$ArtistLastName"'"' >> "${varfilePath}"
+echo 'title="'"$title"'"' >> "${varfilePath}"
+echo 'accession="'"$accession"'"' >> "${varfilePath}"
+echo 'ArtFile="'"$ArtFile"'"' >> "${varfilePath}"
+echo 'SDir="'"$SDir"'"' >> "${varfilePath}"
+echo 'Device="'"$Device"'"' >> "${varfilePath}"
+echo 'Volume="'"$Volume"'"' >> "${varfilePath}"
+echo 'techdir="'"$techdir"'"' >> "${varfilePath}"
+echo 'sidecardir="'"$sidecardir"'"' >> "${varfilePath}"
+echo 'reportdir="'"$reportdir"'"' >> "${varfilePath}"
+echo 'configLogPath="'"$configLogPath"'"' >> "${varfilePath}"
+
+echo -e "The varfile has been created using the file name $varfilePath \n \n"
+
 source make_meta.sh
