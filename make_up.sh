@@ -107,19 +107,22 @@ searchArtFile
 #searchSDir
 #Worth checking SDir for metadata? 
 
-cowsay "What would you like to do?"
-#Prompt is a placeholder. Need to prompt for what tasks are available/What user wants to do...
-IFS=$'\n'; select makeUp_option in "Make framemd5" "Make MediaInfo" "Make QCTools reports" ; do
-	if [[ $makeUp_option = "Make framemd5" ]] 
-	then 
-		Make_Framemd5
-	elif [[ $makeUp_option =  "Make MediaInfo" ]]
-  	then 
-  		RunMI
-	elif [[ $makeUp_option =  "Make QCTools reports" ]] 
+cowsay "move files?"
+IFS=$'\n'; select move_option in "yes" "no" ; do
+	if [[ $move_option = yes ]]
 	then
-		Make_QCT
+		source move_files.sh 
 	fi
-break			
-done;
+break
+done ;
+
+cowsay "Run metadata tools on files in ${SDir}?"
+IFS=$'\n'; select mkmeta_option in "yes" "no" ; do
+	if [[ $mkmeta_option = yes ]]
+	then
+		source meta_files.sh 
+	fi
+break
+done ;
+
 
