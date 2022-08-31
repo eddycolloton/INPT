@@ -2,6 +2,16 @@
 
 source `dirname "$0"`/HMSG_auto.config    #this sets the path for the config file, which should be nested next to the script 
 
+function DeleteMetaList {
+test -f $(find "$techdir" -type f \( -iname "*_makeupmeta_selects.txt" \)) && 
+find "$techdir" -type f \( -iname "*_makeupmeta_selects.txt" \) -print0 |
+    while IFS= read -r -d '' l;
+        do rm "$l"
+    done
+}
+
+DeleteMetaList
+
 cowsay -s "Select tools from the list below, one at a time. Type the corresponding number and press enter to select one. Repeat as necessary. Once all the directories have been selected, press enter again."
 #The majority of this function comes from here: http://serverfault.com/a/298312
 options=("disktype" "tree" "Siegfried" "MediaInfo" "Exiftool" "Framemd5" "QCTools")
@@ -101,6 +111,8 @@ fi
 if [[ "$Run_QCTools" = "1" ]]
 	then Make_QCT
 fi
+
+DeleteMetaList
 
 figlet Fin. 
 
