@@ -9,9 +9,11 @@ function findVarfile {
 	sourcefile=$(find "${1}" -type f \( -iname "*.varfile" \))
   #Searches user input for a file with a .varfile extension
 	echo -e "\nthe varfile is "${sourcefile}"\n\n" 
+	sleep 1
 	source "${sourcefile}"
 	echo -e "the artist's first name is "${ArtistFirstName}"\n"
 	echo -e "the artist last name is "${ArtistLastName}"\n"
+	sleep 1
   #These echo statements are in here (temporarily?) to confirm that sourcing the varfile has successfully re-assigned the variables $ArtistFirstName and $ArtistLastName
 }
 
@@ -75,6 +77,7 @@ function searchArtFile {
 		echo -e "qctools report found"
 		qct_report=1
 	fi
+	sleep 1
 }
 
 echo -e "type or drag and drop the path of the artwork file\n"
@@ -92,6 +95,7 @@ if [[ -z "${SDir}" ]]; then
 	echo -e "\nNo Staging Directory variable found, varfile may not have sourced correctly\n\n"
 else
 	echo -e "\nStaging Directory variable found, varfile sourced correctly\n\n"
+	sleep 1
 fi
 
 logName=`date '+%Y-%m-%d-%H.%M.%S'`_"$ArtistLastName"_"$accession"  #the log will be named after the Date (YYYY-MM-DD)
@@ -107,7 +111,7 @@ searchArtFile
 #searchSDir
 #Worth checking SDir for metadata? 
 
-cowsay "move files?"
+cowsay "Would you like to move files from "${Volume}" to "${SDir}"?"
 IFS=$'\n'; select move_option in "yes" "no" ; do
 	if [[ $move_option = yes ]]
 	then
@@ -116,7 +120,7 @@ IFS=$'\n'; select move_option in "yes" "no" ; do
 break
 done ;
 
-cowsay "Run metadata tools on files in ${SDir}?"
+cowsay "Run metadata tools on all the files in ${SDir}?"
 IFS=$'\n'; select mkmeta_option in "yes" "no" ; do
 	if [[ $mkmeta_option = yes ]]
 	then
