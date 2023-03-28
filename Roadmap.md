@@ -7,6 +7,8 @@ Planned updates to HMSG_auto scripts
 - Integration of make_vars, meta_files and move_files scripts into README and HMSG documentation, including example workflows. 
 
 ## HMSG_auto v2
+- Dependencies check
+  - run a check to see if necessary dependencies are installed and accessible for the scripts
 - Config yaml file
   - Instead of iterating through prompts to define variables, variables will be recorded in a template yaml file prior to running the script
   - The script will read the yaml file and verify the variables and extrapolate the path, as well as other information, as they do in v1. 
