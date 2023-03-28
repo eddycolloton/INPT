@@ -6,7 +6,7 @@ Planned updates to HMSG_auto scripts
 - Further testing of the make_vars.sh, meta_files.sh and move_files.sh scripts to ensure functionality and ease of use. Especially with artist folders containing more than one artwork file.
 - Integration of make_vars, meta_files and move_files scripts into README and HMSG documentation, including example workflows. 
 
-HMSG_auto v2
+## HMSG_auto v2
 - Config yaml file
   - Instead of iterating through prompts to define variables, variables will be recorded in a template yaml file prior to running the script
   - The script will read the yaml file and verify the variables and extrapolate the path, as well as other information, as they do in v1. 
