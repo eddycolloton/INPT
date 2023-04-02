@@ -26,4 +26,3 @@ The shell script has the following dependencies. Each of these is a CLI applicat
 
 The script also takes advantage of the IFIscripts designed by Kieran O’Leary. Download the repo from [Kieran’s GitHub](https://github.com/kieranjol/IFIscripts). The HMSG script will call the [copyit.py script](https://github.com/kieranjol/IFIscripts/blob/master/copyit.py) which requires python. 
 
-*Note:* This is my first foray into automated workflows, I have previously just used simple one or two line scripts to perform the tasks in this workflow individually. This is very much a first draft of the script, and I’m open to restructuring it.  
