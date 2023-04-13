@@ -12,7 +12,7 @@ find "$techdir" -type f \( -iname "*_makeupmeta_selects.txt" \) -print0 |
 
 DeleteMetaList
 
-cowsay -s "Select tools from the list below, one at a time. Type the corresponding number and press enter to select one. Repeat as necessary. Once all the directories have been selected, press enter again."
+cowsay -s "Select tools from the list below, one at a time. Type the corresponding number and press enter to select one. Repeat as necessary. Once all the tools have been selected, press enter again."
 #The majority of this function comes from here: http://serverfault.com/a/298312
 options=("disktype" "tree" "Siegfried" "MediaInfo" "Exiftool" "Framemd5" "QCTools")
 
@@ -96,7 +96,7 @@ if [[ "$Run_sf" = "1" ]]
 	then RunSF
 fi
 
-if [[ "$Run_mediainfo" = "1" ]]
+if [[ "$Run_MI" = "1" ]]
 then RunMI
 fi
 
@@ -108,7 +108,7 @@ if [[ "$Run_framemd5" = "1" ]]
 	then Make_Framemd5
 fi
 
-if [[ "$Run_QCTools" = "1" ]]
+if [[ "$Run_QCT" = "1" ]]
 	then Make_QCT
 fi
 

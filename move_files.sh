@@ -2,7 +2,7 @@
 
 source `dirname "$0"`/HMSG_auto.config    #this sets the path for the config file, which should be nested next to the script 
 
-echo -e "********/nmove files from the source location: "${Volume}" \nto the destination \n"${SDir}"?"
+echo -e "\n********move files from the source location: "${Volume}" \nto the destination \n"${SDir}"?"
 IFS=$'\n'; select move_confirm in "yes" "no" ; do
 	if [[ $move_confirm = no ]]
 	then
