@@ -47,7 +47,7 @@ done;
 
 cowsay "Enter a number to set the path to the Staging Directory on the TBMA DroBo:"
 #Prompts for either identifying the staging directory or creating one using the function defined earlier. Defines that path as "$SDir"
-IFS=$'\n'; select SDir_option in $(find /Volumes/TBMA\ Drobo/Time\ Based\ Media\ Artwork -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
+IFS=$'\n'; select SDir_option in $(find "${TBMADroBoPath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
 	if [[ $SDir_option = "Input path" ]]
   	then while [[ -z "$SDir" ]] ; do 
 		echo "Input path to Staging Directory:"
