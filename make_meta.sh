@@ -232,7 +232,7 @@ then disktype
 fi
 
 if [[ "$Run_Copyit" = "1" ]] 
-then CopyitVolumeStaging
+then FindcopyitPath && CopyitVolumeStaging
 fi
 
 if [[ "$Run_FileCopy" = "1" ]]
@@ -240,7 +240,7 @@ then RunIndvMD5 && CopyFiles && DeleteList
 fi
 
 if [[ "$Run_MultiCopy" = "1" ]] 
-then CopyitSelected && DeleteList
+then FindcopyitPath && CopyitSelected && DeleteList
 fi
 
 if [[ "$Run_meta" = "1" ]] 
