@@ -45,6 +45,8 @@ IFS=$'\n'; select artdir in $(find "${ArtFilePath%/}" -maxdepth 1 -type d -iname
 break			
 done;
 
+FindTBMADroBoPath
+
 cowsay "Enter a number to set the path to the Staging Directory on the TBMA DroBo:"
 #Prompts for either identifying the staging directory or creating one using the function defined earlier. Defines that path as "$SDir"
 IFS=$'\n'; select SDir_option in $(find "${TBMADroBoPath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
