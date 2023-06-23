@@ -76,27 +76,6 @@ Staging Driectory is $SDir \n\n*************************************************
 break			
 done;
 
-echo -e "Show diskutil list? \n"
-select dlist in "Yes, show diskutil list" "No, I already know the device path"
-	do
-		case $dlist in
-			"Yes, show diskutil list") 
-				 echo "Generating list..."
-				 diskutil list
-			break;;
-			"No, I already know the device path") echo "Moving on..."
-			break;;
-		esac
-	done
-
-#Prompts user input for path to hard drive (or other carrier), defines that path as "$Device"
-#diskutil list
-while [[ -z "$Device" ]] ; do
-	cowsay -p -W 31 "Input the path to the device - Should be '/dev/disk#' " 
-	read -e Device
-done
-echo -e "The device path is $Device \n"
-
 #Prompts user input for path to hard drive (or other carrier), defines that path as "$Volume"
 cowsay -p -W 31 "Input the path to the volume - Should begin with '/Volumes/' (use tab complete to help)"
 read -e VolumeInput
@@ -130,7 +109,6 @@ logNewLine "make_dirs.sh complete:
 ----------------------->The accession number is $accession
 ----------------------->The artwork folder is $ArtFile
 ----------------------->The staging directory is $SDir
------------------------>The device path is $Device
 ----------------------->The volume path is $Volume"
 
 varfileName=`date '+%Y-%m-%d-%H.%M.%S'`_"$ArtistLastName"_"$accession"  #the file that stores the variables will be named after the the date, artists last name, and the accession number
@@ -143,7 +121,6 @@ echo 'title="'"$title"'"' >> "${varfilePath}"
 echo 'accession="'"$accession"'"' >> "${varfilePath}"
 echo 'ArtFile="'"$ArtFile"'"' >> "${varfilePath}"
 echo 'SDir="'"$SDir"'"' >> "${varfilePath}"
-echo 'Device="'"$Device"'"' >> "${varfilePath}"
 echo 'Volume="'"$Volume"'"' >> "${varfilePath}"
 echo 'techdir="'"$techdir"'"' >> "${varfilePath}"
 echo 'sidecardir="'"$sidecardir"'"' >> "${varfilePath}"
