@@ -81,24 +81,6 @@ Copy $FileList to:\n ${SDir}?"
 	done
 fi  
 
-#Prompts user that disktype is being run? Not sure about this...
-echo -e "\n*************************************************\n
-The following prompts will ask about running command line applications. The responses to the prompts will be saved, and applications will be run once all prompts have been answered.
-\n*************************************************\n"
-sleep 1
-echo -e "Run disktype on $Device (Choose a number 1-2)"
-select Disktype_option in "yes" "no"
-do
-	case $Disktype_option in
-		yes) Run_disktype=1
-			#disktype
-			#Should run disktype on device path and then pipe output to tee, copy output to Staging Directory, Tech Specs dir in ArtFile and appendix in ArtFile
-			break;;
-		no) Run_disktype=0
-break;;
-	esac
-done  
-
 #Prompts user to run metadata tools
 echo -e "\n*************************************************\n
 If you select "yes," this will be the final prompt and applications will run after this response!\n
@@ -227,10 +209,6 @@ fi
 #The following if statements will check the variable assignements from above to run the desired functions.
 #Next step is to change these functions in to bash scripts I think
 
-if [[ "$Run_disktype" = "1" ]] 
-then disktype
-fi
-
 if [[ "$Run_Copyit" = "1" ]] 
 then FindcopyitPath && CopyitVolumeStaging
 fi
@@ -246,7 +224,6 @@ fi
 if [[ "$Run_meta" = "1" ]] 
 then RunTree; RunSF; RunMI; RunExif; Make_Framemd5; Make_QCT 
 fi
- 
 
 if [[ "$Run_tree" = "1" ]]
 then RunTree
