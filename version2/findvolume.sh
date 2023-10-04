@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 function FindVolume {
 	FindVolume=$(find "/Volumes/" -maxdepth 1 -type d -iname "*$ArtistLastName*")
 	if [[ -z "${FindVolumes}" ]];
@@ -15,3 +17,6 @@ function FindVolume {
 if [[ -z "${Volume}" ]];
 then
 	#find volume by artist name
+HMSG-32873
+Shared
+TBMA\ Drobo/
