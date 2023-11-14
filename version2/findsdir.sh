@@ -67,10 +67,11 @@ function FindSDir {
 }
 
 
-FindTBMADroBoPath
+# FindTBMADroBoPath
+## Moving functions call to start_input script
 
-if [[ -z "${SDir}" ]];
-then
-	FindSDir
-fi
+#if [[ -z "${SDir}" ]];
+#then
+	#FindSDir
+#fi
 

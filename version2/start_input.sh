@@ -44,7 +44,19 @@ fi
 if [[ -z "${Volume}" ]] ;
 then
     echo "No volume path in input csv"
+    source `dirname "$0"`/findvolume.sh 
+    FindVolume
 else
     echo "Volume: $Volume"
 fi
-    
+
+source `dirname "$0"`/findsdir.sh
+FindTBMADroBoPath
+if [[ -z "${SDir}" ]] ;
+then
+    echo "No path to Staging Directory found in input csv"
+    FindSDir
+else
+    echo "Staging Directory: $SDir"
+fi
+

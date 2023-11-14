@@ -10,6 +10,8 @@ then
 	echo -e "homebrew is not installed! All dependencies of HMSG_auto are installed via homebrew.\n Go to https://brew.sh/ to install homebrew."
 	exit
 	#if brew is not installed the script exits, because all subsequent if statements run brew
+else
+	echo "homebrew installed"
 fi
 
 if ! command -v cowsay &> /dev/null
@@ -24,6 +26,8 @@ then
 	else
 		echo "cowsay installed"
 	fi
+else
+	echo "cowsay installed"
 fi
 
 if ! command -v exiftool &> /dev/null
@@ -36,6 +40,8 @@ then
 	else
 		echo "exiftool installed"
 	fi
+else
+	echo "exiftool installed"
 fi
 
 if ! command -v ffmpeg &> /dev/null
@@ -48,6 +54,8 @@ then
 	else
 		echo "ffmpeg installed"
 	fi
+else
+	echo "ffmpeg installed"
 fi
 
 if ! command -v figlet &> /dev/null
@@ -60,6 +68,8 @@ then
 	else
 		echo "figlet installed"
 	fi
+else
+	echo "figlet installed"
 fi
 
 if ! command -v md5deep &> /dev/null
@@ -72,6 +82,8 @@ then
 	else
 		echo "md5deep installed"
 	fi
+else
+	echo "md5deep installed"
 fi
 
 if ! command -v mediainfo &> /dev/null
@@ -84,6 +96,8 @@ then
 	else
 		echo "mediainfo installed"
 	fi
+else
+	echo "mediainfo installed"
 fi
 
 if ! command -v qcli &> /dev/null
@@ -96,6 +110,8 @@ then
 	else
 		echo "qcli installed"
 	fi
+else
+	echo "qcli installed"
 fi
 
 if ! command -v tree &> /dev/null
@@ -108,6 +124,8 @@ then
 	else
 		echo "tree installed"
 	fi
+else
+	echo "tree installed"
 fi
 
 if ! command -v sf &> /dev/null
@@ -120,4 +138,6 @@ then
 	else
 		echo "Siegfried installed"
 	fi
+else
+	echo "Siegfried installed"
 fi
