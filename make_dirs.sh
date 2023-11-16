@@ -6,6 +6,7 @@ figlet Automation!
 
 FindArtworkFilePath
 
+InputArtistsName () {
 echo -e "\n*************************************************\n
 Input artist's first name"
 	read -e ArtistFirstName
@@ -17,10 +18,10 @@ Input artist's last name"
 	echo -e "\n Artist name is $ArtistFirstName $ArtistLastName"
 cowsay -W 30 "Enter a number to set the path to the Artwork File on the T:\ drive:"
 #prompt for select command
-IFS=$'\n'; select artdir in $(find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Artwork File" ; do
+IFS=$'\n'; select artdir in $(find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Artwork File" "Re-enter artist's name" ; do
 #lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
   	if [[ $artdir = "Input path" ]]
-  	then while [[ -z "$ArtFile" ]] ; do 
+  		then while [[ -z "$ArtFile" ]] ; do 
 		echo "Input path to Artwork File:"
 		read -e ArtFileInput
 		#Asks for user input and assigns it to variable
@@ -33,7 +34,11 @@ IFS=$'\n'; select artdir in $(find "${ArtFilePath%/}" -maxdepth 1 -type d -iname
 		sleep 1
   		done
   	elif [[ $artdir = "Create Artwork File" ]]
-  	then MakeArtworkFile 
+  		then MakeArtworkFile 
+  	elif [[ $artdir = "Re-enter artist's name" ]]
+  		then echo "Let's try again"
+  		unset ArtistFirstName ArtistLastName 
+  		return 1
 	else
 		ArtFile=$artdir
 		#assigns variable to the users selection from the select menu
@@ -44,14 +49,19 @@ IFS=$'\n'; select artdir in $(find "${ArtFilePath%/}" -maxdepth 1 -type d -iname
 	fi
 break			
 done;
+}
+
+until InputArtistsName ; do : ; done
+# Got this from here: https://stackoverflow.com/questions/45088696/bash-scripting-can-you-make-a-function-call-itself
 
 FindTBMADroBoPath
 
+InputSDir () {
 cowsay "Enter a number to set the path to the Staging Directory on the TBMA DroBo:"
 #Prompts for either identifying the staging directory or creating one using the function defined earlier. Defines that path as "$SDir"
-IFS=$'\n'; select SDir_option in $(find "${TBMADroBoPath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
+IFS=$'\n'; select SDir_option in $(find "${TBMADroBoPath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" "Go back a step" ; do
 	if [[ $SDir_option = "Input path" ]]
-  	then while [[ -z "$SDir" ]] ; do 
+  		then while [[ -z "$SDir" ]] ; do 
 		echo "Input path to Staging Directory:"
 		read -e SDirInput 
 		#Takes user input. might be ok with either a "/" or no "/"?? Is that possible?
@@ -65,8 +75,12 @@ Staging Driectory is $SDir \n\n*************************************************
 		sleep 1
 		done
 	elif [[ $SDir_option = "Create Staging Directory" ]]
-  	then MakeStagingDirectory
-	#Runs MakeStagingDirectory function defined in make_meta.config
+  		then MakeStagingDirectory
+		#Runs MakeStagingDirectory function defined in make_meta.config
+	elif [[ $SDir_option = "Go back a step" ]]
+		then 
+			unset ArtistFirstName ArtistLastName ArtFile accession_dir accession title
+			InputArtistsName && InputSDir
 	else
 		SDir=$SDir_option
 		#assigns variable to the users selection from the select menu
@@ -75,7 +89,12 @@ Staging Driectory is $SDir \n\n*************************************************
 	fi
 break			
 done;
+}
 
+InputSDir
+
+
+InputVolume () {
 #Prompts user input for path to hard drive (or other carrier), defines that path as "$Volume"
 cowsay -p -W 31 "Input the path to the volume - Should begin with '/Volumes/' (use tab complete to help)"
 read -e VolumeInput
@@ -86,6 +105,25 @@ while [[ -z "$Volume" ]] ; do
 	echo -e "Input the path to the volume - Should begin with '/Volumes/' (use tab complete to help)" && read -e Volume 
 done
 echo "The volume path is $Volume"
+IFS=$'\n'; select volume_check in "continue" "Re-enter volume path" "Go back a step" ; do
+#lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
+  	if [[ $volume_check = "continue" ]]
+  		then echo "moving on..."
+  	elif [[ $volume_check = "Re-enter volume path" ]]
+  		then echo "Let's try again"
+  		unset VolumeInput Volume
+  		return 1
+  	elif [[ $volume_check = "Go back a step" ]]
+  		then
+  		unset VolumeInput Volume SDirInput SDir SDir_option 
+  		InputSDir && InputVolume
+  		return 1
+	fi
+break			
+done;
+}
+
+until InputVolume ; do : ; done
 
 FindConditionDir
 #searches the ArtFile for the Condition Report, and assigns it to the $reportdir variable
