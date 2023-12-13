@@ -53,3 +53,5 @@ source "${script_dir}"/start_output_functions/selecttools.sh
 SelectTools
 source "${script_dir}"/start_output_functions/runtools.sh
 RunTools
+
+cp "${configLogPath}" "${techdir}"/"${logName}"_"${ArtistLastName}"
