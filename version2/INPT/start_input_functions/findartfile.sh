@@ -40,7 +40,7 @@ function FindArtworkFilesPath {
 #This function makes the nested directores of a Time-based Media Artwork File
 function MakeArtworkFile {
 	while [[ -z "$accession" ]] ; do
-		echo "Enter Accession Number in '###.###' format" && read accession
+		echo "Enter Accession Number in '####.###' format" && read accession
 		#prompts user for accession number and reads input
 		export accession="${accession}"
 	done

@@ -28,7 +28,7 @@ if [[ -z $(find "${techdir}" -iname "*_manifest.md5") ]]; then
 	source "${script_dir}"/start_output_functions/selectfiles.sh
 	UserSelectFiles
 	source "${script_dir}"/start_output_functions/runmovefiles.sh
-	RunMoveFiles
+	
 else
 	cowsay "Checksum manifest found in Artwork File! Checksums from the following files were found in "${techdir}":"
 	sleep 1
@@ -47,12 +47,12 @@ else
 	source "${script_dir}"/start_output_functions/selectfiles.sh
 	UserSelectFiles
 	source "${script_dir}"/start_output_functions/runmovefiles.sh
-	RunMoveFiles
 fi
 
 source "${script_dir}"/start_output_functions/selecttools.sh
 SelectTools
 source "${script_dir}"/start_output_functions/runtools.sh
 RunTools
+RunMoveFiles
 
 cp "${configLogPath}" "${techdir}"/"${logName}"_"${ArtistLastName}"

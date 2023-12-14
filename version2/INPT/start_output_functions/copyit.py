@@ -1,5 +1,31 @@
 #!/usr/bin/env python3
 
+### This script, used as part of HMSG's INPT is from 'IFIscripts' created for the IFI Irish Film Archive, which is licensed under the MIT License.
+### The original project can currently be found here: https://github.com/Irish-Film-Institute/IFIscripts
+
+## MIT License
+
+## Copyright (c) [year] [original copyright holder]
+
+## Permission is hereby granted, free of charge, to any person obtaining a copy
+## of this software and associated documentation files (the "Software"), to deal
+## in the Software without restriction, including without limitation the rights
+## to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+## copies of the Software, and to permit persons to whom the Software is
+## furnished to do so, subject to the following conditions:
+
+## The above copyright notice and this permission notice shall be included in
+## all copies or substantial portions of the Software.
+
+## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+## THE SOFTWARE.
+
+
 '''
 Copy pastes drectories while comparing checksum manifests of src and dst.
 '''
@@ -99,23 +125,25 @@ def get_script_version(scriptname):
     os.chdir(current_dir)
     return script_version
 
-def make_desktop_logs_dir():
-    desktop_logs_dir = os.path.expanduser("~/Desktop/ifiscripts_logs")
-    if not os.path.isdir(desktop_logs_dir):
+### For INPT:
+### I've changed the two functions below to coresspond with how this project is organized
+def make_logs_dir():
+    logs_dir = os.path.join((os.path.dirname(os.getcwd())), 'logs/copyit/copyit_logs/')
+    if not os.path.isdir(logs_dir):
         #I should probably ask permission here, or ask for alternative location
-        os.makedirs(desktop_logs_dir)
-    return desktop_logs_dir
+        os.makedirs(logs_dir)
+    return logs_dir
 
-def make_desktop_manifest_dir():
-    desktop_manifest_dir = os.path.expanduser("~/Desktop/moveit_manifests")
-    if not os.path.isdir(desktop_manifest_dir):
+def make_manifest_dir():
+    manifest_dir = os.path.join((os.path.dirname(os.getcwd())), 'logs/copyit/manifests')
+    if not os.path.isdir(manifest_dir):
         #I should probably ask permission here, or ask for alternative location
-        os.makedirs(desktop_manifest_dir)
-        os.makedirs(os.path.join(desktop_manifest_dir, 'old_manifests'))
+        os.makedirs(manifest_dir)
+        os.makedirs(os.path.join(manifest_dir, 'old_manifests'))
     else:
-        if not os.path.isdir(os.path.join(desktop_manifest_dir, 'old_manifests')):
-            os.makedirs(os.path.join(desktop_manifest_dir, 'old_manifests'))
-    return desktop_manifest_dir
+        if not os.path.isdir(os.path.join(manifest_dir, 'old_manifests')):
+            os.makedirs(os.path.join(manifest_dir, 'old_manifests'))
+    return manifest_dir
 
 def generate_log(log, what2log):
     if not os.path.isfile(log):
@@ -560,18 +588,18 @@ def setup(args_):
         manifest_filename = '%s_manifest.md5' % os.path.basename(destination)
     else:
         manifest_filename = '%s_manifest.md5' % dirname
-    desktop_manifest_dir = make_desktop_manifest_dir()
+    manifest_dir = make_manifest_dir()
     # manifest = desktop manifest, looks like this can get rewritten later.
     manifest = os.path.join(
-        desktop_manifest_dir, manifest_filename
+        manifest_dir, manifest_filename
     )
     manifest_sidecar = os.path.join(
         os.path.dirname(source), relative_path + '_manifest.md5'
     )
     manifest_root = source + '/%s_manifest.md5' % os.path.basename(source)
     log_name_filename = dirname + time.strftime("_%Y_%m_%dT%H_%M_%S")
-    desktop_logs_dir = make_desktop_logs_dir()
-    log_name_source = "%s/%s.log" % (desktop_logs_dir, log_name_filename)
+    logs_dir = make_logs_dir()
+    log_name_source = "%s/%s.log" % (logs_dir, log_name_filename)
     generate_log(log_name_source, 'copyit.py started.')
     generate_log(
         log_name_source,
@@ -593,7 +621,7 @@ def setup(args_):
         else:
             generate_log(log_name_source, 'You do not have enough free space! - Exiting')
             sys.exit()
-    return args, rootpos, manifest_sidecar, log_name_source, destination_final_path, manifest_root, manifest_destination, manifest, destination, dirname, desktop_manifest_dir
+    return args, rootpos, manifest_sidecar, log_name_source, destination_final_path, manifest_root, manifest_destination, manifest, destination, dirname, manifest_dir
 
 def overwrite_check(
         destination, log_name_source,
@@ -790,7 +818,7 @@ def main(args_):
     '''
     manifest_temp = '--' # add two characters so that I can slice for manifest_temp[1] later.
     dircheck = None
-    args, rootpos, manifest_sidecar, log_name_source, destination_final_path, manifest_root, manifest_destination, manifest, destination, dirname, desktop_manifest_dir = setup(args_)
+    args, rootpos, manifest_sidecar, log_name_source, destination_final_path, manifest_root, manifest_destination, manifest, destination, dirname, manifest_dir = setup(args_)
     if os.path.isdir(args.source):
         dircheck = check_for_sip(args.source)
     if dircheck != None:
@@ -856,7 +884,7 @@ def main(args_):
                 destination_count += 1 #works in windows at least
         if rootpos == 'y':
             manifest_temp = tempfile.mkstemp(
-                dir=desktop_manifest_dir, suffix='.md5'
+                dir=manifest_dir, suffix='.md5'
             )
             os.close(manifest_temp[0]) # Needed for windows.
             with open(manifest, 'r') as fo:
@@ -870,13 +898,13 @@ def main(args_):
             manifest, manifest_destination, log_name_source, overwrite_destination_manifest, files_in_manifest, destination_count, source_count
         )
         manifest_rename = manifest[:-4] + time.strftime("_%Y_%m_%dT%H_%M_%S") + '.md5'
-        if os.path.normpath(os.path.dirname(manifest)) == os.path.normpath(desktop_manifest_dir):
+        if os.path.normpath(os.path.dirname(manifest)) == os.path.normpath(manifest_dir):
             os.rename(manifest, manifest_rename)
-            shutil.move(manifest_rename, os.path.join(desktop_manifest_dir, 'old_manifests'))
+            shutil.move(manifest_rename, os.path.join(manifest_dir, 'old_manifests'))
             if rootpos == 'y':
                 legacy_manifest_rename = legacy_manifest[:-4] + time.strftime("_%Y_%m_%dT%H_%M_%S") + '.md5'
                 os.rename(legacy_manifest, legacy_manifest_rename)
-                shutil.move(legacy_manifest_rename, os.path.join(desktop_manifest_dir, 'old_manifests'))
+                shutil.move(legacy_manifest_rename, os.path.join(manifest_dir, 'old_manifests'))
         # hack to also copy the sha512 manifest :(
         # Stop the temp manifest from copying
         if not os.path.basename(manifest_temp[1]) == os.path.basename(manifest):
