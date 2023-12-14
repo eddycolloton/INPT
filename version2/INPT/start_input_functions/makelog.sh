@@ -14,6 +14,7 @@ function logCreate {
 function logNewLine {
    timestamp=$(date "+%Y-%m-%d - %H.%M.%S")
    echo -e "$timestamp - ${1}" >> "${configLogPath}"
+   echo -e "$timestamp - ${1}"
 }
 
 #This function adds contents to the current line fo the log
@@ -26,7 +27,7 @@ logName=`date '+%Y-%m-%d-%H.%M.%S'`_INPT  #the log will be named after the Date 
 logName+='.log'
 logPath="${parent_dir}"/logs/"${logName}"
 logCreate "${logPath}"
-echo -e "The log has been created using the file name $logPath \n \n"
+echo -e "\nThe log has been created using the file name $logPath\n"
 export logPath="${logPath}"
 sleep 1
 }

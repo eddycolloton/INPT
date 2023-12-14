@@ -4,7 +4,7 @@ set -a
 
 #This function determines if the list_of_dirs.txt file exists, and if it does, it deletes it.
 function DeleteList {
-test -f $(find "$techdir" -type f \( -iname "*_list_of_dirs.txt" -o -iname "*_list_of_files.txt" \)) && 
+#test -f $(find "$techdir" -type f \( -iname "*_list_of_dirs.txt" -o -iname "*_list_of_files.txt" \)) && 
 find "$techdir" -type f \( -iname "*_list_of_dirs.txt" -o -iname "*_list_of_files.txt" \) -print0 |
 	while IFS= read -r -d '' l;
 		do rm "$l"
@@ -13,8 +13,8 @@ find "$techdir" -type f \( -iname "*_list_of_dirs.txt" -o -iname "*_list_of_file
 
 #This function finds the file path to the copyit.py script
 function FindcopyitPath {
-	if [[ -f copyit.py ]]; then
-		copyitPath=`dirname "$0"`
+	if [[ -f "${script_dir}"/start_output_functions/copyit.py ]]; then
+		copyitPath="${script_dir}"/start_output_functions/
 		echo "found copyit.py at $copyitPath"
 	else
 		cowsay -W 30 "Please input the path to the "copyit.py" script in the IFIscripts-master directory. Feel free to drag and drop the directory into terminal:"

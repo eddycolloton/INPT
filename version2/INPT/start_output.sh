@@ -14,7 +14,7 @@ if [[ -z "${varfilePath}" ]] ; then
 	MakeLog
 	source "${script_dir}"/start_output_functions/findvarfile.sh 
 	findVarfile
-	echo -e "varfile found! Artwork File is here: "${ArtFile}"\n Staging directory is here: "${SDir}""
+	logNewLine -e "varfile found! Artwork File is here: "${ArtFile}"\n Staging directory is here: "${SDir}""
 	if [[ -z "${techdir}" ]] ; then
     	source "${script_dir}"/start_input_functions/findreportdir.sh
     	FindTechDir
@@ -41,6 +41,7 @@ else
 			echo "$filename"
 		done < "$manifest"
 	done
+	echo -e "\n"
 	unset IFS
 	sleep 1
 	source "${script_dir}"/start_output_functions/selectfiles.sh

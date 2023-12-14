@@ -18,20 +18,20 @@ function FindArtworkFilesPath {
 	if [[ -z "${ArtFilePath}" ]]; then
 		if [[ -d /Volumes/hmsg/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/hmsg/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES 
-			echo "found ARTWORK FILES directory at $ArtFilePath"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath"
 		elif [[ -d /Volumes/SHARED/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/SHARED/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES
-			echo "found ARTWORK FILES directory at $ArtFilePath"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath"
 		elif [[ -d /Volumes/shared/departments/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/shared/departments/CONSERVATION/ARTWORK\ FILES
-			echo "found ARTWORK FILES directory at $ArtFilePath"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath"
 		elif [[ -d /Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES
-			echo "found ARTWORK FILES directory at $ArtFilePath"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath"
 		else
 			cowsay -W 30 "Please input the path to the ARTWORK FILES directory from the T:\ drive. Feel free to drag and drop the directory into terminal:"
 			read -e ArtFilePath
-			echo "The path to the Artwork Files is: $ArtFilePath"
+			logNewLine "The path to the Artwork Files is: $ArtFilePath"
 		fi
 		export ArtFilePath="${ArtFilePath}"
 	fi
@@ -159,7 +159,7 @@ if [[ -z "${accession}" ]]; then
 	#pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 7, then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9][0-9][0-9].[0-9][0-9][0-9]\).*$/\1/' ` 
 		#same as before, sed command cuts everything before and after ####.### in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
-		echo -e "*************************************************\nThe accession number is $accession\n\n*************************************************\n"
+		echo -e "*************************************************\n\nThe accession number is $accession\n\n*************************************************\n"
 		export accession="${accession}"
 	else 
 		echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"

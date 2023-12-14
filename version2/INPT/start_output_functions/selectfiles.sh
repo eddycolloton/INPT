@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source `dirname "$0"`/movefiles.sh
+source "${script_dir}"/start_output_functions/movefiles.sh
 
 set -a
 
@@ -49,7 +49,7 @@ while IFS=$'\n' read -r line_data; do
 done < "${techdir}/${accession}_list_of_dirs.txt"
 #populates the array with contents of the text file, with each new line assigned as its own element 
 #got this from https://peniwize.wordpress.com/2011/04/09/how-to-read-all-lines-of-a-file-into-a-bash-array/
-echo -e "\nThe selected directories are: ${SelectedDirs[@]}"
+# echo -e "\nThe selected directories are: ${SelectedDirs[@]}"
 DirsList=${SelectedDirs[@]}
 #lists the contents of the array, populated by the text file
 logNewLine "The selected directories are: "${DirsList}""
@@ -100,7 +100,7 @@ while IFS=$'\n' read -r line_files; do
 done < "${techdir}/${accession}_list_of_files.txt"
 #populates the array with contents of the text file, with each new line assigned as its own element 
 #got this from https://peniwize.wordpress.com/2011/04/09/how-to-read-all-lines-of-a-file-into-a-bash-array/
-echo -e "\nThe selected files are: ${SelectedFiles[@]}"
+#echo -e "\nThe selected files are: ${SelectedFiles[@]}"
 FileList=${SelectedFiles[@]}
 #lists the contents of the array, populated by the text file
 logNewLine "The selected files are: "${FileList}""
