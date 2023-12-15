@@ -17,6 +17,12 @@ function logNewLine {
    echo -e "$timestamp - ${1}"
 }
 
+#This function adds a new line to the log
+function logNewLineQuiet {
+   timestamp=$(date "+%Y-%m-%d - %H.%M.%S")
+   echo -e "$timestamp - ${1}" >> "${configLogPath}"
+}
+
 #This function adds contents to the current line fo the log
 function logCurrentLine {
    sed -i '' -e '$s/$/'"$1"'/' "${configLogPath}"     #this was a doozy to write. the -i '' -e is required for MacOS for some reason
@@ -33,7 +39,7 @@ sleep 1
 }
 
 function LogVars {
-logNewLine "start_input.sh complete:
+logNewLineQuiet "start_input.sh complete:
 ----------------------->The artist name is $ArtistFirstName $ArtistLastName
 ----------------------->The title of the work is $title
 ----------------------->The accession number is $accession
