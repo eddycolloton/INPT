@@ -12,7 +12,7 @@ parent_dir="$(dirname "$script_dir")"
 if [[ -z "${varfilePath}" ]] ; then
 	source "${script_dir}"/start_input_functions/makelog.sh
 	MakeLog
-	source "${script_dir}"/start_output_functions/findvarfile.sh 
+	source "${script_dir}"/start_output_functions/findvarfile.sh
 	findVarfile
 	logNewLine -e "varfile found! Artwork File is here: "${ArtFile}"\n Staging directory is here: "${SDir}""
 	if [[ -z "${techdir}" ]] ; then

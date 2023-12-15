@@ -5,7 +5,7 @@
 
 ## MIT License
 
-## Copyright (c) [year] [original copyright holder]
+## Copyright (c) 2015-2018 Kieran O'Leary for the Irish Film Institute.
 
 ## Permission is hereby granted, free of charge, to any person obtaining a copy
 ## of this software and associated documentation files (the "Software"), to deal

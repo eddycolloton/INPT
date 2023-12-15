@@ -147,48 +147,45 @@ if [[ -z "${accession}" ]]; then
 	#pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 3, then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9].[0-9]\).*$/\1/' ` 
 		#sed command cuts everything before and after ##.# in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
-		if [[  $(echo "$accession" | wc -l) =~ 4 ]]; then
+		if [[  $(echo -n "$accession" | wc -c) =~ 4 ]]; then
 			echo -e "*************************************************\n\nThe accession number is $accession\n\n*************************************************\n"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-			echo -e "\n*************************************************\n
-			Input accession number"
+			echo -e "\n*************************************************\nInput accession number"
 			read -e accession
 			# Asks for user input and assigns it to variable
-			echo "The accession number is $accession"
+			# echo "The accession number is $accession"
 			export accession="${accession}"
 		fi
 	elif [[ $(echo "$acount" | wc -l) =~ 4 ]]; then
 	#pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 4, then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9].[0-9][0-9]\).*$/\1/' `
 		# sed command cuts everything before and after ##.## in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236 
-		if [[  $(echo "$accession" | wc -l) =~ 4 ]]; then
+		if [[  $(echo -n "$accession" | wc -c) =~ 5 ]]; then
 			echo -e "*************************************************\n\nThe accession number is $accession\n\n*************************************************\n"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-			echo -e "\n*************************************************\n
-			Input accession number"
+			echo -e "\n*************************************************\nInput accession number"
 			read -e accession
 			# Asks for user input and assigns it to variable
-			echo "The accession number is $accession"
+			# echo "The accession number is $accession"
 			export accession="${accession}"
 		fi
 	elif [[ $(echo "$acount" | wc -l) =~ 7 ]]; then
 	#pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 7, then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9][0-9][0-9].[0-9][0-9][0-9]\).*$/\1/' ` 
 		# same as before, sed command cuts everything before and after ####.### in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
-		if [[  $(echo "$accession" | wc -l) =~ 7 ]]; then
+		if [[  $(echo -n "$accession" | wc -c) =~ 8 ]]; then
 			echo -e "*************************************************\n\nThe accession number is $accession\n\n*************************************************\n"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-			echo -e "\n*************************************************\n
-			Input accession number"
+			echo -e "\n*************************************************\nInput accession number"
 			read -e accession
 			# Asks for user input and assigns it to variable
-			echo "The accession number is $accession"
+			# echo "The accession number is $accession"
 			export accession="${accession}"
 		fi
 	else 
