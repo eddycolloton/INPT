@@ -128,7 +128,7 @@ def get_script_version(scriptname):
 ### For INPT:
 ### I've changed the two functions below to coresspond with how this project is organized
 def make_logs_dir():
-    logs_dir = os.path.join((os.path.dirname(os.getcwd())), 'logs/copyit/copyit_logs/')
+    logs_dir = os.path.join((os.path.dirname(os.path.dirname(os.getcwd()))), 'logs/copyit/copyit_logs/')
     if not os.path.isdir(logs_dir):
         #I should probably ask permission here, or ask for alternative location
         os.makedirs(logs_dir)
