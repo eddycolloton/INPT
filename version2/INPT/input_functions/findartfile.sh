@@ -42,11 +42,13 @@ function MakeArtworkFile {
 	while [[ -z "$accession" ]] ; do
 		echo "Enter Accession Number in '####.###' format" && read accession
 		#prompts user for accession number and reads input
+		logNewLine "The acession number manually input: "${accession}""
 		export accession="${accession}"
 	done
 	while [[ -z "$title" ]] ; do
 		echo "Enter Artwork Title" && read title
 		#prompts user for artwork title and reads input
+		logNewLine "The title manually input: "${title}""
 		export title="${title}"
 	done
 	mkdir -pv "${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/"time-based media"/"$accession""_""$title"/{"Acquisition and Registration","Artist Interaction","Cataloging","Conservation"/{"Condition_Tmt Reports","DAMS","Equipment Reports"},"Iteration Reports_Exhibition Info"/"Equipment Reports","Photo-Video Documentation","Research"/"Correspondence","Technical Info_Specs"/{"Past installations_Pics","Sidecars"},"Trash"}
@@ -55,7 +57,7 @@ function MakeArtworkFile {
 	ArtFile="${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/
 	#assigns the ArtFile variable to the artwork file just created 
 	#I've removed the path to the HMSG shared drive below for security reasons
-	echo -e "\n*************************************************\nThe Artwork file is $ArtFile\n"
+	logNewLine "The artwork file has been created: "${ArtFile}""
 	export ArtFile="${ArtFile}"
 } 
 
@@ -72,11 +74,10 @@ if [ "$title_dir_results" \> 1 ]; then
 	#If the variable title_dir_results stores more than one result
 	#This is to determine if there is more than one dir in the ArtFile that has an accession number (typically means there are two artworks by the same artist)
 	echo -e "\nCannot find accession number in Artwork File directories"
-	echo -e "\n*************************************************\n
-	Input accession number"
+	echo -e "\n*************************************************\nInput accession number"
 	read -e accession
 	#Asks for user input and assigns it to variable
-	echo "The accession number is $accession"
+	logNewLine "The acession number manually input: "${accession}""
 	export accession="${accession}"
 	accession_dir=$(find "${ArtFile}" -mindepth 0 -maxdepth 4 -type d -iname "*${accession}*")
 	#defines the accession_dir variable as a directory stored inside the ArtFile that has the accession number in it's name
@@ -87,6 +88,7 @@ if [ "$title_dir_results" \> 1 ]; then
 		while [[ -z "$title" ]] ; do
 		echo "Enter Artwork Title" && read title
 		#prompts user for artwork title and reads input
+		logNewLine "The title manually input: "${title}""
 		export title="${title}"
 		done
 		accession_dir=$(find "${ArtFile}" -mindepth 0 -maxdepth 4 -type d -iname "*${title}*")
@@ -134,11 +136,10 @@ if [[ -z "${accession}" ]]; then
 	if [[ -z "$titledir" ]]; then 
 	#if the $titledir variable is empty, then
 		echo -e "\nCannot find accession number in Artwork File directories"
-		echo -e "\n*************************************************\n
-		Input accession number"
+		echo -e "\n*************************************************\nInput accession number"
 		read -e accession
 		#Asks for user input and assigns it to variable
-		echo "The accession number is $accession"
+		logNewLine "The acession number manually input: "${accession}""
 		export accession="${accession}"
 	fi
 	acount=$(echo "$titledir" | grep -oE '[0-9]')
@@ -148,14 +149,14 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9].[0-9]\).*$/\1/' ` 
 		#sed command cuts everything before and after ##.# in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
 		if [[  $(echo -n "$accession" | wc -c) =~ 4 ]]; then
-			echo -e "*************************************************\n\nThe accession number is $accession\n\n*************************************************\n"
+			logNewLine "The acession number is "${accession}" found in the artwork folder "${titledir}""
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
 			echo -e "\n*************************************************\nInput accession number"
 			read -e accession
 			# Asks for user input and assigns it to variable
-			# echo "The accession number is $accession"
+			logNewLine "The acession number manually input: "${accession}""
 			export accession="${accession}"
 		fi
 	elif [[ $(echo "$acount" | wc -l) =~ 4 ]]; then
@@ -163,14 +164,14 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9].[0-9][0-9]\).*$/\1/' `
 		# sed command cuts everything before and after ##.## in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236 
 		if [[  $(echo -n "$accession" | wc -c) =~ 5 ]]; then
-			echo -e "*************************************************\n\nThe accession number is $accession\n\n*************************************************\n"
+			logNewLine "The acession number is "${accession}" found in the artwork folder "${titledir}""
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
 			echo -e "\n*************************************************\nInput accession number"
 			read -e accession
 			# Asks for user input and assigns it to variable
-			# echo "The accession number is $accession"
+			logNewLine "The acession number manually input: "${accession}""
 			export accession="${accession}"
 		fi
 	elif [[ $(echo "$acount" | wc -l) =~ 7 ]]; then
@@ -178,14 +179,14 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9][0-9][0-9].[0-9][0-9][0-9]\).*$/\1/' ` 
 		# same as before, sed command cuts everything before and after ####.### in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
 		if [[  $(echo -n "$accession" | wc -c) =~ 8 ]]; then
-			echo -e "*************************************************\n\nThe accession number is $accession\n\n*************************************************\n"
+			logNewLine "The acession number is "${accession}" found in the artwork folder "${titledir}""
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
 			echo -e "\n*************************************************\nInput accession number"
 			read -e accession
 			# Asks for user input and assigns it to variable
-			# echo "The accession number is $accession"
+			logNewLine "The acession number manually input: "${accession}""
 			export accession="${accession}"
 		fi
 	else 
@@ -194,7 +195,7 @@ if [[ -z "${accession}" ]]; then
 		Input accession number"
 		read -e accession
 		#Asks for user input and assigns it to variable
-		echo "The accession number is $accession"
+		logNewLine "The acession number manually input: "${accession}""
 		export accession="${accession}"
 	fi
 fi
@@ -220,6 +221,7 @@ if [[ -z "${FindArtFile}" ]]; then
 			#Strips a trailing space from the input. 
 			#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
 			#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+			logNewLine "The artwork file manually input is "${ArtFile}""
 			if [[ -z "${accession}" ]];
 			then
 				FindAccessionNumber
@@ -232,7 +234,7 @@ if [[ -z "${FindArtFile}" ]]; then
 		else
 			ArtFile=$artdir
 			#assigns variable to the users selection from the select menu
-			echo -e "\n*************************************************\n\nThe Artwork File is $ArtFile\n"
+			logNewLine "The artwork file is "${ArtFile}""
 			export ArtFile="${ArtFile}"
 			if [[ -z "${accession}" ]];
 			then
@@ -258,13 +260,14 @@ elif [[ $(echo "${FindArtFile}" | wc -l) > 1 ]];
 				if [[ -z "${accession}" ]]; then
 				FindAccessionNumber
 				fi
+				logNewLine "The artwork file is "${ArtFile}""
 				export ArtFile="${ArtFile}"
 			fi
 		done
 else
 	ArtFile=$FindArtFile
 	#assigns variable to the results of the find command "find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*""
-	echo -e "\n*************************************************\n\nThe Artwork File is $ArtFile\n"
+	logNewLine "The artwork file is "${ArtFile}""
 	export ArtFile="${ArtFile}"
 	if [[ -z "${accession}" ]]; then
 		FindAccessionNumber

@@ -52,8 +52,7 @@ if [[ -z "${ArtFile}" ]] ; then
     echo -e "\nNo path to the artwork file found in input csv"
     source "${script_dir}"/input_functions/findartfile.sh
     FindArtworkFilesPath
-    FindArtworkFile
-    
+    FindArtworkFile  
 else
     echo "Artwork File: $ArtFile"
     logNewLine "The artwork file path from CSV: "${ArtFile}""
@@ -68,7 +67,7 @@ if [[ -z "${accession}" ]] ; then
         FindArtworkFilesPath
     fi 
     FindAccessionNumber 
-    logNewLine "The acession number manually input: "${ArtFile}""
+    logNewLine "The acession number manually input: "${accession}""
 else
     logNewLine "The acession number is: "${accession}""
 fi
