@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "${script_dir}"/start_output_functions/tools.sh
+source "${script_dir}"/output_functions/tools/tools.sh
 
 function RunTools {
 	if [[ "$Run_meta" = "1" ]] ; then 

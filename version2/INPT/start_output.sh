@@ -10,13 +10,13 @@ parent_dir="$(dirname "$script_dir")"
 
 
 if [[ -z "${varfilePath}" ]] ; then
-	source "${script_dir}"/start_input_functions/makelog.sh
+	source "${script_dir}"/input_functions/makelog.sh
 	MakeLog
-	source "${script_dir}"/start_output_functions/findvarfile.sh
+	source "${script_dir}"/output_functions/findvarfile.sh
 	findVarfile
 	logNewLine -e "varfile found! Artwork File is here: "${ArtFile}"\n Staging directory is here: "${SDir}""
 	if [[ -z "${techdir}" ]] ; then
-    	source "${script_dir}"/start_input_functions/findreportdir.sh
+    	source "${script_dir}"/input_functions/findreportdir.sh
     	FindTechDir
 	else
     	echo "Technical Info and Specs: $techdir"
@@ -25,9 +25,9 @@ if [[ -z "${varfilePath}" ]] ; then
 fi
 
 if [[ -z $(find "${techdir}" -iname "*_manifest.md5") ]]; then
-	source "${script_dir}"/start_output_functions/selectfiles.sh
+	source "${script_dir}"/output_functions/move/selectfiles.sh
 	UserSelectFiles
-	source "${script_dir}"/start_output_functions/runmovefiles.sh
+	source "${script_dir}"/output_functions/move/runmovefiles.sh
 	
 else
 	cowsay "Checksum manifest found in Artwork File! Checksums from the following files were found in "${techdir}":"
@@ -44,14 +44,14 @@ else
 	echo -e "\n"
 	unset IFS
 	sleep 1
-	source "${script_dir}"/start_output_functions/selectfiles.sh
+	source "${script_dir}"/output_functions/move/selectfiles.sh
 	UserSelectFiles
-	source "${script_dir}"/start_output_functions/runmovefiles.sh
+	source "${script_dir}"/output_functions/move/runmovefiles.sh
 fi
 
-source "${script_dir}"/start_output_functions/selecttools.sh
+source "${script_dir}"/output_functions/tools/selecttools.sh
 SelectTools
-source "${script_dir}"/start_output_functions/runtools.sh
+source "${script_dir}"/output_functions/tools/runtools.sh
 RunTools
 RunMoveFiles
 

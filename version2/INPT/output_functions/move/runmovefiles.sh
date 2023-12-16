@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "${script_dir}"/start_output_functions/movefiles.sh
+source "${script_dir}"/output_functions/move/movefiles.sh
 
 function RunMoveFiles {
 	if [[ "$Run_Copyit" = "1" ]] ; then 

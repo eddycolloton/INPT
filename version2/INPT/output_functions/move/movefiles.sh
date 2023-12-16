@@ -13,8 +13,8 @@ find "$techdir" -type f \( -iname "*_list_of_dirs.txt" -o -iname "*_list_of_file
 
 #This function finds the file path to the copyit.py script
 function FindcopyitPath {
-	if [[ -f "${script_dir}"/start_output_functions/copyit.py ]]; then
-		copyitPath="${script_dir}"/start_output_functions/
+	if [[ -f "${script_dir}"/output_functions/copyit.py ]]; then
+		copyitPath="${script_dir}"/output_functions/
 		echo "found copyit.py at $copyitPath"
 	else
 		cowsay -W 30 "Please input the path to the "copyit.py" script in the IFIscripts-master directory. Feel free to drag and drop the directory into terminal:"
