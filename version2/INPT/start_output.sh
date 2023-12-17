@@ -14,7 +14,7 @@ if [[ -z "${varfilePath}" ]] ; then
 	MakeLog
 	source "${script_dir}"/output_functions/findvarfile.sh
 	findVarfile
-	logNewLine -e "varfile found! Artwork File is here: "${ArtFile}"\n Staging directory is here: "${SDir}""
+	logNewLine -e "varfile found! Artwork File is here: ${ArtFile}\n Staging directory is here: ${SDir}" "$YELLOW"
 	if [[ -z "${techdir}" ]] ; then
     	source "${script_dir}"/input_functions/findreportdir.sh
     	FindTechDir
@@ -28,7 +28,7 @@ if [[ -z $(find "${techdir}" -iname "*_manifest.md5") ]]; then
 	source "${script_dir}"/output_functions/move/selectfiles.sh
 	UserSelectFiles
 else
-	cowsay "Checksum manifest found in Artwork File! Checksums from the following files were found in "${techdir}":"
+	cowsay "Checksum manifest found in Artwork File! Checksums from the following files were found in ${techdir}:"
 	sleep 1
 	mainfest_search=$(find "${techdir}" -type f -name "*_manifest.md5")
 	# Use a while loop to read each line from the find command output

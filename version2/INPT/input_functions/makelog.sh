@@ -1,6 +1,14 @@
 #!/bin/bash
 
+set -a
+
 ## Much of this script is taken from the AMIA open source project loglog, more information here: https://github.com/amiaopensource/loglog
+
+# Define color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RESET='\033[0m'
 
 #This function creates a log at a specific directory
 function logCreate {
@@ -12,9 +20,11 @@ function logCreate {
 
 #This function adds a new line to the log
 function logNewLine {
+   local message="$1"
+   local color="$2"
    timestamp=$(date "+%Y-%m-%d - %H.%M.%S")
-   echo -e "$timestamp - ${1}" >> "${configLogPath}"
-   echo -e "$timestamp - ${1}"
+   echo -e "$timestamp - ${message}" >> "${configLogPath}"
+   echo -e "${color}${timestamp} - ${message}${RESET}" 
 }
 
 #This function adds a new line to the log
@@ -29,13 +39,13 @@ function logCurrentLine {
 }
 
 function MakeLog {
-logName=`date '+%Y-%m-%d-%H.%M.%S'`_INPT  #the log will be named after the Date (YYYY-MM-DD)
-logName+='.log'
-logPath="${parent_dir}"/logs/"${logName}"
-logCreate "${logPath}"
-echo -e "\nThe log has been created using the file name $logPath\n"
-export logPath="${logPath}"
-sleep 1
+   logName=`date '+%Y-%m-%d-%H.%M.%S'`_INPT  #the log will be named after the Date (YYYY-MM-DD)
+   logName+='.log'
+   logPath="${parent_dir}"/logs/"${logName}"
+   logCreate "${logPath}"
+   echo -e "\nThe log has been created using the file name $logPath\n"
+   export logPath="${logPath}"
+   sleep 1
 }
 
 function LogVars {
@@ -69,3 +79,5 @@ echo 'reportdir="'"$reportdir"'"' >> "${varfilePath}"
 echo -e "The varfile has been created using the file name $varfilePath \n \n"
 export varfilePath="${varfilePath}"
 }
+
+set +a
