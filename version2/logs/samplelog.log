@@ -13,57 +13,47 @@ Sample log below:
 2023-12-16 - 15.12.37 - Artist name manually input: Some Name
 2023-12-16 - 15.12.38 - The acession number is: 1999.000
 2023-12-16 - 15.12.46 - The path to the volume manually input: /Users/eddy/Desktop/volume/
-2023-12-16 - 15.12.51 - Path to the staging directory manually input: /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name
+2023-12-16 - 15.12.51 - Path to the staging directory manually input: /path/to/1999-000_Name
 2023-12-16 - 15.12.51 - start_input.sh complete:
 ----------------------->The artist name is Some Name
 ----------------------->The title of the work is Untitled
 ----------------------->The accession number is XXXX.XXX
 ----------------------->The artwork folder is /path/to/artwork_files/Name, Some
 ----------------------->The staging directory is /path/to/XXXX-XXX_Name
------------------------>The device path is 
------------------------>The volume path is /Users/eddy/Desktop/volume/
-2023-12-16 - 15.13.07 - The selected files are: /Users/eddy/Desktop/volume/artwork/artwork_ch1.mov
-
-2023-12-16 - 15.13.22 ******** siegfried started ******** 
- siegfried will be run on /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name
-	2023-12-16 - 15.13.23 sf run on /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name/test/mediainfo.txt
-	2023-12-16 - 15.13.23 sf run on /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name/test/IMG_0076.MOV.qctools.mkv
-	2023-12-16 - 15.13.23 sf run on /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name/test/IMG_0076.JPG
-	2023-12-16 - 15.13.23 sf run on /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name/test/IMG_0076.MOV
-	2023-12-16 - 15.13.23 sf run on /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name/test again/IMG_0075.JPG
-	2023-12-16 - 15.13.24 sf run on /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name/test again/heimlich.jpeg
-	2023-12-16 - 15.13.24 sf run on /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name/Ernest & Celestine (2012) [1080p] [BluRay] [5.1] [YTS.MX]/Ernest.&.Celestine.2012.1080p.BluRay.x264.AAC5.1-[YTS.MX].srt
-	2023-12-16 - 15.13.24 sf run on /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name/Ernest & Celestine (2012) [1080p] [BluRay] [5.1] [YTS.MX]/Ernest.&.Celestine.2012.1080p.BluRay.x264.AAC5.1-[YTS.MX].mp4
-	2023-12-16 - 15.13.24 sf run on /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name/Ernest & Celestine (2012) [1080p] [BluRay] [5.1] [YTS.MX]/www.YTS.MX.jpg
-2023-12-16 - 15.13.24 ******** siegfried completed ******** 
-
-		sf Results:
-		copied to /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name and 
-		/Users/eddy/Desktop/hmsg_directoires/artwork_files/Name, Some/time-based media/1999.000_something/Conservation/Condition_Tmt Reports/1999.000_appendix.txt
-		===================> Total Execution Time: 0 m 2 s
+----------------------->The volume path is /Volumes/some_volume
+2023-12-16 - 15.13.07 - The selected files are: /Volumes/some_volume/artwork_ch1.mov
 
 2023-12-16 - 15.13.24 ******** generating md5 checksums on selected files ******** 
-md5deep will be run on /Users/eddy/Desktop/volume/
-2023-12-16 - 15.13.24 ******** md5 checksum manifest from /Users/eddy/Desktop/volume/ completed ******** 
+md5deep will be run on /Volumes/some_volume
+2023-12-16 - 15.13.24 ******** md5 checksum manifest from /Volumes/some_volume completed ******** 
 
 		md5deep Results:
-		copied to /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name and 
-		/Users/eddy/Desktop/hmsg_directoires/artwork_files/Name, Some/time-based media/1999.000_something/Conservation/Condition_Tmt Reports/1999.000_appendix.txt
+		copied to /path/to/1999-000_Name and 
+		/path/to/artwork_files/Name, Some/time-based media/1999.000_something/Conservation/Condition_Tmt Reports/1999.000_appendix.txt
 		===================> Total Execution Time: 0 m 0 s
 
 2023-12-16 - 15.13.24 ******** copying files started ******** 
 	copying individual files from the volume
 
 	list of files copied below:
-	/Users/eddy/Desktop/volume/artwork/artwork_ch1.mov
+	/Volumes/some_volume/artwork_ch1.mov
 
 2023-12-16 - 15.13.25 ******** file copying and md5 checksum manifest from /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name completed ******** 
 
 		rsync Results:
-		manifest copied to /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name and 
-		/Users/eddy/Desktop/hmsg_directoires/artwork_files/Name, Some/time-based media/1999.000_something/Conservation/Condition_Tmt Reports/1999.000_appendix.txt 
- rsync logs in /Users/eddy/Desktop/hmsg_directoires/artwork_files/Name, Some/time-based media/1999.000_something/Technical Info_Specs
+		manifest copied to /path/to/1999-000_Name and 
+		/path/to/artwork_files/Name, Some/time-based media/1999.000_something/Conservation/Condition_Tmt Reports/1999.000_appendix.txt 
+ rsync logs in /path/to/artwork_files/Name, Some/time-based media/1999.000_something/Technical Info_Specs
 		===================> Total Execution Time: 0 m 1 s
 2023-12-16 - 15.13.25 ******** checksum manifests match ******** 
 
 		===================> Total Execution Time: 0 m 1 s
+
+2023-12-16 - 15.13.22 ******** siegfried started ******** 
+ siegfried will be run on /path/to/1999-000_Name
+2023-12-16 - 15.13.24 ******** siegfried completed ******** 
+
+		sf Results:
+		copied to /path/to/1999-000_Name and 
+		/path/to/artwork_files/Name, Some/time-based media/1999.000_something/Conservation/Condition_Tmt Reports/1999.000_appendix.txt
+		===================> Total Execution Time: 0 m 2 s
