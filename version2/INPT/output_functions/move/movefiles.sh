@@ -30,6 +30,11 @@ function FindcopyitPath {
 
 #This function runs the python script copyit.py from the IFIscripts directory
 function CopyitVolumeStaging {
+	copyit_again=yes
+	while [[ "$copyit_again" = yes ]]
+	# Found this as a solution to potentially re-run a function from the link below: 
+	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
+	do
 	SECONDS=0 &&
 	echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** copyit.py started ******** \n -------------------> copyit.py will be run on all contents of the volume" >> "${configLogPath}" &&
 	#print timestamp and command to log
@@ -39,12 +44,33 @@ function CopyitVolumeStaging {
 	for t in "`find "$SDir" -name "*_manifest.md5"`" ; do cp "$t" "$techdir" && echo -e "\n***** md5 checksum manifest ***** \n" >> "${reportdir}/${accession}_appendix.txt" && cat "$t" >> "${reportdir}/${accession}_appendix.txt"
 	done
 	if [[ -n $(find "${SDir}" -name "*_manifest.md5") ]]; then 
+	### -> Consider: changing the name of the manifest file to include more specifics in the event of multiple manifests.
+	### -> As of right now, if *any* manifest exists 
 		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** copyit.py completed ******** \n\n\t\tcopyit.py Results:\n\t\tall files copied to the $SDir" >> "${configLogPath}" &&
 		#prints timestamp once the command has exited
 		duration=$SECONDS
 		echo -e "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}"
 	else 
 		echo -e "\n\n\t\tcopyit.py Results:\n\t\t\n xxxxxxxx No manfiest file found in $SDir xxxxxxxx" >> "${configLogPath}"
+		echo -e "\n ******** Checksum manfiest not found in $SDir ******** \n"
+		echo -e "\n Run copyit.py again? (Choose a number 1-2)"
+		select copyitAgain_option in "yes" "no"
+		do
+			case $copyitAgain_option in
+				yes) copyit_again=yes
+				# set again variable to enable loop
+				break;;
+				no) copyit_again=no
+	break;;
+				esac
+		done
+	fi
+
+	if [ "$copyit_again" = yes ]
+	then echo -e "!! Running copyit.py again !! \n\n"
+	fi
+
+	done
 	fi
 }
 
