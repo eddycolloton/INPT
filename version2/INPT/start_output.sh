@@ -53,6 +53,6 @@ RunMoveFiles
 source "${script_dir}"/output_functions/tools/runtools.sh
 RunTools
 
-cp "${configLogPath}" "${techdir}"/"${logName}"_"${ArtistLastName}"
+cp "${configLogPath}" "${techdir}"/"${ArtistLastName}"_"${accession}"_"${logName}"
 
 figlet OUTPUT

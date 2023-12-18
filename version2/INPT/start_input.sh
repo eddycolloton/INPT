@@ -33,7 +33,7 @@ if test -f "${parent_dir}"/input_template.csv; then
     done < "${parent_dir}"/input_template.csv
     logNewLine "input csv found at "${parent_dir}"/input_template.csv" "$YELLOW"
 else
-    logNewLine "No input csv found" "$YELLOW"
+    logNewLine "No input csv found" "$RED"
 fi
 	
 if [[ -z "${ArtistLastName}" ]] ; then

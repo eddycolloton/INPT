@@ -55,7 +55,6 @@ logNewLineQuiet "start_input.sh complete:
 ----------------------->The accession number is $accession
 ----------------------->The artwork folder is $ArtFile
 ----------------------->The staging directory is $SDir
------------------------>The device path is $Device
 ----------------------->The volume path is $Volume"
 }
 
