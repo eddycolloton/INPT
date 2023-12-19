@@ -77,6 +77,7 @@ function RunSF {
 		echo -e "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}"
 		echo -e "\n ******** sf complete ******** \n"
 		#prints statement to terminal
+		sf_again=no
 	else 
 		echo -e "\n\n\t\tsf Results:\n\t\txxxxxxxx No siegfried files found in $SDir xxxxxxxx" >> "${configLogPath}"
 		echo -e "\n ******** sf output not found in $SDir ******** \n"
@@ -99,13 +100,12 @@ function RunSF {
 	fi
 
 	done
-	fi
 }
 
 #This function will create MediaInfo sidecar files for all files with .mp4, .mov and .mkv file extensions in the Staging Directory, the copy output to Tech Specs dir in ArtFile and appendix in ArtFile
 function RunMI {
 	mi_again=yes
-	while [ "$mi_again" = yes ]
+	while [[ "$mi_again" = yes ]]
 	do
 	SECONDS=0 &&
 	echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** MediaInfo started ******** \nMediaInfo will be run on audio and video files in $SDir" >> "${configLogPath}" &&
@@ -134,11 +134,13 @@ function RunMI {
 		echo -e "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}"
 		echo -e "\n ******** MediaInfo complete ******** \n"
 		#prints statement to terminal
+		mi_again=no
 	else 
 		echo -e "\n\n\t\tMediaInfo Results:\n\t\txxxxxxxx No MediaInfo files found in $SDir xxxxxxxx" >> "${configLogPath}"
 		echo -e "\n ******** MediaInfo output not found in $SDir ******** \n"
 		#prints statement to terminal
 		echo -e "\n Run MediaInfo again? (Choose a number 1-2)"
+		select miAgain_option in "yes" "no"
 		do
 			case $miAgain_option in
 				yes) mi_again=yes
@@ -155,13 +157,12 @@ function RunMI {
 	fi
 
 	done
-	fi
 }
 
 #This function will create Exiftool sidecar files for all files with .jpg, .jpeg, .png and .tiff file extensions in the Staging Directory, the copy output to Tech Specs dir in ArtFile and appendix in ArtFile
 function RunExif {
 	exif_again=yes
-	while [ "$exif_again" = yes ]
+	while [[ "$exif_again" = yes ]]
 	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
 	do
 	SECONDS=0 &&
@@ -192,11 +193,13 @@ function RunExif {
 		echo -e "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}"
 		echo -e "\n ******** Exiftool complete ******** \n"
 		#prints statement to terminal
+		exif_again=no
 	else
 		echo -e "\n\n\t\tExiftool Results:\n\t\txxxxxxxx No exiftool files found in $SDir xxxxxxxx" >> "${configLogPath}"
 		echo -e "\n ******** Exiftool output not found in $SDir ******** \n"
 		#prints statement to terminal
 		echo -e "\n Run Exiftool again? (Choose a number 1-2)"
+		select exifAgain_option in "yes" "no"
 		do
 			case $exifAgain_option in
 				yes) exif_again=yes
@@ -208,18 +211,17 @@ function RunExif {
 		done
 	fi
 
-	if [ "$exif_again" = yes ]
+	if [[ "$exif_again" = yes ]]
 	then echo -e "!! Running Exiftool again !! \n\n"
 	fi
 
 	done
-	fi 
 }
 
 #This function will make a text file containing md5 checksums of each frame of any video files in the Staging Directory. The output will be saved as a side car file in the Staging Directory and the Tech Specs dir in the ArtFile
 function Make_Framemd5 {
 	framemd5_again=yes
-	while [ "$framemd5_again" = yes ]
+	while [[ "$framemd5_again" = yes ]]
 	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
 	do
 	SECONDS=0 &&
@@ -244,11 +246,13 @@ function Make_Framemd5 {
 		echo -e "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}"
 		echo -e "\n ******** Framemd5 complete ******** \n"
 		#prints statement to terminal
+		framemd5_again=no
 	else
 		echo -e "\n\n\t\tFramemd5 Results:\n\t\txxxxxxxx No framemd5 files found in $SDir xxxxxxxx" >> "${configLogPath}"
 		echo -e "\n ******** Framemd5 output not found in $SDir ******** \n"
 		#prints statement to terminal
 		echo -e "\n Run Framemd5 again? (Choose a number 1-2)"
+		select framemd5Again_option in "yes" "no"
 		do
 			case $framemd5Again_option in
 				yes) framemd5_again=yes
@@ -260,18 +264,17 @@ function Make_Framemd5 {
 		done
 	fi
 
-	if [ "$framemd5_again" = yes ]
+	if [[ "$framemd5_again" = yes ]]
 	then echo -e "!! Running Framemd5 again !! \n\n"
 	fi
 
 	done
-	fi
 }
 
 #This function will make a QCTools report for video files with the .mp4, .mov and .mkv extensions and save the reports as sidecar files in the Staging Directory and the Tech Specs dir in the ArtFile
 function Make_QCT {
 	qct_again=yes
-	while [ "$qct_again" = yes ]
+	while [[ "$qct_again" = yes ]]
 	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
 	do
 	SECONDS=0 &&
@@ -295,11 +298,13 @@ function Make_QCT {
 		echo -e "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}"
 		echo -e "\n ******** QCTools complete ******** \n"
 		#prints statement to terminal
+		qct_again=no
 	else
 		echo -e "\n\n\t\tQCTools Results:\n\t\txxxxxxxx No QCTools reports found in $SDir xxxxxxxx" >> "${configLogPath}"
 		echo -e "\n ******** QCTools output not found in $SDir ******** \n"
 		#prints statement to terminal
 		echo -e "\n Run QCTools again? (Choose a number 1-2)"
+		select qctAgain_option in "yes" "no"
 		do
 			case $qctAgain_option in
 				yes) qct_again=yes
@@ -311,10 +316,9 @@ function Make_QCT {
 		done
 	fi
 
-	if [ "$qct_again" = yes ]
+	if [[ "$qct_again" = yes ]]
 	then echo -e "!! Running QCTools again !! \n\n"
 	fi
 
 	done
-	fi 
 }

@@ -127,8 +127,7 @@ function UserSelectFiles {
 	done
 
 	if [[ "$MultiSelect" -eq "1" ]]; then 
-		echo -e "\n*************************************************\n
-	Copy $DirsList to:\n ${SDir}?"
+		echo -e "\n*************************************************\nCopy $DirsList to:\n ${SDir}?"
 		select Run_MultiCopy in "yes" "no"
 			do
 			case $Run_MultiCopy in
@@ -141,8 +140,7 @@ function UserSelectFiles {
 	fi  
 
 	if [[ "$IndvFiles" -eq "1" ]]; then 
-		echo -e "\n*************************************************\n
-	Copy $FileList to:\n ${SDir}?"
+		echo -e "\n*************************************************\nCopy $FileList to:\n ${SDir}?"
 		select Run_FileCopy in "yes" "no"
 			do
 			case $Run_FileCopy in
