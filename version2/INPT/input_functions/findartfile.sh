@@ -44,8 +44,8 @@ function MakeArtworkFile {
     	while [[ "$accession_again" = yes ]] ; do
 			echo "Enter Accession Number in '####.###' format" && read accession
 			#prompts user for accession number and reads input
-			logNewLine "The acession number manually input: ${accession}" "$YELLOW"
-			echo -e "\nIs the acession number correct?"
+			logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+			echo -e "\nIs the accession number correct?"
 		    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 		    if [[ $accession_option = "Yes" ]] ;
 		        then
@@ -116,8 +116,8 @@ if [ "$title_dir_results" \> 1 ]; then
 	while [[ "$accession_again" = yes ]] ; do
 		echo "\n*************************************************\nInput accession number" && read accession
 		#prompts user for accession number and reads input
-		logNewLine "The acession number manually input: ${accession}" "$YELLOW"
-		echo -e "\nIs the acession number correct?"
+		logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+		echo -e "\nIs the accession number correct?"
 	    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 	    if [[ $accession_option = "Yes" ]] ;
 	        then
@@ -215,8 +215,8 @@ if [[ -z "${accession}" ]]; then
 		while [[ "$accession_again" = yes ]] ; do
 			echo "\n*************************************************\nInput accession number" && read accession
 			#prompts user for accession number and reads input
-			logNewLine "The acession number manually input: ${accession}" "$YELLOW"
-			echo -e "\nIs the acession number correct?"
+			logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+			echo -e "\nIs the accession number correct?"
 		    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 			    if [[ $accession_option = "Yes" ]] ;
 			        then
@@ -242,7 +242,7 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9].[0-9]\).*$/\1/' ` 
 		#sed command cuts everything before and after ##.# in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
 		if [[  $(echo -n "$accession" | wc -c) =~ 4 ]]; then
-			logNewLine "The acession number is ${accession} found in the artwork folder ${titledir}" "$YELLOW"
+			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$YELLOW"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
@@ -250,8 +250,8 @@ if [[ -z "${accession}" ]]; then
 			while [[ "$accession_again" = yes ]] ; do
 				echo "\n*************************************************\nInput accession number" && read accession
 				#prompts user for accession number and reads input
-				logNewLine "The acession number manually input: ${accession}" "$YELLOW"
-				echo -e "\nIs the acession number correct?"
+				logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+				echo -e "\nIs the accession number correct?"
 			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 				    if [[ $accession_option = "Yes" ]] ;
 				        then
@@ -275,7 +275,7 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9].[0-9][0-9]\).*$/\1/' `
 		# sed command cuts everything before and after ##.## in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236 
 		if [[  $(echo -n "$accession" | wc -c) =~ 5 ]]; then
-			logNewLine "The acession number is ${accession} found in the artwork folder ${titledir}" "$YELLOW"
+			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$YELLOW"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
@@ -283,8 +283,8 @@ if [[ -z "${accession}" ]]; then
 			while [[ "$accession_again" = yes ]] ; do
 				echo "\n*************************************************\nInput accession number" && read accession
 				#prompts user for accession number and reads input
-				logNewLine "The acession number manually input: ${accession}" "$YELLOW"
-				echo -e "\nIs the acession number correct?"
+				logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+				echo -e "\nIs the accession number correct?"
 			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 				    if [[ $accession_option = "Yes" ]] ;
 				        then
@@ -308,7 +308,7 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9][0-9][0-9].[0-9][0-9][0-9]\).*$/\1/' ` 
 		# same as before, sed command cuts everything before and after ####.### in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
 		if [[  $(echo -n "$accession" | wc -c) =~ 8 ]]; then
-			logNewLine "The acession number is ${accession} found in the artwork folder ${titledir}" "$YELLOW"
+			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$YELLOW"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
@@ -316,8 +316,8 @@ if [[ -z "${accession}" ]]; then
 			while [[ "$accession_again" = yes ]] ; do
 				echo "\n*************************************************\nInput accession number" && read accession
 				#prompts user for accession number and reads input
-				logNewLine "The acession number manually input: ${accession}" "$YELLOW"
-				echo -e "\nIs the acession number correct?"
+				logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+				echo -e "\nIs the accession number correct?"
 			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 				    if [[ $accession_option = "Yes" ]] ;
 				        then
@@ -342,8 +342,8 @@ if [[ -z "${accession}" ]]; then
 			while [[ "$accession_again" = yes ]] ; do
 				echo "\n*************************************************\nInput accession number" && read accession
 				#prompts user for accession number and reads input
-				logNewLine "The acession number manually input: ${accession}" "$YELLOW"
-				echo -e "\nIs the acession number correct?"
+				logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+				echo -e "\nIs the accession number correct?"
 			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 				    if [[ $accession_option = "Yes" ]] ;
 				        then
