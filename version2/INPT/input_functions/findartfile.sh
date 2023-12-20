@@ -268,7 +268,7 @@ if [[ -z "${accession}" ]]; then
 			    then echo -e "Let's try again"
 			    fi
 			done
-			 export accession="${accession}"
+			export accession="${accession}"
 		fi
 	elif [[ $(echo "$acount" | wc -l) =~ 4 ]]; then
 	#pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 4, then
@@ -279,10 +279,28 @@ if [[ -z "${accession}" ]]; then
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-			echo -e "\n*************************************************\nInput accession number"
-			read -e accession
-			# Asks for user input and assigns it to variable
-			logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+			accession_again=yes
+			while [[ "$accession_again" = yes ]] ; do
+				echo "\n*************************************************\nInput accession number" && read accession
+				#prompts user for accession number and reads input
+				logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+				echo -e "\nIs the acession number correct?"
+			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
+				    if [[ $accession_option = "Yes" ]] ;
+				        then
+				            accession_again=no
+				            echo -e "Moving on..."
+				    elif [[ $accession_option = "No, go back a step" ]] ;
+				        then 
+				            unset accession
+				    fi
+				    break           
+			    done;
+
+			    if [[ "$accession_again" = yes ]]
+			    then echo -e "Let's try again"
+			    fi
+			done
 			export accession="${accession}"
 		fi
 	elif [[ $(echo "$acount" | wc -l) =~ 7 ]]; then
@@ -294,19 +312,54 @@ if [[ -z "${accession}" ]]; then
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-			echo -e "\n*************************************************\nInput accession number"
-			read -e accession
-			# Asks for user input and assigns it to variable
-			logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+			accession_again=yes
+			while [[ "$accession_again" = yes ]] ; do
+				echo "\n*************************************************\nInput accession number" && read accession
+				#prompts user for accession number and reads input
+				logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+				echo -e "\nIs the acession number correct?"
+			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
+				    if [[ $accession_option = "Yes" ]] ;
+				        then
+				            accession_again=no
+				            echo -e "Moving on..."
+				    elif [[ $accession_option = "No, go back a step" ]] ;
+				        then 
+				            unset accession
+				    fi
+				    break           
+			    done;
+
+			    if [[ "$accession_again" = yes ]]
+			    then echo -e "Let's try again"
+			    fi
+			done
 			export accession="${accession}"
 		fi
 	else 
 		echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-		echo -e "\n*************************************************\n
-		Input accession number"
-		read -e accession
-		#Asks for user input and assigns it to variable
-		logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+		accession_again=yes
+			while [[ "$accession_again" = yes ]] ; do
+				echo "\n*************************************************\nInput accession number" && read accession
+				#prompts user for accession number and reads input
+				logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+				echo -e "\nIs the acession number correct?"
+			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
+				    if [[ $accession_option = "Yes" ]] ;
+				        then
+				            accession_again=no
+				            echo -e "Moving on..."
+				    elif [[ $accession_option = "No, go back a step" ]] ;
+				        then 
+				            unset accession
+				    fi
+				    break           
+			    done;
+
+			    if [[ "$accession_again" = yes ]]
+			    then echo -e "Let's try again"
+			    fi
+			done
 		export accession="${accession}"
 	fi
 fi
