@@ -40,15 +40,53 @@ function FindArtworkFilesPath {
 #This function makes the nested directores of a Time-based Media Artwork File
 function MakeArtworkFile {
 	while [[ -z "$accession" ]] ; do
-		echo "Enter Accession Number in '####.###' format" && read accession
-		#prompts user for accession number and reads input
-		logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+		accession_again=yes
+    	while [[ "$accession_again" = yes ]] ; do
+			echo "Enter Accession Number in '####.###' format" && read accession
+			#prompts user for accession number and reads input
+			logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+			echo -e "\nIs the acession number correct?"
+		    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
+		    if [[ $accession_option = "Yes" ]] ;
+		        then
+		            accession_again=no
+		            echo -e "Moving on..."
+		    elif [[ $accession_option = "No, go back a step" ]] ;
+		        then 
+		            unset accession
+		    fi
+		    break           
+		    done;
+
+		    if [[ "$accession_again" = yes ]]
+		    then echo -e "Let's try again"
+		    fi
+		done
 		export accession="${accession}"
 	done
 	while [[ -z "$title" ]] ; do
-		echo "Enter Artwork Title" && read title
-		#prompts user for artwork title and reads input
-		logNewLine "The title manually input: ${title}" "$YELLOW"
+		title_again=yes
+    	while [[ "$title_again" = yes ]] ; do
+			echo "Enter Artwork Title" && read title
+			#prompts user for artwork title and reads input
+			logNewLine "The title manually input: ${title}" "$YELLOW"
+			echo -e "\nIs the title correct?"
+		    IFS=$'\n'; select title_option in "Yes" "No, go back a step" ; do
+		    if [[ $title_option = "Yes" ]] ;
+		        then
+		            title_again=no
+		            echo -e "Moving on..."
+		    elif [[ $title_option = "No, go back a step" ]] ;
+		        then 
+		            unset title
+		    fi
+		    break           
+		    done;
+
+		    if [[ "$title_again" = yes ]]
+		    then echo -e "Let's try again"
+		    fi
+		done
 		export title="${title}"
 	done
 	mkdir -pv "${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/"time-based media"/"$accession""_""$title"/{"Acquisition and Registration","Artist Interaction","Cataloging","Conservation"/{"Condition_Tmt Reports","DAMS","Equipment Reports"},"Iteration Reports_Exhibition Info"/"Equipment Reports","Photo-Video Documentation","Research"/"Correspondence","Technical Info_Specs"/{"Past installations_Pics","Sidecars"},"Trash"}
@@ -74,10 +112,28 @@ if [ "$title_dir_results" \> 1 ]; then
 	#If the variable title_dir_results stores more than one result
 	#This is to determine if there is more than one dir in the ArtFile that has an accession number (typically means there are two artworks by the same artist)
 	echo -e "\nCannot find accession number in Artwork File directories"
-	echo -e "\n*************************************************\nInput accession number"
-	read -e accession
-	#Asks for user input and assigns it to variable
-	logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+	accession_again=yes
+	while [[ "$accession_again" = yes ]] ; do
+		echo "\n*************************************************\nInput accession number" && read accession
+		#prompts user for accession number and reads input
+		logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+		echo -e "\nIs the acession number correct?"
+	    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
+	    if [[ $accession_option = "Yes" ]] ;
+	        then
+	            accession_again=no
+	            echo -e "Moving on..."
+	    elif [[ $accession_option = "No, go back a step" ]] ;
+	        then 
+	            unset accession
+	    fi
+	    break           
+	    done;
+
+	    if [[ "$accession_again" = yes ]]
+	    then echo -e "Let's try again"
+	    fi
+	done
 	export accession="${accession}"
 	accession_dir=$(find "${ArtFile}" -mindepth 0 -maxdepth 4 -type d -iname "*${accession}*")
 	#defines the accession_dir variable as a directory stored inside the ArtFile that has the accession number in it's name
@@ -86,10 +142,29 @@ if [ "$title_dir_results" \> 1 ]; then
 	#if the accession_dir variable is empty
 	#This var will typically be empty if the find command did not return a result
 		while [[ -z "$title" ]] ; do
-		echo "Enter Artwork Title" && read title
-		#prompts user for artwork title and reads input
-		logNewLine "The title manually input: ${title}" "$YELLOW"
-		export title="${title}"
+			title_again=yes
+	    	while [[ "$title_again" = yes ]] ; do
+				echo "\n*************************************************\nInput the artwork's title" && read title
+				#prompts user for artwork title and reads input
+				logNewLine "The title manually input: ${title}" "$YELLOW"
+				echo -e "\nIs the title correct?"
+			    IFS=$'\n'; select title_option in "Yes" "No, go back a step" ; do
+			    if [[ $title_option = "Yes" ]] ;
+			        then
+			            title_again=no
+			            echo -e "Moving on..."
+			    elif [[ $title_option = "No, go back a step" ]] ;
+			        then 
+			            unset title
+			    fi
+			    break           
+			    done;
+
+			    if [[ "$title_again" = yes ]]
+			    then echo -e "Let's try again"
+			    fi
+			done
+			export title="${title}"
 		done
 		accession_dir=$(find "${ArtFile}" -mindepth 0 -maxdepth 4 -type d -iname "*${title}*")
 		#defines the accession_dir variable as a directory stored inside the ArtFile that has the title in it's name
@@ -136,10 +211,28 @@ if [[ -z "${accession}" ]]; then
 	if [[ -z "$titledir" ]]; then 
 	#if the $titledir variable is empty, then
 		echo -e "\nCannot find accession number in Artwork File directories"
-		echo -e "\n*************************************************\nInput accession number"
-		read -e accession
-		#Asks for user input and assigns it to variable
-		logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+		accession_again=yes
+		while [[ "$accession_again" = yes ]] ; do
+			echo "\n*************************************************\nInput accession number" && read accession
+			#prompts user for accession number and reads input
+			logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+			echo -e "\nIs the acession number correct?"
+		    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
+			    if [[ $accession_option = "Yes" ]] ;
+			        then
+			            accession_again=no
+			            echo -e "Moving on..."
+			    elif [[ $accession_option = "No, go back a step" ]] ;
+			        then 
+			            unset accession
+			    fi
+			    break           
+		    done;
+
+		    if [[ "$accession_again" = yes ]]
+		    then echo -e "Let's try again"
+		    fi
+		done
 		export accession="${accession}"
 	fi
 	acount=$(echo "$titledir" | grep -oE '[0-9]')
@@ -153,11 +246,29 @@ if [[ -z "${accession}" ]]; then
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-			echo -e "\n*************************************************\nInput accession number"
-			read -e accession
-			# Asks for user input and assigns it to variable
-			logNewLine "The acession number manually input: ${accession}" "$YELLOW"
-			export accession="${accession}"
+			accession_again=yes
+			while [[ "$accession_again" = yes ]] ; do
+				echo "\n*************************************************\nInput accession number" && read accession
+				#prompts user for accession number and reads input
+				logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+				echo -e "\nIs the acession number correct?"
+			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
+				    if [[ $accession_option = "Yes" ]] ;
+				        then
+				            accession_again=no
+				            echo -e "Moving on..."
+				    elif [[ $accession_option = "No, go back a step" ]] ;
+				        then 
+				            unset accession
+				    fi
+				    break           
+			    done;
+
+			    if [[ "$accession_again" = yes ]]
+			    then echo -e "Let's try again"
+			    fi
+			done
+			 export accession="${accession}"
 		fi
 	elif [[ $(echo "$acount" | wc -l) =~ 4 ]]; then
 	#pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 4, then
@@ -214,21 +325,40 @@ if [[ -z "${FindArtFile}" ]]; then
 		#lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
   		if [[ $artdir = "Input path" ]]
   		then while [[ -z "$ArtFile" ]] ; do 
-			echo "Input path to Artwork File:"
-			read -e ArtFileInput
-			#Asks for user input and assigns it to variable
-			ArtFile="$(echo -e "${ArtFileInput}" | sed -e 's/[[:space:]]*$//')"
-			#Strips a trailing space from the input. 
-			#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
-			#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-			logNewLine "The artwork file manually input is ${ArtFile}" "$YELLOW"
+			artfilen_again=yes
+    		while [[ "$artfile_again" = yes ]] ; do
+    			echo "Input path to Artwork File:"
+				read -e ArtFileInput
+				#Asks for user input and assigns it to variable
+				ArtFile="$(echo -e "${ArtFileInput}" | sed -e 's/[[:space:]]*$//')"
+				#Strips a trailing space from the input. 
+				#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
+				#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+				logNewLine "The artwork file manually input is ${ArtFile}" "$YELLOW"
+				echo -e "\nIs the artwork file correct?"
+			    IFS=$'\n'; select artfile_option in "Yes" "No, go back a step" ; do
+			    if [[ $artfile_option = "Yes" ]] ;
+		        then
+		            artfile_again=no
+		            echo -e "Moving on..."
+		    	elif [[ $artfile_option = "No, go back a step" ]] ;
+		        then 
+		            unset ArtFile
+		    	fi
+		    	break           
+		    	done;
+
+		    	if [[ "$artfile_again" = yes ]]
+		    	then echo -e "Let's try again"
+		    	fi
+			done
 			if [[ -z "${accession}" ]];
 			then
 				FindAccessionNumber
 				#searches the Artwork File for the accession number, and assigns it to the $accession variable
 				sleep 1
 			fi
-  			done
+  		done
   		elif [[ $artdir = "Create Artwork File" ]]
   		then MakeArtworkFile 
 		else

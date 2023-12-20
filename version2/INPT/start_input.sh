@@ -10,17 +10,9 @@ figlet INPT
 source "${script_dir}"/input_functions/makelog.sh
 MakeLog
 
-# Function to remove BOM and non-printable characters
-remove_special_chars() {
-    local str=$1
-    str=$(printf '%s' "$str" | LC_ALL=C tr -dc '[:print:]\n')
-    str="${str#"${str%%[![:space:]]*}"}"   # Remove leading whitespace
-    str="${str%"${str##*[![:space:]]}"}"   # Remove trailing whitespace
-    echo "$str"
-}
-
+source "${script_dir}"/input_functions/inputs.sh
 if test -f "${parent_dir}"/input_template.csv; then
-  # Read the CSV file
+# Read the CSV file
     while IFS=, read -r key value || [ -n "$key" ]
     do
         # Remove quotes and special characters from the key and value
@@ -37,13 +29,8 @@ else
 fi
 	
 if [[ -z "${ArtistLastName}" ]] ; then
-    echo -e "\n*************************************************\nInput artist's first name"
-    read -e ArtistFirstName
-    #Asks for user input and assigns it to variable
-    echo -e "\n*************************************************\nInput artist's last name"
-    read -e ArtistLastName
-    #Asks for user input and assigns it to variable
-    logNewLine "Artist name manually input: ${ArtistFirstName} ${ArtistLastName}" "$YELLOW"
+    source "${script_dir}"/input_functions/inputs.sh
+    InputArtistsName
 else
     logNewLine "Artist name found in CSV: ${ArtistFirstName} ${ArtistLastName}" "$YELLOW"
 fi
@@ -52,12 +39,11 @@ if [[ -z "${ArtFile}" ]] ; then
     echo -e "\nNo path to the artwork file found in input csv"
     source "${script_dir}"/input_functions/findartfile.sh
     FindArtworkFilesPath
-    FindArtworkFile  
+    FindArtworkFile
 else
     echo "Artwork File: $ArtFile"
     logNewLine "The artwork file path from CSV: ${ArtFile}" "$YELLOW"
 fi
-
 
 if [[ -z "${accession}" ]] ; then
     echo "No accession number in input csv"

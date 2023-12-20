@@ -4,11 +4,37 @@ set -a
 
 ## Much of this script is taken from the AMIA open source project loglog, more information here: https://github.com/amiaopensource/loglog
 
-# Define color codes
+## Define color codes
+# Foreground (text) colors:
+BLACK='\033[0;30m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RESET='\033[0m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[0;37m'
+
+# Bright (bold) versions of the above colors:
+
+Bright_Black='\033[1;30m'
+Bright_Red='\033[1;31m'
+Bright_Green='\033[1;32m'
+Bright_Yellow='\033[1;33m'
+Bright_Blue='\033[1;34m'
+Bright_Magenta='\033[1;35m'
+Bright_Cyan='\033[1;36m'
+Bright_White='\033[1;37m'
+
+# Background colors (replace 0 with 4):
+Black_bg='\033[40m'
+Red_bg='\033[41m'
+Green_bg='\033[42m'
+Yellow_bg='\033[43m'
+Blue_bg='\033[44m'
+magenta_bg='\033[45m'
+Cyan_bg='\033[46m'
+White_bg='\033[47m'
 
 #This function creates a log at a specific directory
 function logCreate {
