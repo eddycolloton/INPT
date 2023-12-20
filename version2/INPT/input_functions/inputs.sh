@@ -21,7 +21,7 @@ function InputArtistsName {
     echo -e "\n*************************************************\nInput artist's last name"
     read -e ArtistLastName
     #Asks for user input and assigns it to variable
-    logNewLine "Artist name manually input: ${ArtistFirstName} ${ArtistLastName}" "$YELLOW"
+    logNewLine "Artist name manually input: ${ArtistFirstName} ${ArtistLastName}" "$CYAN"
     echo -e "\nIs the artist's name correct?"
     IFS=$'\n'; select name_option in "Yes" "No, go back a step" ; do
     if [[ $name_option = "Yes" ]] ;

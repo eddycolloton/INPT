@@ -14,7 +14,7 @@ if [[ -z "${varfilePath}" ]] ; then
 	MakeLog
 	source "${script_dir}"/output_functions/findvarfile.sh
 	findVarfile
-	logNewLine -e "varfile found! Artwork File is here: ${ArtFile}\n Staging directory is here: ${SDir}" "$YELLOW"
+	logNewLine -e "varfile found! Artwork File is here: ${ArtFile}\n Staging directory is here: ${SDir}" "$Bright_Magenta"
 	if [[ -z "${techdir}" ]] ; then
     	source "${script_dir}"/input_functions/findreportdir.sh
     	FindTechDir

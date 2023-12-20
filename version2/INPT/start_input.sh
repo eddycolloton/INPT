@@ -23,7 +23,7 @@ if test -f "${parent_dir}"/input_template.csv; then
         # Print debug information
         # echo "Key: $key, Value: $value"
     done < "${parent_dir}"/input_template.csv
-    logNewLine "input csv found at "${parent_dir}"/input_template.csv" "$YELLOW"
+    logNewLine "input csv found at "${parent_dir}"/input_template.csv" "$CYAN"
 else
     logNewLine "No input csv found" "$RED"
 fi
@@ -32,7 +32,7 @@ if [[ -z "${ArtistLastName}" ]] ; then
     source "${script_dir}"/input_functions/inputs.sh
     InputArtistsName
 else
-    logNewLine "Artist name found in CSV: ${ArtistFirstName} ${ArtistLastName}" "$YELLOW"
+    logNewLine "Artist name found in CSV: ${ArtistFirstName} ${ArtistLastName}" "$WHITE"
 fi
 
 if [[ -z "${ArtFile}" ]] ; then
@@ -42,7 +42,7 @@ if [[ -z "${ArtFile}" ]] ; then
     FindArtworkFile
 else
     echo "Artwork File: $ArtFile"
-    logNewLine "The artwork file path from CSV: ${ArtFile}" "$YELLOW"
+    logNewLine "The artwork file path from CSV: ${ArtFile}" "$WHITE"
 fi
 
 if [[ -z "${accession}" ]] ; then
@@ -53,19 +53,19 @@ if [[ -z "${accession}" ]] ; then
         FindArtworkFilesPath
     fi 
     FindAccessionNumber 
-    logNewLine "The acession number manually input: ${accession}" "$YELLOW"
+    logNewLine "The acession number manually input: ${accession}" "$CYAN"
 else
-    logNewLine "The acession number is: ${accession}" "$YELLOW"
+    logNewLine "The acession number is: ${accession}" "$WHITE"
 fi
 
 if [[ -z "${Volume}" ]] ; then
     echo -e "\nNo volume path in input csv"
     source "${script_dir}"/input_functions/findvolume.sh
     FindVolume
-    logNewLine "The path to the volume manually input: ${Volume}" "$YELLOW"
+    logNewLine "The path to the volume manually input: ${Volume}" "$CYAN"
 else
     echo "Volume: $Volume"
-    logNewLine "The path to the volume from CSV: ${Volume}" "$YELLOW"
+    logNewLine "The path to the volume from CSV: ${Volume}" "$WHITE"
 fi
 
 if [[ -z "${SDir}" ]] ; then
@@ -75,10 +75,10 @@ if [[ -z "${SDir}" ]] ; then
         FindTBMADroBoPath
     fi
     FindSDir
-    logNewLine "Path to the staging directory manually input: ${SDir}" "$YELLOW"
+    logNewLine "Path to the staging directory manually input: ${SDir}" "$CYAN"
 else
     echo "Staging Directory: $SDir"
-    logNewLine "Path to the staging directory from CSV: ${SDir}" "$YELLOW"
+    logNewLine "Path to the staging directory from CSV: ${SDir}" "$WHITE"
 fi
 
 if [[ -z "${techdir}" ]] ; then
@@ -86,7 +86,7 @@ if [[ -z "${techdir}" ]] ; then
     source "${script_dir}"/input_functions/findreportdir.sh
     FindTechDir
 else
-    logNewLine "Technical Info and Specs: $techdir" "$YELLOW"
+    logNewLine "Technical Info and Specs: $techdir" "$CYAN"
 fi
 
 if [[ -z "${reportdir}" ]] ; then
@@ -94,7 +94,7 @@ if [[ -z "${reportdir}" ]] ; then
     source "${script_dir}"/input_functions/findreportdir.sh
     FindConditionDir
 else
-    logNewLine "Condition Report: $reportdir \nSidecar directory: $sidecardir" "$YELLOW"
+    logNewLine "Condition Report: $reportdir \nSidecar directory: $sidecardir" "$CYAN"
 fi
 
 LogVars

@@ -15,8 +15,8 @@ MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 WHITE='\033[0;37m'
 
+## Define color codes
 # Bright (bold) versions of the above colors:
-
 Bright_Black='\033[1;30m'
 Bright_Red='\033[1;31m'
 Bright_Green='\033[1;32m'
@@ -26,6 +26,7 @@ Bright_Magenta='\033[1;35m'
 Bright_Cyan='\033[1;36m'
 Bright_White='\033[1;37m'
 
+## Define color codes
 # Background colors (replace 0 with 4):
 Black_bg='\033[40m'
 Red_bg='\033[41m'

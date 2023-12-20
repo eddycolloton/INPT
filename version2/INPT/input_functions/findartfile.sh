@@ -18,20 +18,20 @@ function FindArtworkFilesPath {
 	if [[ -z "${ArtFilePath}" ]]; then
 		if [[ -d /Volumes/hmsg/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/hmsg/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES 
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$GREEN"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$Bright_Blue"
 		elif [[ -d /Volumes/SHARED/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/SHARED/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$GREEN"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$Bright_Blue"
 		elif [[ -d /Volumes/shared/departments/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/shared/departments/CONSERVATION/ARTWORK\ FILES
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$GREEN"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$Bright_Blue"
 		elif [[ -d /Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$GREEN"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$Bright_Blue"
 		else
 			cowsay -W 30 "Please input the path to the ARTWORK FILES directory from the T:\ drive. Feel free to drag and drop the directory into terminal:"
 			read -e ArtFilePath
-			logNewLine "The path to the Artwork Files is: $ArtFilePath" "$GREEN"
+			logNewLine "The path to the Artwork Files is: $ArtFilePath" "$Bright_Blue"
 		fi
 		export ArtFilePath="${ArtFilePath}"
 	fi
@@ -44,7 +44,7 @@ function MakeArtworkFile {
     	while [[ "$accession_again" = yes ]] ; do
 			echo "Enter Accession Number in '####.###' format" && read accession
 			#prompts user for accession number and reads input
-			logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+			logNewLine "The accession number manually input: ${accession}" "$CYAN"
 			echo -e "\nIs the accession number correct?"
 		    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 		    if [[ $accession_option = "Yes" ]] ;
@@ -69,7 +69,7 @@ function MakeArtworkFile {
     	while [[ "$title_again" = yes ]] ; do
 			echo "Enter Artwork Title" && read title
 			#prompts user for artwork title and reads input
-			logNewLine "The title manually input: ${title}" "$YELLOW"
+			logNewLine "The title manually input: ${title}" "$CYAN"
 			echo -e "\nIs the title correct?"
 		    IFS=$'\n'; select title_option in "Yes" "No, go back a step" ; do
 		    if [[ $title_option = "Yes" ]] ;
@@ -95,7 +95,7 @@ function MakeArtworkFile {
 	ArtFile="${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/
 	#assigns the ArtFile variable to the artwork file just created 
 	#I've removed the path to the HMSG shared drive below for security reasons
-	logNewLine "The artwork file has been created: ${ArtFile}" "$YELLOW"
+	logNewLine "The artwork file has been created: ${ArtFile}" "$Bright_Green"
 	export ArtFile="${ArtFile}"
 } 
 
@@ -116,7 +116,7 @@ if [ "$title_dir_results" \> 1 ]; then
 	while [[ "$accession_again" = yes ]] ; do
 		echo "\n*************************************************\nInput accession number" && read accession
 		#prompts user for accession number and reads input
-		logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+		logNewLine "The accession number manually input: ${accession}" "$CYAN"
 		echo -e "\nIs the accession number correct?"
 	    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 	    if [[ $accession_option = "Yes" ]] ;
@@ -146,7 +146,7 @@ if [ "$title_dir_results" \> 1 ]; then
 	    	while [[ "$title_again" = yes ]] ; do
 				echo "\n*************************************************\nInput the artwork's title" && read title
 				#prompts user for artwork title and reads input
-				logNewLine "The title manually input: ${title}" "$YELLOW"
+				logNewLine "The title manually input: ${title}" "$CYAN"
 				echo -e "\nIs the title correct?"
 			    IFS=$'\n'; select title_option in "Yes" "No, go back a step" ; do
 			    if [[ $title_option = "Yes" ]] ;
@@ -215,7 +215,7 @@ if [[ -z "${accession}" ]]; then
 		while [[ "$accession_again" = yes ]] ; do
 			echo "\n*************************************************\nInput accession number" && read accession
 			#prompts user for accession number and reads input
-			logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+			logNewLine "The accession number manually input: ${accession}" "$CYAN"
 			echo -e "\nIs the accession number correct?"
 		    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 			    if [[ $accession_option = "Yes" ]] ;
@@ -242,7 +242,7 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9].[0-9]\).*$/\1/' ` 
 		#sed command cuts everything before and after ##.# in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
 		if [[  $(echo -n "$accession" | wc -c) =~ 4 ]]; then
-			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$YELLOW"
+			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$Bright_Green"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
@@ -250,7 +250,7 @@ if [[ -z "${accession}" ]]; then
 			while [[ "$accession_again" = yes ]] ; do
 				echo "\n*************************************************\nInput accession number" && read accession
 				#prompts user for accession number and reads input
-				logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+				logNewLine "The accession number manually input: ${accession}" "$CYAN"
 				echo -e "\nIs the accession number correct?"
 			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 				    if [[ $accession_option = "Yes" ]] ;
@@ -275,7 +275,7 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9].[0-9][0-9]\).*$/\1/' `
 		# sed command cuts everything before and after ##.## in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236 
 		if [[  $(echo -n "$accession" | wc -c) =~ 5 ]]; then
-			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$YELLOW"
+			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$Bright_Green"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
@@ -283,7 +283,7 @@ if [[ -z "${accession}" ]]; then
 			while [[ "$accession_again" = yes ]] ; do
 				echo "\n*************************************************\nInput accession number" && read accession
 				#prompts user for accession number and reads input
-				logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+				logNewLine "The accession number manually input: ${accession}" "$CYAN"
 				echo -e "\nIs the accession number correct?"
 			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 				    if [[ $accession_option = "Yes" ]] ;
@@ -308,7 +308,7 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9][0-9][0-9].[0-9][0-9][0-9]\).*$/\1/' ` 
 		# same as before, sed command cuts everything before and after ####.### in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
 		if [[  $(echo -n "$accession" | wc -c) =~ 8 ]]; then
-			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$YELLOW"
+			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$Bright_Green"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
@@ -316,7 +316,7 @@ if [[ -z "${accession}" ]]; then
 			while [[ "$accession_again" = yes ]] ; do
 				echo "\n*************************************************\nInput accession number" && read accession
 				#prompts user for accession number and reads input
-				logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+				logNewLine "The accession number manually input: ${accession}" "$CYAN"
 				echo -e "\nIs the accession number correct?"
 			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 				    if [[ $accession_option = "Yes" ]] ;
@@ -342,7 +342,7 @@ if [[ -z "${accession}" ]]; then
 			while [[ "$accession_again" = yes ]] ; do
 				echo "\n*************************************************\nInput accession number" && read accession
 				#prompts user for accession number and reads input
-				logNewLine "The accession number manually input: ${accession}" "$YELLOW"
+				logNewLine "The accession number manually input: ${accession}" "$CYAN"
 				echo -e "\nIs the accession number correct?"
 			    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 				    if [[ $accession_option = "Yes" ]] ;
@@ -387,7 +387,7 @@ if [[ -z "${FindArtFile}" ]]; then
 				#Strips a trailing space from the input. 
 				#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
 				#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-				logNewLine "The artwork file manually input is ${ArtFile}" "$YELLOW"
+				logNewLine "The artwork file manually input is ${ArtFile}" "$CYAN"
 				echo -e "\nIs the artwork file correct?"
 			    IFS=$'\n'; select artfile_option in "Yes" "No, go back a step" ; do
 			    if [[ $artfile_option = "Yes" ]] ;
@@ -417,7 +417,7 @@ if [[ -z "${FindArtFile}" ]]; then
 		else
 			ArtFile=$artdir
 			#assigns variable to the users selection from the select menu
-			logNewLine "The artwork file is ${ArtFile}" "$YELLOW"
+			logNewLine "The artwork file is ${ArtFile}" "$Bright_Green"
 			export ArtFile="${ArtFile}"
 			if [[ -z "${accession}" ]];
 			then
@@ -443,14 +443,14 @@ elif [[ $(echo "${FindArtFile}" | wc -l) > 1 ]];
 				if [[ -z "${accession}" ]]; then
 				FindAccessionNumber
 				fi
-				logNewLine "The artwork file is ${ArtFile}" "$YELLOW"
+				logNewLine "The artwork file is ${ArtFile}" "$Bright_Green"
 				export ArtFile="${ArtFile}"
 			fi
 		done
 else
 	ArtFile="${FindArtFile}"
 	#assigns variable to the results of the find command "find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*""
-	logNewLine "The artwork file is ${ArtFile}" "$YELLOW"
+	logNewLine "The artwork file is ${ArtFile}" "$Bright_Green"
 	export ArtFile="${ArtFile}"
 	if [[ -z "${accession}" ]]; then
 		FindAccessionNumber
