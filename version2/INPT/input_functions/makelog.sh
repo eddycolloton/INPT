@@ -14,6 +14,7 @@ BLUE='\033[0;34m'
 MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 WHITE='\033[0;37m'
+RESET='\033[0m'
 
 ## Define color codes
 # Bright (bold) versions of the above colors:

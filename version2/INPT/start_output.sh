@@ -16,7 +16,7 @@ if [[ -z "${varfilePath}" ]] ; then
 	findVarfile
 	logNewLine -e "varfile found! Artwork File is here: ${ArtFile}\n Staging directory is here: ${SDir}" "$Bright_Magenta"
 	if [[ -z "${techdir}" ]] ; then
-    	source "${script_dir}"/input_functions/findreportdir.sh
+    	source "${script_dir}"/input_functions/find/findreportdir.sh
     	FindTechDir
 	else
     	echo "Technical Info and Specs: $techdir"

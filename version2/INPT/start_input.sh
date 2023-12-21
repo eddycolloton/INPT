@@ -37,7 +37,7 @@ fi
 
 if [[ -z "${ArtFile}" ]] ; then
     echo -e "\nNo path to the artwork file found in input csv"
-    source "${script_dir}"/input_functions/findartfile.sh
+    source "${script_dir}"/input_functions/find/findartfile.sh
     FindArtworkFilesPath
     FindArtworkFile
 else
@@ -47,7 +47,7 @@ fi
 
 if [[ -z "${accession}" ]] ; then
     echo "No accession number in input csv"
-    source "${script_dir}"/input_functions/findartfile.sh
+    source "${script_dir}"/input_functions/find/findartfile.sh
     if [[ -z "${ArtFilePath}" ]] ;
     then
         FindArtworkFilesPath
@@ -60,9 +60,8 @@ fi
 
 if [[ -z "${Volume}" ]] ; then
     echo -e "\nNo volume path in input csv"
-    source "${script_dir}"/input_functions/findvolume.sh
+    source "${script_dir}"/input_functions/find/findvolume.sh
     FindVolume
-    logNewLine "The path to the volume manually input: ${Volume}" "$CYAN"
 else
     echo "Volume: $Volume"
     logNewLine "The path to the volume from CSV: ${Volume}" "$WHITE"
@@ -70,7 +69,7 @@ fi
 
 if [[ -z "${SDir}" ]] ; then
     echo -e "\nNo path to Staging Directory found in input csv"
-    source "${script_dir}"/input_functions/findsdir.sh
+    source "${script_dir}"/input_functions/find/findsdir.sh
     if [[ -z "${TBMADroBoPath}" ]]; then
         FindTBMADroBoPath
     fi
@@ -83,7 +82,7 @@ fi
 
 if [[ -z "${techdir}" ]] ; then
     echo -e "\nNo path to the Technical Info and Specs directory found in input csv"
-    source "${script_dir}"/input_functions/findreportdir.sh
+    source "${script_dir}"/input_functions/find/findreportdir.sh
     FindTechDir
 else
     logNewLine "Technical Info and Specs: $techdir" "$CYAN"
@@ -91,7 +90,7 @@ fi
 
 if [[ -z "${reportdir}" ]] ; then
     echo -e "\nNo path to the Condition_Tmt Reports directory found in input csv"
-    source "${script_dir}"/input_functions/findreportdir.sh
+    source "${script_dir}"/input_functions/find/findreportdir.sh
     FindConditionDir
 else
     logNewLine "Condition Report: $reportdir \nSidecar directory: $sidecardir" "$CYAN"

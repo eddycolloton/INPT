@@ -3,9 +3,9 @@
 function SelectTools {
 	#Prompts user to run metadata tools
 	echo -e "\n*************************************************\n
-	If you select "yes," this will be the final prompt and applications will run after this response!\n
-	Otherwise, you will be asked about each tool individually.
-	\n*************************************************\n"
+If you select "yes," this will be the final prompt and applications will run after this response!\n
+Otherwise, you will be asked about each tool individually.
+\n*************************************************\n"
 	sleep 1
 	echo -e "Run metadata tools (tree, siegfried, MediaInfo, Exiftool, framemd5, and qctools) on files copied to $SDir (Choose a number 1-2)"
 	select Meta_option in "yes" "no"
