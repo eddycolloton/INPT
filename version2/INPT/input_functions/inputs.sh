@@ -27,7 +27,6 @@ function InputArtistsName {
     if [[ $name_option = "Yes" ]] ;
         then
             name_again=no
-            echo -e "Moving on..."
     elif [[ $name_option = "No, go back a step" ]] ;
         then 
             unset ArtistFirstName ArtistLastName

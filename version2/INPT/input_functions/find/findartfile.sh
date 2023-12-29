@@ -50,7 +50,6 @@ function MakeArtworkFile {
 		    if [[ $accession_option = "Yes" ]] ;
 		        then
 		            accession_again=no
-		            echo -e "Moving on..."
 		    elif [[ $accession_option = "No, go back a step" ]] ;
 		        then 
 		            unset accession
@@ -75,7 +74,6 @@ function MakeArtworkFile {
 		    if [[ $title_option = "Yes" ]] ;
 		        then
 		            title_again=no
-		            echo -e "Moving on..."
 		    elif [[ $title_option = "No, go back a step" ]] ;
 		        then 
 		            unset title
@@ -122,7 +120,6 @@ if [ "$title_dir_results" \> 1 ]; then
 	    if [[ $accession_option = "Yes" ]] ;
 	        then
 	            accession_again=no
-	            echo -e "Moving on..."
 	    elif [[ $accession_option = "No, go back a step" ]] ;
 	        then 
 	            unset accession
@@ -152,7 +149,6 @@ if [ "$title_dir_results" \> 1 ]; then
 			    if [[ $title_option = "Yes" ]] ;
 			        then
 			            title_again=no
-			            echo -e "Moving on..."
 			    elif [[ $title_option = "No, go back a step" ]] ;
 			        then 
 			            unset title
@@ -221,7 +217,6 @@ if [[ -z "${accession}" ]]; then
 			    if [[ $accession_option = "Yes" ]] ;
 			        then
 			            accession_again=no
-			            echo -e "Moving on..."
 			    elif [[ $accession_option = "No, go back a step" ]] ;
 			        then 
 			            unset accession
@@ -256,7 +251,6 @@ if [[ -z "${accession}" ]]; then
 				    if [[ $accession_option = "Yes" ]] ;
 				        then
 				            accession_again=no
-				            echo -e "Moving on..."
 				    elif [[ $accession_option = "No, go back a step" ]] ;
 				        then 
 				            unset accession
@@ -289,7 +283,6 @@ if [[ -z "${accession}" ]]; then
 				    if [[ $accession_option = "Yes" ]] ;
 				        then
 				            accession_again=no
-				            echo -e "Moving on..."
 				    elif [[ $accession_option = "No, go back a step" ]] ;
 				        then 
 				            unset accession
@@ -322,7 +315,6 @@ if [[ -z "${accession}" ]]; then
 				    if [[ $accession_option = "Yes" ]] ;
 				        then
 				            accession_again=no
-				            echo -e "Moving on..."
 				    elif [[ $accession_option = "No, go back a step" ]] ;
 				        then 
 				            unset accession
@@ -348,7 +340,6 @@ if [[ -z "${accession}" ]]; then
 				    if [[ $accession_option = "Yes" ]] ;
 				        then
 				            accession_again=no
-				            echo -e "Moving on..."
 				    elif [[ $accession_option = "No, go back a step" ]] ;
 				        then 
 				            unset accession
@@ -393,7 +384,6 @@ if [[ -z "${FindArtFile}" ]]; then
 			    if [[ $artfile_option = "Yes" ]] ;
 		        then
 		            artfile_again=no
-		            echo -e "Moving on..."
 		    	elif [[ $artfile_option = "No, go back a step" ]] ;
 		        then 
 		            unset ArtFile
