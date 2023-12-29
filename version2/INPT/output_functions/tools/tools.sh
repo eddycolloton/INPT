@@ -170,7 +170,7 @@ function RunExif {
 	#print timestamp and command to log
 	echo -e "******** Exiftool started ******** \n Exiftool will be run on files in $SDir \n" &&
 	#prints statement to terminal
-	find "$SDir" -type f \( -iname \*.jpg -o -iname \*.jpeg -o -iname \*.png -o -iname \*.tiff \) -print0 |  
+	find "$SDir" -type f \( -iname \*.jpg -o -iname \*.jpeg -o -iname \*.png -o -iname \*.tiff -o -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg -o -iname \*.wav -o -iname \*.mp3 \) -print0 |  
 	while IFS= read -r -d '' i;
 		do  
 			exiftool "$i" > "${i%.*}_exif".txt
