@@ -100,8 +100,6 @@ function CleanupLogDir {
     # Delete excess log files, keeping the newest 5
     ls -1t "$log_dir" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}\.[0-9]{2}\.[0-9]{2}_INPT\.log$' | tail -n +"$((5+1))" | xargs -I {} rm "$log_dir/{}"
     echo "Cleanup complete: Deleted $((num_logs - 5)) old log files."
-  else
-    echo "No cleanup needed: Found $num_logs log files."
   fi
 }
 

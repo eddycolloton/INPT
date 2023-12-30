@@ -101,7 +101,7 @@ fi
 
 LogVars
 MakeVarfile
-logNewLine "The varfile has been created using the file name $varfilePath" "$MAGENTA"
+logNewLine "The varfile has been created using the file name $varfilePath" "$YELLOW"
 
 source "${script_dir}"/start_output.sh
 

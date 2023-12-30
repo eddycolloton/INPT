@@ -39,10 +39,10 @@ if [[ -z "$accession_dir" ]]; then
 			esac	
 		done;
 		unset IFS
-		logNewLine "Path to the staging directory: $reportdir" "$MAGENTA"
+		logNewLine "Path to the Condition_Tmt Reports directory: $reportdir" "$Bright_Magenta"
 		logNewLine "Metadata output will be written to the appendix.txt file in $reportdir" "$MAGENTA"
 	else 
-		logNewLine "Path to the staging directory: $reportdir" "$MAGENTA"
+		logNewLine "Path to the Condition_Tmt Reports directory: $reportdir" "$Bright_Magenta"
 		logNewLine "Metadata output will be written to the appendix.txt file in $reportdir" "$MAGENTA"
 	#States the location of the report dir if it was found in the inital find command (before the if statement)
 	fi
@@ -83,10 +83,10 @@ else
 			esac	
 		done;
 		unset IFS
-		logNewLine "Path to the staging directory: $reportdir" "$MAGENTA"
+		logNewLine "Path to the Condition_Tmt Reports directory: $reportdir" "$Bright_Magenta"
 		logNewLine "Metadata output will be written to the appendix.txt file in $reportdir" "$MAGENTA"
 	else 
-		logNewLine "Path to the staging directory: $reportdir" "$MAGENTA"
+		logNewLine "Path to the Condition_Tmt Reports directory: $reportdir" "$Bright_Magenta"
 		logNewLine "Metadata output will be written to the appendix.txt file in $reportdir" "$MAGENTA"
 	#States the location of the report dir if it was found in the inital find command (before the if statement)
 	fi
@@ -136,7 +136,7 @@ if [[ -z "$accession_dir" ]]; then
 			esac	
 		done;
 		unset IFS
-		logNewLine "Path to the staging directory: $techdir" "$MAGENTA"
+		logNewLine "Path to the Technical Info_Specs directory: $techdir" "$Bright_Magenta"
 		logNewLine "Metadata output will be written to sidecar files in $sidecardir" "$MAGENTA"
 	else 
 		sidecardir=$(find "${techdir%/}" -maxdepth 2 -type d -iname "*Sidecars*")
@@ -145,10 +145,10 @@ if [[ -z "$accession_dir" ]]; then
 		#In other words, if the find command fails to find a directory called "sidecars" in the techdir, then
 			mkdir -pv "${techdir%/}/Sidecars" &&
 			sidecardir="${techdir%/}/Sidecars" 
-			logNewLine "Path to the staging directory: $techdir" "$MAGENTA"
+			logNewLine "Path to the Technical Info_Specs directory: $techdir" "$Bright_Magenta"
 			logNewLine "Metadata output will be written to sidecar files in $sidecardir" "$MAGENTA"
 		else
-			logNewLine "Path to the staging directory: $techdir" "$MAGENTA"
+			logNewLine "Path to the Technical Info_Specs directory: $techdir" "$Bright_Magenta"
 			logNewLine "Metadata output will be written to sidecar files in $sidecardir" "$MAGENTA"
 		fi
 	#States the location of the tech dir if it was found in the inital find command (before the if statement)
@@ -194,7 +194,7 @@ else
 			esac	
 		done;
 		unset IFS
-		logNewLine "Path to the staging directory: $techdir" "$MAGENTA"
+		logNewLine "Path to the Technical Info_Specs directory: $techdir" "$Bright_Magenta"
 		logNewLine "Metadata output will be written to sidecar files in $sidecardir" "$MAGENTA"
 	else 
 		sidecardir=$(find "${techdir%/}" -maxdepth 2 -type d -iname "*Sidecars*")
@@ -203,10 +203,10 @@ else
 		#In other words, if the find command fails to find a directory called "sidecars" in the techdir, then
 			mkdir -pv "${techdir%/}/Sidecars" &&
 			sidecardir="${techdir%/}/Sidecars" 
-			logNewLine "Path to the staging directory: $techdir" "$MAGENTA"
+			logNewLine "Path to the Technical Info_Specs directory: $techdir" "$Bright_Magenta"
 			logNewLine "Metadata output will be written to sidecar files in $sidecardir" "$MAGENTA"
 		else
-			logNewLine "Path to the staging directory: $techdir" "$MAGENTA"
+			logNewLine "Path to the Technical Info_Specs directory: $techdir" "$Bright_Magenta"
 			logNewLine "Metadata output will be written to sidecar files in $sidecardir" "$MAGENTA"
 		fi
 	#States the location of the tech dir if it was found in the inital find command (before the if statement)

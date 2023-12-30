@@ -6,7 +6,7 @@ function RunTree {
 	while [[ "$tree_again" = yes ]]
 	do
 	SECONDS=0  
-	logNewLine "tree started! tree running on $Volume" "$YELLOW"
+	logNewLine "tree started! tree running on $Volume" "$Bright_Yellow"
 	tree "$Volume" > "$SDir"/"$accession"_tree_output.txt
 	echo -e "\n***** tree output ***** \n" >> "${reportdir}/${accession}_appendix.txt"
 	cat "${SDir}/${accession}_tree_output.txt" >> "${reportdir}/${accession}_appendix.txt"  
@@ -44,7 +44,7 @@ function RunSF {
 	while [[ "$sf_again" = yes ]]
 	do
 	SECONDS=0  
-	logNewLine "sf started! siegfried will be run on $SDir" "$YELLOW"
+	logNewLine "sf started! siegfried will be run on $SDir" "$Bright_Yellow"
 	#prints statement to terminal
 	find "$SDir" -type f \( -iname "*.*" ! -iname "*.md5" ! -iname "*_output.txt" ! -iname "*.DS_Store" ! -iname "*_manifest.txt" ! -iname "*_sf.txt" ! -iname "*_exif.txt" ! -iname "*_mediainfo.txt" ! -iname "*_qctools.mkv" ! -iname "*_framemd5.txt" ! -iname "*.log" \) -print0 | 
 	while IFS= read -r -d '' i; do
@@ -93,7 +93,7 @@ function RunMI {
 	while [[ "$mi_again" = yes ]]
 	do
 	SECONDS=0  
-	logNewLine "MediaInfo started! MediaInfo will be run on audio and video files in $SDir" "$YELLOW"
+	logNewLine "MediaInfo started! MediaInfo will be run on audio and video files in $SDir" "$Bright_Yellow"
 	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg -o -iname \*.wav -o -iname \*.mp3 \) -print0 |  
 	while IFS= read -r -d '' i;
 		do  
@@ -140,7 +140,7 @@ function RunExif {
 	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
 	do
 	SECONDS=0  
-	logNewLine "Exiftool started! Exiftool will be run on files in $SDir" "$YELLOW"
+	logNewLine "Exiftool started! Exiftool will be run on files in $SDir" "$Bright_Yellow"
 	find "$SDir" -type f \( -iname \*.jpg -o -iname \*.jpeg -o -iname \*.png -o -iname \*.tiff -o -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg -o -iname \*.wav -o -iname \*.mp3 \) -print0 |  
 	while IFS= read -r -d '' i;
 		do  
@@ -188,7 +188,7 @@ function Make_Framemd5 {
 	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
 	do
 	SECONDS=0 
-	logNewLine "framemd5 started! framemd5 will be run on video files in $SDir" "$YELLOW" 
+	logNewLine "framemd5 started! framemd5 will be run on video files in $SDir" "$Bright_Yellow" 
 	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.avi -o -iname \*.VOB -o -iname \*.mpg -o -iname \*.wav -o -iname \*.flac -o -iname \*.mp3 -o -iname \*.aac -o -iname \*.wma -o -iname \*.m4a \) -print0 |  
 	while IFS= read -r -d '' i;
 		do   
@@ -234,7 +234,7 @@ function Make_QCT {
 	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
 	do
 	SECONDS=0  
-	logNewLine "QCTools started! QCTools run on video files in $SDir" "$YELLOW"
+	logNewLine "QCTools started! QCTools run on video files in $SDir" "$Bright_Yellow"
 	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg \) -print0 |  
 	while IFS= read -r -d '' i;
 		do qcli -i "$i"
