@@ -13,7 +13,7 @@ function FindVolume {
 	logNewLine "The path to the volume manually input: ${Volume}" "$CYAN"
 	volume_again=yes
     while [[ "$volume_again" = yes ]] ; do
-		echo -e "Is the volume path correct?"
+		echo -e "\nIs the volume path correct?"
     	IFS=$'\n'; select volume_option in "Yes" "No, go back a step" ; do
     	if [[ $volume_option = "Yes" ]] ;
        		then

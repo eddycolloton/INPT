@@ -37,7 +37,7 @@ else
 fi
 
 if [[ -z "${ArtFile}" ]] ; then
-    echo -e "\nNo path to the artwork file found in input csv"
+    echo -e "\nNo path to the artwork file found in input csv\n"
     source "${script_dir}"/input_functions/find/findartfile.sh
     FindArtworkFilesPath
     FindArtworkFile
@@ -71,7 +71,7 @@ else
 fi
 
 if [[ -z "${SDir}" ]] ; then
-    echo -e "\nNo path to Staging Directory found in input csv"
+    echo -e "\nNo path to Staging Directory found in input csv\n"
     source "${script_dir}"/input_functions/find/findsdir.sh
     if [[ -z "${TBMADroBoPath}" ]]; then
         FindTBMADroBoPath
@@ -84,7 +84,7 @@ else
 fi
 
 if [[ -z "${techdir}" ]] ; then
-    echo -e "\nNo path to the Technical Info and Specs directory found in input csv"
+    echo -e "\nNo path to the Technical Info and Specs directory found in input csv\n"
     source "${script_dir}"/input_functions/find/findreportdir.sh
     FindTechDir
 else
@@ -92,7 +92,7 @@ else
 fi
 
 if [[ -z "${reportdir}" ]] ; then
-    echo -e "\nNo path to the Condition_Tmt Reports directory found in input csv"
+    echo -e "\nNo path to the Condition_Tmt Reports directory found in input csv\n"
     source "${script_dir}"/input_functions/find/findreportdir.sh
     FindConditionDir
 else

@@ -53,7 +53,6 @@ function FindSDir {
 			#Strips a trailing space from the input. 
 			#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
 			#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-			echo -e "\n*************************************************\n\nStaging Driectory is $SDir \n\n*************************************************\n"
 			export SDir="${SDir}"
 			#Confirms that the SDir variable is defined
 			logNewLine "Path to the staging directory manually input: ${SDir}" "$CYAN" 
@@ -66,7 +65,6 @@ function FindSDir {
 		else
 			SDir=$SDir_option
 			#assigns variable to the users selection from the select menu
-			echo -e "\n*************************************************\n\nthe Staging Directory is $SDir \n\n*************************************************\n"
 			export SDir="${SDir}"
 			logNewLine "Path to the staging directory: ${SDir}" "$MAGENTA" 
 			sleep 1
