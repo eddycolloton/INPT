@@ -110,7 +110,7 @@ function UserSelectFiles {
 	#Prompts user to tranfer files to Staging Driectory
 	#The following select loops set vairable to either "1" or "0". This allows the script to store the user's selection without running the function till the end. 
 	#At the end fo the script there are if statements that will run the different functions based on the stored answers from the user  
-	echo -e "Copy all files from the volume to the staging directory?"
+	echo -e "\nCopy all files from the volume to the staging directory?"
 	select Run_Copyit in "yes" "no, only certain directories" "no, specific files" "none"
 	do
 	case $Run_Copyit in
