@@ -13,8 +13,8 @@ function RunTree {
 	cp "${SDir}/${accession}_tree_output.txt" "$sidecardir"
 	if [[ -f "${SDir}/${accession}_tree_output.txt" ]]; then
 		duration=$SECONDS
-		logNewLine "===================> tree complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s"
-		logNewLine "tree output written to "${reportdir}/${accession}_appendix.txt", "$sidecardir/${accession}_tree_output.txt" and "${SDir}/${accession}_tree_output.txt""
+		logNewLine "===================> tree complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$YELLOW"
+		logNewLine "tree output written to "${reportdir}/${accession}_appendix.txt", "$sidecardir/${accession}_tree_output.txt" and "${SDir}/${accession}_tree_output.txt"" "$YELLOW"
 		tree_again=no
 	else
 		logNewLine "tree output not found in ${SDir}" "$Bright_Red"
@@ -32,7 +32,7 @@ function RunTree {
 	fi
 
 	if [[ "$tree_again" = yes ]]; then
-		logNewLine "re-running tree on ${Volume}" "$MAGENTA" 
+		logNewLine "re-running tree on ${Volume}" "$CYAN" 
 	fi
 	
 	done
@@ -60,9 +60,7 @@ function RunSF {
 		echo -e "\n***** siegfried output ***** \n" >> "${reportdir}/${accession}_appendix.txt"
 		cat "$t" >> "${reportdir}/${accession}_appendix.txt"
 	done 
-	if [[ -n $(find "${SDir}" -name "*_sf.txt") ]] ; then 
-		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** siegfried completed ******** \n\n\t\tsf Results:\n\t\tcopied to ${SDir} and \n\t\t${reportdir}/${accession}_appendix.txt" >> "${configLogPath}"  
-		#prints timestamp once the command has exited
+	if [[ -n $(find "${SDir}" -name "*_sf.txt") ]] ; then
 		duration=$SECONDS
 		logNewLine "===================> siegfried complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$YELLOW"
 		logNewLine "siegfried output copied to ${SDir} and ${reportdir}/${accession}_appendix.txt" "$YELLOW"
@@ -83,7 +81,7 @@ function RunSF {
 	fi
 
 	if [[ "$sf_again" = yes ]]; then
-		logNewLine "Re-running siegfried on $SDir" "$MAGENTA"
+		logNewLine "Re-running siegfried on $SDir" "$CYAN"
 	fi
 
 	done
@@ -129,7 +127,7 @@ function RunMI {
 	fi
 
 	if [[ "$mi_again" = yes ]]; then
-		logNewLine "Re-running MediaInfo again" "$MAGENTA"
+		logNewLine "Re-running MediaInfo again" "$CYAN"
 	fi
 
 	done
@@ -177,7 +175,7 @@ function RunExif {
 	fi
 
 	if [[ "$exif_again" = yes ]]; then
-		logNewLine "Re-running Exiftool again" "$MAGENTA"
+		logNewLine "Re-running Exiftool again" "$CYAN"
 	fi
 
 	done
@@ -223,7 +221,7 @@ function Make_Framemd5 {
 	fi
 
 	if [[ "$framemd5_again" = yes ]]; then
-		logNewLine "Running Framemd5 again" "$MAGENTA"
+		logNewLine "Running Framemd5 again" "$CYAN"
 	fi
 
 	done
@@ -268,7 +266,7 @@ function Make_QCT {
 	fi
 
 	if [[ "$qct_again" = yes ]]; then
-		logNewLine "Re-running QCTools again" "$MAGENTA"
+		logNewLine "Re-running QCTools again" "$CYAN"
 	fi
 
 	done

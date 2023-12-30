@@ -19,8 +19,7 @@ Otherwise, you will be asked about each tool individually.
 	done
 
 	if [[ "$Run_meta" -eq "0"  ]]; 
-		then echo -e "\n*************************************************\n
-	Run tree on $Volume (Choose a number 1-2)"
+		then echo -e "\n*************************************************\nRun tree on $Volume (Choose a number 1-2)"
 	select Tree_option in "yes" "no"
 	do
 		case $Tree_option in
@@ -37,8 +36,7 @@ Otherwise, you will be asked about each tool individually.
 
 	if [[ "$Run_meta" -eq "0"  ]]; then
 	#Prompts user to run siegfried file format id
-	echo -e "\n*************************************************\n
-	Run siegfried on $SDir (Choose a number 1-2)"
+	echo -e "\n*************************************************\nRun siegfried on $SDir (Choose a number 1-2)"
 	select SF_option in "yes" "no"
 	do
 		case $SF_option in
@@ -55,8 +53,7 @@ Otherwise, you will be asked about each tool individually.
 
 	if [[ "$Run_meta" -eq "0"  ]]; then
 	#Prompts user to run mediainfo 
-	echo -e "\n*************************************************\n
-	Run MediaInfo on video files in $SDir (Choose a number 1-2)"
+	echo -e "\n*************************************************\nRun MediaInfo on video files in $SDir (Choose a number 1-2)"
 	select MI_option in "yes" "no"
 	do
 		case $MI_option in
@@ -73,8 +70,7 @@ Otherwise, you will be asked about each tool individually.
 
 	if [[ "$Run_meta" -eq "0"  ]]; then
 	#Prompts user to run exiftool
-	echo -e "\n*************************************************\n
-	Run Exiftool on image files in $SDir (Choose a number 1-2)"
+	echo -e "\n*************************************************\nRun Exiftool on image files in $SDir (Choose a number 1-2)"
 	select Exif_option in "yes" "no"
 	do
 		case $Exif_option in
@@ -90,8 +86,7 @@ Otherwise, you will be asked about each tool individually.
 
 	if [[ "$Run_meta" -eq "0" ]]; then
 	#Prompts user to make framemd5 text files for videos
-	echo -e "\n*************************************************\n
-	Create framemd5 text files for each of the video files in $SDir (Choose a number 1-2)"
+	echo -e "\n*************************************************\nCreate framemd5 text files for each of the video files in $SDir (Choose a number 1-2)"
 	select Fmd5_option in "yes" "no"
 	do
 		case $Fmd5_option in
@@ -108,10 +103,8 @@ Otherwise, you will be asked about each tool individually.
 	if [[ "$Run_meta" -eq "0" ]]; then
 	#Prompts user to make QCTools reports for ech video file in the staging directory
 	echo -e "
-	\n*************************************************\n
-	This will be the final prompt and applications will run after this response!\n
-	Create QCTools reports for each of the video files in $SDir (Choose a number 1-2)
-	\n*************************************************\n"
+	\n*************************************************\nThis will be the final prompt and applications will run after this response!\n
+Create QCTools reports for each of the video files in $SDir (Choose a number 1-2)\n*************************************************\n"
 	select QCT_option in "yes" "no"
 	do
 		case $QCT_option in

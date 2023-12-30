@@ -52,7 +52,7 @@ done < "${techdir}/${accession}_list_of_dirs.txt"
 # echo -e "\nThe selected directories are: ${SelectedDirs[@]}"
 DirsList=${SelectedDirs[@]}
 #lists the contents of the array, populated by the text file
-logNewLine "The selected directories are: "${DirsList}"" "$MAGENTA"
+logNewLine "The selected directories are: "${DirsList}"" "$CYAN"
 }
 
 function SelectFiles {
@@ -103,7 +103,7 @@ done < "${techdir}/${accession}_list_of_files.txt"
 #echo -e "\nThe selected files are: ${SelectedFiles[@]}"
 FileList=${SelectedFiles[@]}
 #lists the contents of the array, populated by the text file
-logNewLine "The selected files are: "${FileList}"" "$MAGENTA"
+logNewLine "The selected files are: "${FileList}"" "$CYAN"
 }
 
 function UserSelectFiles {

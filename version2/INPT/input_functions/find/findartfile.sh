@@ -18,20 +18,20 @@ function FindArtworkFilesPath {
 	if [[ -z "${ArtFilePath}" ]]; then
 		if [[ -d /Volumes/hmsg/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/hmsg/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES 
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$Bright_Blue"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
 		elif [[ -d /Volumes/SHARED/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/SHARED/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$Bright_Blue"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
 		elif [[ -d /Volumes/shared/departments/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/shared/departments/CONSERVATION/ARTWORK\ FILES
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$Bright_Blue"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
 		elif [[ -d /Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$Bright_Blue"
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
 		else
 			cowsay -W 30 "Please input the path to the ARTWORK FILES directory from the T:\ drive. Feel free to drag and drop the directory into terminal:"
 			read -e ArtFilePath
-			logNewLine "The path to the Artwork Files is: $ArtFilePath" "$Bright_Blue"
+			logNewLine "The path to the Artwork Files is: $ArtFilePath" "$MAGENTA"
 		fi
 		export ArtFilePath="${ArtFilePath}"
 	fi
@@ -433,14 +433,14 @@ elif [[ $(echo "${FindArtFile}" | wc -l) > 1 ]];
 				if [[ -z "${accession}" ]]; then
 				FindAccessionNumber
 				fi
-				logNewLine "The artwork file is ${ArtFile}" "$Bright_Green"
+				logNewLine "The artwork file is ${ArtFile}" "$MAGENTA"
 				export ArtFile="${ArtFile}"
 			fi
 		done
 else
 	ArtFile="${FindArtFile}"
 	#assigns variable to the results of the find command "find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*""
-	logNewLine "The artwork file is ${ArtFile}" "$Bright_Green"
+	logNewLine "The artwork file is ${ArtFile}" "$MAGENTA"
 	export ArtFile="${ArtFile}"
 	if [[ -z "${accession}" ]]; then
 		FindAccessionNumber
