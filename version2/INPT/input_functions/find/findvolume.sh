@@ -3,7 +3,7 @@
 function FindVolume {
 	#FindVolume=$(find "/Volumes/" -maxdepth 1 -type d -iname "*$ArtistLastName*") 
 	# add other variables as we build v2 out. for example title. Will then need "else" statement in this conditional for multiple results
-	if [[ -z "${FindVolumes}" ]]; then
+	#if [[ -z "${FindVolumes}" ]]; then
 	#Prompts user input for path to hard drive (or other carrier), defines that path as "$Volume"
 	cowsay -p -W 31 "Input the path to the volume - Should begin with '/Volumes/' (use tab complete to help)"
 	read -e VolumeInput
@@ -18,7 +18,6 @@ function FindVolume {
     	if [[ $volume_option = "Yes" ]] ;
        		then
             	volume_again=no
-            	echo -e "Moving on..."
    		elif [[ $volume_option = "No, go back a step" ]] ;
         	then 
             	echo -e "Let's try again"
@@ -32,5 +31,5 @@ function FindVolume {
 		fi
 	done
     export Volume="${Volume}"
-	fi
+	#fi
 }

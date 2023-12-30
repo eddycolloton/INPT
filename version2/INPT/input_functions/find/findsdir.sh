@@ -55,17 +55,20 @@ function FindSDir {
 			#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
 			echo -e "\n*************************************************\n\nStaging Driectory is $SDir \n\n*************************************************\n"
 			export SDir="${SDir}"
-			#Confirms that the SDir variable is defined 
+			#Confirms that the SDir variable is defined
+			logNewLine "Path to the staging directory manually input: ${SDir}" "$CYAN" 
 			sleep 1
 			done
 		elif [[ $SDir_option = "Create Staging Directory" ]]
   		then MakeStagingDirectory
+		logNewLine "Path to the staging directory: ${SDir}" "$MAGENTA" 
 		#Runs MakeStagingDirectory function defined in make_meta.config
 		else
 			SDir=$SDir_option
 			#assigns variable to the users selection from the select menu
 			echo -e "\n*************************************************\n\nthe Staging Directory is $SDir \n\n*************************************************\n"
 			export SDir="${SDir}"
+			logNewLine "Path to the staging directory: ${SDir}" "$MAGENTA" 
 			sleep 1
 		fi
 		break			

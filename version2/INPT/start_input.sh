@@ -9,6 +9,7 @@ figlet INPT
 
 source "${script_dir}"/input_functions/makelog.sh
 MakeLog
+CleanupLogDir
 
 source "${script_dir}"/input_functions/inputs.sh
 if test -f "${parent_dir}"/input_template.csv; then
@@ -54,8 +55,10 @@ if [[ -z "${accession}" ]] ; then
     fi 
     FindAccessionNumber 
     logNewLine "The acession number manually input: ${accession}" "$CYAN"
+elif grep -q "accession" "${logPath}" ; then
+    true
 else
-    logNewLine "The acession number is: ${accession}" "$WHITE"
+    logNewLine "The acession number from CSV: ${accession}" "$WHITE"
 fi
 
 if [[ -z "${Volume}" ]] ; then
@@ -74,7 +77,7 @@ if [[ -z "${SDir}" ]] ; then
         FindTBMADroBoPath
     fi
     FindSDir
-    logNewLine "Path to the staging directory manually input: ${SDir}" "$CYAN"
+    # added logging functions for sdir to input_functions/find/findsdir.sh
 else
     echo "Staging Directory: $SDir"
     logNewLine "Path to the staging directory from CSV: ${SDir}" "$WHITE"
@@ -85,7 +88,7 @@ if [[ -z "${techdir}" ]] ; then
     source "${script_dir}"/input_functions/find/findreportdir.sh
     FindTechDir
 else
-    logNewLine "Technical Info and Specs: $techdir" "$CYAN"
+    logNewLine "Technical Info and Specs: $techdir" "$WHITE"
 fi
 
 if [[ -z "${reportdir}" ]] ; then
@@ -93,11 +96,12 @@ if [[ -z "${reportdir}" ]] ; then
     source "${script_dir}"/input_functions/find/findreportdir.sh
     FindConditionDir
 else
-    logNewLine "Condition Report: $reportdir \nSidecar directory: $sidecardir" "$CYAN"
+    logNewLine "Condition Report: $reportdir \nSidecar directory: $sidecardir" "$WHITE"
 fi
 
 LogVars
 MakeVarfile
+logNewLine "The varfile has been created using the file name $varfilePath" "$MAGENTA"
 
 source "${script_dir}"/start_output.sh
 
