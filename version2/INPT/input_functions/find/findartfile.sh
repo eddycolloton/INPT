@@ -93,7 +93,7 @@ function MakeArtworkFile {
 	ArtFile="${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/
 	#assigns the ArtFile variable to the artwork file just created 
 	#I've removed the path to the HMSG shared drive below for security reasons
-	logNewLine "The artwork file has been created: ${ArtFile}" "$Bright_Green"
+	logNewLine "The artwork file has been created: ${ArtFile}" "$YELLOW"
 	export ArtFile="${ArtFile}"
 } 
 
@@ -269,7 +269,7 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9].[0-9][0-9]\).*$/\1/' `
 		# sed command cuts everything before and after ##.## in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236 
 		if [[  $(echo -n "$accession" | wc -c) =~ 5 ]]; then
-			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$Bright_Green"
+			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$MAGENTA"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
@@ -301,7 +301,7 @@ if [[ -z "${accession}" ]]; then
 		accession=`echo $titledir | sed 's/^.*\([0-9][0-9][0-9][0-9].[0-9][0-9][0-9]\).*$/\1/' ` 
 		# same as before, sed command cuts everything before and after ####.### in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
 		if [[  $(echo -n "$accession" | wc -c) =~ 8 ]]; then
-			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$Bright_Green"
+			logNewLine "The accession number is ${accession} found in the artwork folder ${titledir}" "$MAGENTA"
 			export accession="${accession}"
 		else
 			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
@@ -407,7 +407,7 @@ if [[ -z "${FindArtFile}" ]]; then
 		else
 			ArtFile=$artdir
 			#assigns variable to the users selection from the select menu
-			logNewLine "The artwork file is ${ArtFile}" "$Bright_Green"
+			logNewLine "The artwork file is ${ArtFile}" "$MAGENTA"
 			export ArtFile="${ArtFile}"
 			if [[ -z "${accession}" ]];
 			then

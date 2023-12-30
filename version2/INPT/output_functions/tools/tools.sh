@@ -13,8 +13,8 @@ function RunTree {
 	cp "${SDir}/${accession}_tree_output.txt" "$sidecardir"
 	if [[ -f "${SDir}/${accession}_tree_output.txt" ]]; then
 		duration=$SECONDS
-		logNewLine "===================> tree complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$YELLOW"
-		logNewLine "tree output written to "${reportdir}/${accession}_appendix.txt", "$sidecardir/${accession}_tree_output.txt" and "${SDir}/${accession}_tree_output.txt"" "$YELLOW"
+		logNewLine "===================> tree complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
+		logNewLine "tree output written to ${reportdir}/${accession}_appendix.txt, $sidecardir/${accession}_tree_output.txt and ${SDir}/${accession}_tree_output.txt" "$YELLOW"
 		tree_again=no
 	else
 		logNewLine "tree output not found in ${SDir}" "$Bright_Red"
@@ -62,7 +62,7 @@ function RunSF {
 	done 
 	if [[ -n $(find "${SDir}" -name "*_sf.txt") ]] ; then
 		duration=$SECONDS
-		logNewLine "===================> siegfried complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$YELLOW"
+		logNewLine "===================> siegfried complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "siegfried output copied to ${SDir} and ${reportdir}/${accession}_appendix.txt" "$YELLOW"
 		sf_again=no
 	else 
@@ -108,7 +108,7 @@ function RunMI {
 	done
 	if [[ -n $(find "${SDir}" -name "*_mediainfo.txt") ]]; then 
 		duration=$SECONDS
-		logNewLine "===================> MediaInfo completed! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$YELLOW"
+		logNewLine "===================> MediaInfo completed! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "MediaInfo output copied to ${SDir} and ${reportdir}/${accession}_appendix.txt" "$YELLOW"
 		mi_again=no
 	else 
@@ -145,7 +145,7 @@ function RunExif {
 	while IFS= read -r -d '' i;
 		do  
 			exiftool "$i" > "${i%.*}_exif".txt
-			logNewLine "exiftool run on ${i}"
+			logNewLine "exiftool run on ${i}" "$YELLOW"
 		done  
 	find "$SDir" -type f \( -iname "*_exif.txt" \) -print0 |
 	while IFS= read -r -d '' t; 
@@ -156,7 +156,7 @@ function RunExif {
 	done
 	if [[ -n $(find "${SDir}" -name "*_exif.txt") ]]; then
 		duration=$SECONDS
-		logNewLine "===================> Exiftool complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$YELLOW"
+		logNewLine "===================> Exiftool complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "Exiftool output copied to ${SDir} and ${reportdir}/${accession}_appendix.txt" "$YELLOW"
 		exif_again=no
 	else
@@ -201,7 +201,7 @@ function Make_Framemd5 {
 	done
 	if [[ -n $(find "${SDir}" -name "*_framemd5.txt") ]]; then
 		duration=$SECONDS
-		logNewLine "===================> framemd5 complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$YELLOW"
+		logNewLine "===================> framemd5 complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "framemd5 output copied to ${SDir}" "$YELLOW"
 		#prints statement to terminal
 		framemd5_again=no
@@ -246,7 +246,7 @@ function Make_QCT {
 	done
 	if [[ -n $(find "${SDir}" -name "*.qctools*") ]]; then
 		duration=$SECONDS
-		logNewLine "===================> QCTools complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$YELLOW"
+		logNewLine "===================> QCTools complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "QCTools output copied to ${SDir}" "$YELLOW"
 		#prints statement to terminal
 		qct_again=no
