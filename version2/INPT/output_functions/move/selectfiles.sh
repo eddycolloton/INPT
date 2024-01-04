@@ -75,7 +75,8 @@ menu() {
     [[ "$msg" ]] && echo "$msg" ; :
 }
  
-prompt="Check an option (again to uncheck, ENTER when done): "
+prompt="Check an option (again to uncheck, ENTER when done): 
+"
 while menu && read -rp "$prompt" num && [[ "$num" ]]; do
     [[ "$num" != *[![:digit:]]* ]] &&
     (( num > 0 && num <= ${#options[@]} )) ||
