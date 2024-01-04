@@ -23,7 +23,8 @@ menu() {
     [[ "$msg" ]] && echo "$msg" ; :
 }
  
-prompt="Check an option (again to uncheck, ENTER when done): "
+prompt="Check an option (again to uncheck, ENTER when done): 
+"
 while menu && read -rp "$prompt" num && [[ "$num" ]]; do
     [[ "$num" != *[![:digit:]]* ]] &&
     (( num > 0 && num <= ${#options[@]} )) ||
@@ -52,7 +53,7 @@ done < "${techdir}/${accession}_list_of_dirs.txt"
 # echo -e "\nThe selected directories are: ${SelectedDirs[@]}"
 DirsList=${SelectedDirs[@]}
 #lists the contents of the array, populated by the text file
-logNewLine "The selected directories are: "${DirsList}"" "$CYAN"
+logNewLine "The selected directories are: ${DirsList}" "$CYAN"
 }
 
 function SelectFiles {
@@ -103,7 +104,7 @@ done < "${techdir}/${accession}_list_of_files.txt"
 #echo -e "\nThe selected files are: ${SelectedFiles[@]}"
 FileList=${SelectedFiles[@]}
 #lists the contents of the array, populated by the text file
-logNewLine "The selected files are: "${FileList}"" "$CYAN"
+logNewLine "The selected files are: ${FileList}" "$CYAN"
 }
 
 function UserSelectFiles {

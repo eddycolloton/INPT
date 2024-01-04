@@ -31,7 +31,7 @@ function FindArtworkFilesPath {
 		else
 			cowsay -W 30 "Please input the path to the ARTWORK FILES directory from the T:\ drive. Feel free to drag and drop the directory into terminal:"
 			read -e ArtFilePath
-			logNewLine "The path to the Artwork Files is: $ArtFilePath" "$MAGENTA"
+			logNewLine "The path to the Artwork Files is: $ArtFilePath" "$Bright_Magenta"
 		fi
 		export ArtFilePath="${ArtFilePath}"
 	fi
@@ -407,7 +407,7 @@ if [[ -z "${FindArtFile}" ]]; then
 		else
 			ArtFile=$artdir
 			#assigns variable to the users selection from the select menu
-			logNewLine "The artwork file is ${ArtFile}" "$MAGENTA"
+			logNewLine "The artwork file is ${ArtFile}" "$Bright_Magenta"
 			export ArtFile="${ArtFile}"
 			if [[ -z "${accession}" ]];
 			then
@@ -433,14 +433,14 @@ elif [[ $(echo "${FindArtFile}" | wc -l) > 1 ]];
 				if [[ -z "${accession}" ]]; then
 				FindAccessionNumber
 				fi
-				logNewLine "The artwork file is ${ArtFile}" "$MAGENTA"
+				logNewLine "The artwork file is ${ArtFile}" "$Bright_Magenta"
 				export ArtFile="${ArtFile}"
 			fi
 		done
 else
 	ArtFile="${FindArtFile}"
 	#assigns variable to the results of the find command "find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*""
-	logNewLine "The artwork file is ${ArtFile}" "$MAGENTA"
+	logNewLine "The artwork file is ${ArtFile}" "$Bright_Magenta"
 	export ArtFile="${ArtFile}"
 	if [[ -z "${accession}" ]]; then
 		FindAccessionNumber

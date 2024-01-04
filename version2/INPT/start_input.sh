@@ -66,7 +66,6 @@ if [[ -z "${Volume}" ]] ; then
     source "${script_dir}"/input_functions/find/findvolume.sh
     FindVolume
 else
-    echo "Volume: $Volume"
     logNewLine "The path to the volume from CSV: ${Volume}" "$WHITE"
 fi
 
@@ -79,7 +78,6 @@ if [[ -z "${SDir}" ]] ; then
     FindSDir
     # added logging functions for sdir to input_functions/find/findsdir.sh
 else
-    echo "Staging Directory: $SDir"
     logNewLine "Path to the staging directory from CSV: ${SDir}" "$WHITE"
 fi
 

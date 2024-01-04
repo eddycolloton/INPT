@@ -14,7 +14,7 @@ function RunTree {
 	if [[ -f "${SDir}/${accession}_tree_output.txt" ]]; then
 		duration=$SECONDS
 		logNewLine "===================> tree complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
-		logNewLine "tree output written to ${reportdir}/${accession}_appendix.txt, $sidecardir/${accession}_tree_output.txt and ${SDir}/${accession}_tree_output.txt" "$YELLOW"
+		logNewLine "tree output written to ${accession}_appendix.txt, and saved as sidecar file ${accession}_tree_output.txt." "$YELLOW"
 		tree_again=no
 	else
 		logNewLine "tree output not found in ${SDir}" "$Bright_Red"
@@ -49,7 +49,7 @@ function RunSF {
 	find "$SDir" -type f \( -iname "*.*" ! -iname "*.md5" ! -iname "*_output.txt" ! -iname "*.DS_Store" ! -iname "*_manifest.txt" ! -iname "*_sf.txt" ! -iname "*_exif.txt" ! -iname "*_mediainfo.txt" ! -iname "*_qctools.mkv" ! -iname "*_framemd5.txt" ! -iname "*.log" \) -print0 | 
 	while IFS= read -r -d '' i; do
 		sf "$i" > "${i%.*}_sf."txt 
-		logNewLine "sf run on ${i}" "$YELLOW"
+		logNewLine "sf run on $(basename ${i})" "$YELLOW"
 	#runs sf on all files in the staging directory except files that were made earlier in this workflow (md5 manifest, disktype, tree, and DS_Stores) 
 	#The "for" loop was not working with this command. I found the IFS solution online, but honestly don't totally understand how it works.
 	done   
@@ -63,7 +63,7 @@ function RunSF {
 	if [[ -n $(find "${SDir}" -name "*_sf.txt") ]] ; then
 		duration=$SECONDS
 		logNewLine "===================> siegfried complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
-		logNewLine "siegfried output copied to ${SDir} and ${reportdir}/${accession}_appendix.txt" "$YELLOW"
+		logNewLine "siegfried output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
 		sf_again=no
 	else 
 		logNewLine "No siegfried files found in $SDir" "$Bright_Red"
@@ -98,7 +98,7 @@ function RunMI {
 	while IFS= read -r -d '' i;
 		do  
 			mediainfo -f "$i" > "${i%.*}_mediainfo".txt
-			logNewLine "mediainfo run on ${i}" "$YELLOW"
+			logNewLine "mediainfo run on $(basename ${i})" "$YELLOW"
 	done  
 	find "$SDir" -type f \( -iname "*_mediainfo.txt" \) -print0 |
 	while IFS= read -r -d '' t; 
@@ -109,7 +109,7 @@ function RunMI {
 	if [[ -n $(find "${SDir}" -name "*_mediainfo.txt") ]]; then 
 		duration=$SECONDS
 		logNewLine "===================> MediaInfo completed! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
-		logNewLine "MediaInfo output copied to ${SDir} and ${reportdir}/${accession}_appendix.txt" "$YELLOW"
+		logNewLine "MediaInfo output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
 		mi_again=no
 	else 
 		logeNewLine "No MediaInfo files found in $SDir" "$Bright_Red"
@@ -145,7 +145,7 @@ function RunExif {
 	while IFS= read -r -d '' i;
 		do  
 			exiftool "$i" > "${i%.*}_exif".txt
-			logNewLine "exiftool run on ${i}" "$YELLOW"
+			logNewLine "exiftool run on $(basename ${i})" "$YELLOW"
 		done  
 	find "$SDir" -type f \( -iname "*_exif.txt" \) -print0 |
 	while IFS= read -r -d '' t; 
@@ -157,7 +157,7 @@ function RunExif {
 	if [[ -n $(find "${SDir}" -name "*_exif.txt") ]]; then
 		duration=$SECONDS
 		logNewLine "===================> Exiftool complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
-		logNewLine "Exiftool output copied to ${SDir} and ${reportdir}/${accession}_appendix.txt" "$YELLOW"
+		logNewLine "Exiftool output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
 		exif_again=no
 	else
 		logeNewLine "No exiftool files found in $SDir" "$Bright_Red"
@@ -192,8 +192,8 @@ function Make_Framemd5 {
 	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.avi -o -iname \*.VOB -o -iname \*.mpg -o -iname \*.wav -o -iname \*.flac -o -iname \*.mp3 -o -iname \*.aac -o -iname \*.wma -o -iname \*.m4a \) -print0 |  
 	while IFS= read -r -d '' i;
 		do   
+			logNewLine "framemd5 running on $(basename ${i})" "$YELLOW" 
 			ffmpeg -nostdin -i "$i" -f framemd5 -an  "${i%.*}_framemd5".txt 
-			logNewLine "framemd5 run on ${i}" "$YELLOW" 
 	done 
 	find "$SDir" -type f \( -iname "*_framemd5.txt" \) -print0 |
 	while IFS= read -r -d '' t; 
@@ -202,8 +202,7 @@ function Make_Framemd5 {
 	if [[ -n $(find "${SDir}" -name "*_framemd5.txt") ]]; then
 		duration=$SECONDS
 		logNewLine "===================> framemd5 complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
-		logNewLine "framemd5 output copied to ${SDir}" "$YELLOW"
-		#prints statement to terminal
+		logNewLine "framemd5 output copied to $(basename ${SDir})" "$YELLOW"
 		framemd5_again=no
 	else
 		logNewLine "No framemd5 files found in $SDir" "$Bright_Red"
@@ -238,7 +237,7 @@ function Make_QCT {
 	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg \) -print0 |  
 	while IFS= read -r -d '' i;
 		do qcli -i "$i"
-		logNewLine "qctools run on ${i}" "$YELLOW"
+		logNewLine "qctools run on $(basename ${i})" "$YELLOW"
 	done   
 	find "$SDir" -type f \( -iname "*.qctools.xml.gz" -o -iname "*.qctools.mkv" \) -print0 |
 	while IFS= read -r -d '' t; 
@@ -247,7 +246,7 @@ function Make_QCT {
 	if [[ -n $(find "${SDir}" -name "*.qctools*") ]]; then
 		duration=$SECONDS
 		logNewLine "===================> QCTools complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
-		logNewLine "QCTools output copied to ${SDir}" "$YELLOW"
+		logNewLine "QCTools output copied to $(basename $SDir)" "$YELLOW"
 		#prints statement to terminal
 		qct_again=no
 	else
