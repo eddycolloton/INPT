@@ -15,13 +15,18 @@ function findVarfile {
 
 	sourcefile=$(find "${ArtFile%/}" -type f \( -iname "*.varfile" \))
 	#Searches user input for a file with a .varfile extension
-	echo -e "\nthe varfile is "${sourcefile}"\n\n" 
-	sleep 1
-	source "${sourcefile}"
-	echo -e "the artist's first name is "${ArtistFirstName}"\n"
-	echo -e "the artist last name is "${ArtistLastName}"\n"
-	sleep 1
-	#These echo statements are in here (temporarily?) to confirm that sourcing the varfile has successfully re-assigned the variables $ArtistFirstName and $ArtistLastName
+	if [[ -z $sourcefile ]]; then
+		echo -e "No varfile found!"
+	else
+		echo -e "\nthe varfile is "${sourcefile}"\n\n" 
+		sleep 1
+		source "${sourcefile}"
+		echo -e "the artist's first name is "${ArtistFirstName}"\n"
+		echo -e "the artist last name is "${ArtistLastName}"\n"
+		sleep 1
+		#These echo statements are in here (temporarily?) to confirm that sourcing the varfile has successfully re-assigned the variables $ArtistFirstName and $ArtistLastName
+	fi
+
 	set +a
 }
 
