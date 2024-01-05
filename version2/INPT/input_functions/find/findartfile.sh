@@ -112,7 +112,7 @@ if [ "$title_dir_results" \> 1 ]; then
 	echo -e "\nCannot find accession number in Artwork File directories"
 	accession_again=yes
 	while [[ "$accession_again" = yes ]] ; do
-		echo "\n*************************************************\nInput accession number" && read accession
+		echo -e "\n*************************************************\nInput accession number" && read accession
 		#prompts user for accession number and reads input
 		logNewLine "The accession number manually input: ${accession}" "$CYAN"
 		echo -e "\nIs the accession number correct?"
@@ -141,7 +141,7 @@ if [ "$title_dir_results" \> 1 ]; then
 		while [[ -z "$title" ]] ; do
 			title_again=yes
 	    	while [[ "$title_again" = yes ]] ; do
-				echo "\n*************************************************\nInput the artwork's title" && read title
+				echo -e "\n*************************************************\nInput the artwork's title" && read title
 				#prompts user for artwork title and reads input
 				logNewLine "The title manually input: ${title}" "$CYAN"
 				echo -e "\nIs the title correct?"
