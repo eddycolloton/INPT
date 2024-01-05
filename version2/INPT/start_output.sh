@@ -14,7 +14,11 @@ if [[ -z "${varfilePath}" ]] ; then
 	MakeLog
 	source "${script_dir}"/output_functions/findvarfile.sh
 	findVarfile
-	logNewLine -e "varfile found! Artwork File is here: ${ArtFile}\n Staging directory is here: ${SDir}" "$MAGENTA"
+	if [[ -z "${sourcefile}" ]] ; then
+		echo -e "No varfile found!"
+	else
+		logNewLine -e "varfile found! Artwork File is here: ${ArtFile}\n Staging directory is here: ${SDir}" "$MAGENTA"
+	fi
 	if [[ -z "${techdir}" ]] ; then
     	source "${script_dir}"/input_functions/find/findreportdir.sh
     	FindTechDir
@@ -24,34 +28,90 @@ if [[ -z "${varfilePath}" ]] ; then
 	searchArtFile
 fi
 
-if [[ -z $(find "${techdir}" -iname "*_manifest.md5") ]]; then
-	source "${script_dir}"/output_functions/move/selectfiles.sh
-	UserSelectFiles
+source "${script_dir}"/input_functions/inputs.sh
+if test -f "${parent_dir}"/output_template.csv; then
+# Read the CSV file
+    while IFS=, read -r key value || [ -n "$key" ]
+    do
+        # Replace variable names with descriptions
+        case $key in
+            "Move all files to staging directory") key="Run_Copyit" ;;
+			"Select files to move to staging directory") key="Run_UserSelectFiles" ;;
+			"Run all tools") key="Run_meta" ;;
+            "Run tree on volume") key="RunTree" ;;
+            "Run siegfried on files in staging directory") key="RunSF" ;;
+            "Run MediaInfo on video files in staging directory") key="RunMI" ;;
+            "Run Exiftool on media files in staging directory") key="RunExif" ;;
+            "Create framdemd5 output for video files in staging directory") key="Make_Framemd5" ;;
+            "Create QCTools reports for video files in staging directory") key="Make_QCT" ;;
+        esac
+        # Remove quotes and special characters from the key and value
+        key=$(remove_special_chars "$key" | tr -d '"')
+        value=$(remove_special_chars "$value" | tr -d '"')
+        # Assign the value to a variable named after the key
+        declare "$key=$value"
+        # Print debug information
+        # echo "Key: $key, Value: $value"
+    done < "${parent_dir}"/output_template.csv
+    logNewLine "input csv found at "${parent_dir}"/output_template.csv" "$CYAN"
 else
-	cowsay "Checksum manifest found in Artwork File! Checksums from the following files were found in ${techdir}:"
-	sleep 1
-	mainfest_search=$(find "${techdir}" -type f -name "*_manifest.md5")
-	# Use a while loop to read each line from the find command output
-	echo "${mainfest_search}" | while read -r manifest; do
-	# Read from the current file and process its content
-		while IFS='  ' read -r md5 filename; do
-		# Print the result for each line
-			echo "$filename"
-		done < "$manifest"
-	done
-	echo -e "\n"
-	unset IFS
-	sleep 1
-	source "${script_dir}"/output_functions/move/selectfiles.sh
-	UserSelectFiles
+    logNewLine "No input csv found" "$RED"
 fi
 
-source "${script_dir}"/output_functions/tools/selecttools.sh
-SelectTools
-source "${script_dir}"/output_functions/move/runmovefiles.sh
-RunMoveFiles
-source "${script_dir}"/output_functions/tools/runtools.sh
-RunTools
+if [[ $Run_Copyit = "0" ]] ; then
+	:
+elif [[ $Run_Copyit = "1" ]] ; then
+	:
+else
+	if [[ -z $(find "${techdir}" -iname "*_manifest.md5") ]]; then
+		if [[ -z $Run_UserSelectFiles ]] ; then
+			source "${script_dir}"/output_functions/move/selectfiles.sh
+			UserSelectFiles
+		elif [[ $Run_UserSelectFiles = "1" ]] ; then
+			UserSelectFiles
+		elif [[ $Run_UserSelectFiles = "0" ]] ; then
+			Run_Copyit=0 && Run_MultiCopy=0
+		fi
+	else
+		cowsay "Checksum manifest found in Artwork File! Checksums from the following files were found in ${techdir}:"
+		sleep 1
+		mainfest_search=$(find "${techdir}" -type f -name "*_manifest.md5")
+		# Use a while loop to read each line from the find command output
+		echo "${mainfest_search}" | while read -r manifest; do
+		# Read from the current file and process its content
+			while IFS='  ' read -r md5 filename; do
+			# Print the result for each line
+				echo "$filename"
+			done < "$manifest"
+		done
+		echo -e "\n"
+		unset IFS
+		sleep 1
+		if [[ -z $Run_UserSelectFiles ]] ; then
+			source "${script_dir}"/output_functions/move/selectfiles.sh
+			UserSelectFiles
+		elif [[ $Run_UserSelectFiles = "1" ]] ; then
+			source "${script_dir}"/output_functions/move/selectfiles.sh
+			UserSelectFiles
+		elif [[ $Run_UserSelectFiles = "0" ]] ; then
+			Run_Copyit=0 && Run_MultiCopy=0
+		fi
+	fi
+fi
+
+if [[ -z "${Run_meta}" ]] ; then
+	source "${script_dir}"/output_functions/tools/selecttools.sh
+	SelectTools
+	source "${script_dir}"/output_functions/move/runmovefiles.sh
+	RunMoveFiles
+	source "${script_dir}"/output_functions/tools/runtools.sh
+	RunTools
+else
+	source "${script_dir}"/output_functions/move/runmovefiles.sh
+	RunMoveFiles
+	source "${script_dir}"/output_functions/tools/runtools.sh
+	RunTools
+fi
 
 cp "${configLogPath}" "${techdir}"/"${ArtistLastName}"_"${accession}"_"${logName}"
 
