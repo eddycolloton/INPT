@@ -1,10 +1,12 @@
-ArtistFirstName,First
-ArtistLastName,Last
-title,untitled
-accession,2022.022
-ArtFile,"/Users/eddy/Desktop/artwork_files/Last, First/"
-SDir,/Users/eddy/Desktop/staging_directories/22-22_Last
-Volume,
-techdir,"/Users/eddy/Desktop/artwork_files/Last, First/time-based media/2022.022_untitled/Technical Info_Specs"
-sidecardir,"/Users/eddy/Desktop/artwork_files/Last, First/time-based media/2022.022_untitled/Technical Info_Specs/Sidecars"
-reportdir,"/Users/eddy/Desktop/artwork_files/Last, First/time-based media/2022.022_untitled/Conservation/Condition_Tmt Reports"
+Artist's First Name,First
+Artist's Last Name,Last
+Artwork Title,title
+Accession Number,
+Path to Artwork File on T: Drive,
+Staging Directory on DroBo,/Users/eddy/Desktop/hmsg_directoires/staging_directories/0000-000_Last
+Path to hard drive,
+Path to Technical Info_Specs directory,
+Path to Technical Info_Specs/Sidecars directory,
+Path to Condition_Tmt Reports directory,
+Path Artwork Files parent directory,/Users/eddy/Desktop/hmsg_directoires/artwork_files/
+Path to the Time-based Media Artworks directory on the TBMA DroBo,/Users/eddy/Desktop/hmsg_directoires/staging_directories/

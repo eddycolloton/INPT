@@ -16,6 +16,21 @@ if test -f "${parent_dir}"/input_template.csv; then
 # Read the CSV file
     while IFS=, read -r key value || [ -n "$key" ]
     do
+        # Replace variable names with descriptions
+        case $key in
+            "Artist's First Name") key="ArtistFirstName" ;;
+            "Artist's Last Name") key="ArtistLastName" ;;
+            "Artwork Title") key="title" ;;
+            "Accession Number") key="accession" ;;
+            "Path to Artwork File on T: Drive") key="ArtFile" ;;
+            "Staging Directory on DroBo") key="SDir" ;;
+            "Path to hard drive") key="Volume" ;;
+            "Path to Technical Info_Specs directory") key="techdir" ;;
+            "Path to Technical Info_Specs/Sidecars directory") key="sidecardir" ;;
+            "Path to Condition_Tmt Reports directory") key="reportdir" ;;
+            "Path Artwork Files parent directory") key="ArtFilePath" ;;
+            "Path to the Time-based Media Artworks directory on the TBMA DroBo") key="TBMADroBoPath" ;;
+        esac
         # Remove quotes and special characters from the key and value
         key=$(remove_special_chars "$key" | tr -d '"')
         value=$(remove_special_chars "$value" | tr -d '"')
