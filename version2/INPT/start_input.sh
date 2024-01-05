@@ -69,11 +69,11 @@ if [[ -z "${accession}" ]] ; then
         FindArtworkFilesPath
     fi 
     FindAccessionNumber 
-    logNewLine "The acession number manually input: ${accession}" "$CYAN"
+    logNewLine "The accession number manually input: ${accession}" "$CYAN"
 elif grep -q "accession" "${logPath}" ; then
     true
 else
-    logNewLine "The acession number from CSV: ${accession}" "$WHITE"
+    logNewLine "The accession number from CSV: ${accession}" "$WHITE"
 fi
 
 if [[ -z "${Volume}" ]] ; then
