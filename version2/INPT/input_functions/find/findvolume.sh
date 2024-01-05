@@ -31,9 +31,11 @@ function InputVolume {
 }
 
 function FindVolume {
-	FindVolumes=$(find "/Volumes" -maxdepth 1 -type d -iname "*$ArtistLastName*"  -o -iname "*$title*" | wc -l | xargs)
+	VolumesMatch=$(find "/Volumes" -maxdepth 1 -type d -iname "*$ArtistLastName*"  -o -iname "*$title*" | wc -l | xargs)
+	# Gives number of results in the /Volumes/ directory that contain either the artist's last name or the title of the artwork
+	FindVolumes=$(find "/Volumes" -maxdepth 1 -type d -iname "*${ArtistLastName}*" -o -iname "*${title}*")
 
-	if [ "${FindVolumes}" \> 1 ]; then
+	if [ "${VolumesMatch}" \> 1 ]; then
 	# If there is more than 1 line in the $FindVolumes variable, then
 		declare -a FindVolumes_array
 		IFS=$'\n'
