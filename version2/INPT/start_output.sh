@@ -106,6 +106,7 @@ RunMoveFiles
 source "${script_dir}"/output_functions/tools/runtools.sh
 RunTools
 
+MoveOldLogs
 cp "${configLogPath}" "${techdir}"/"${ArtistLastName}"_"${accession}"_"${logName}"
 
 figlet OUTPUT

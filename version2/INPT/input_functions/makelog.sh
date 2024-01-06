@@ -99,7 +99,7 @@ function CleanupLogDir {
   if [ "$num_logs" -gt 20 ]; then
     # Delete excess log files, keeping the newest 5
     ls -1t "$log_dir" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}\.[0-9]{2}\.[0-9]{2}_INPT\.log$' | tail -n +"$((5+1))" | xargs -I {} rm "$log_dir/{}"
-    echo "Cleanup complete: Deleted $((num_logs - 5)) old log files."
+    echo "Log directory cleanup complete: Deleted $((num_logs - 5)) old log files."
   fi
 }
 
@@ -131,6 +131,32 @@ echo 'sidecardir="'"$sidecardir"'"' >> "${varfilePath}"
 echo 'reportdir="'"$reportdir"'"' >> "${varfilePath}"
 
 export varfilePath="${varfilePath}"
+}
+
+function MoveOldLogs {
+  # Check if $techdir exists
+  if [ -d "$techdir" ]; then
+    log_files=("$techdir"/*.log)
+    
+    # Check if there are .log files
+    if [ ${#log_files[@]} -gt 0 ]; then
+      old_logs_dir="$techdir/old_logs"
+      
+      # Check if old_logs directory exists
+      if [ -d "$old_logs_dir" ]; then
+        # Move .log files to old_logs
+        mv "$techdir"/*.log "$old_logs_dir/"
+        logNewLine "Moved .log files to $old_logs_dir" "$YELLOW"
+      else
+        # Create old_logs directory and move .log files
+        mkdir "$old_logs_dir"
+        mv "$techdir"/*.log "$old_logs_dir/"
+        logNewLine "Created $old_logs_dir and moved pre-existing .log files" "$YELLOW"
+      fi
+    fi
+  else
+    logNewLine "Directory $techdir does not exist" "$RED"
+  fi
 }
 
 set +a
