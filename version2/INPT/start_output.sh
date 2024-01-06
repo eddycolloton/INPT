@@ -38,12 +38,12 @@ if test -f "${parent_dir}"/output_template.csv; then
             "Move all files to staging directory") key="Run_Copyit" ;;
 			"Select files to move to staging directory") key="Run_UserSelectFiles" ;;
 			"Run all tools") key="Run_meta" ;;
-            "Run tree on volume") key="RunTree" ;;
-            "Run siegfried on files in staging directory") key="RunSF" ;;
-            "Run MediaInfo on video files in staging directory") key="RunMI" ;;
-            "Run Exiftool on media files in staging directory") key="RunExif" ;;
-            "Create framdemd5 output for video files in staging directory") key="Make_Framemd5" ;;
-            "Create QCTools reports for video files in staging directory") key="Make_QCT" ;;
+            "Run tree on volume") key="Run_tree" ;;
+            "Run siegfried on files in staging directory") key="Run_sf" ;;
+            "Run MediaInfo on video files in staging directory") key="Run_mediainfo" ;;
+            "Run Exiftool on media files in staging directory") key="Run_exif" ;;
+            "Create framdemd5 output for video files in staging directory") key="Run_framemd5" ;;
+            "Create QCTools reports for video files in staging directory") key="Run_QCTools" ;;
         esac
         # Remove quotes and special characters from the key and value
         key=$(remove_special_chars "$key" | tr -d '"')
@@ -53,15 +53,15 @@ if test -f "${parent_dir}"/output_template.csv; then
         # Print debug information
         # echo "Key: $key, Value: $value"
     done < "${parent_dir}"/output_template.csv
-    logNewLine "input csv found at "${parent_dir}"/output_template.csv" "$CYAN"
+    logNewLine "output csv found at "${parent_dir}"/output_template.csv" "$CYAN"
 else
-    logNewLine "No input csv found" "$RED"
+    logNewLine "No output csv found" "$RED"
 fi
 
 if [[ $Run_Copyit = "0" ]] ; then
-	:
+	logNewLine "From Output CSV - Not all files from ${Volume} will be moved to ${SDir}" "$WHITE"
 elif [[ $Run_Copyit = "1" ]] ; then
-	:
+	logNewLine "From Output CSV - All files from ${Volume} will be moved to ${SDir}" "$WHITE"
 else
 	if [[ -z $(find "${techdir}" -iname "*_manifest.md5") ]]; then
 		if [[ -z $Run_UserSelectFiles ]] ; then
@@ -99,19 +99,12 @@ else
 	fi
 fi
 
-if [[ -z "${Run_meta}" ]] ; then
-	source "${script_dir}"/output_functions/tools/selecttools.sh
-	SelectTools
-	source "${script_dir}"/output_functions/move/runmovefiles.sh
-	RunMoveFiles
-	source "${script_dir}"/output_functions/tools/runtools.sh
-	RunTools
-else
-	source "${script_dir}"/output_functions/move/runmovefiles.sh
-	RunMoveFiles
-	source "${script_dir}"/output_functions/tools/runtools.sh
-	RunTools
-fi
+source "${script_dir}"/output_functions/tools/selecttools.sh
+SelectTools
+source "${script_dir}"/output_functions/move/runmovefiles.sh
+RunMoveFiles
+source "${script_dir}"/output_functions/tools/runtools.sh
+RunTools
 
 cp "${configLogPath}" "${techdir}"/"${ArtistLastName}"_"${accession}"_"${logName}"
 

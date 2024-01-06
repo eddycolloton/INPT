@@ -1,5 +1,17 @@
 #!/bin/bash
 
+CheckCSV () {
+	if [[ "${1}" = "0" ]]; then
+		logNewLine "${2} set to 'off' in output CSV" "$WHITE"
+		declare ${3}=no
+	elif [[ "${1}" = "1" ]]; then
+		logNewLine "${2} set to 'on' in output CSV" "$WHITE"
+		declare ${3}=no
+	else
+		unset "${1}"
+	fi
+}
+
 function SelectMeta {
 	echo -e "\nRun metadata tools (tree, siegfried, MediaInfo, Exiftool, framemd5, and qctools) on files copied to $SDir (Choose a number 1-2)"
 	select Meta_option in "yes" "no"; do
@@ -86,83 +98,7 @@ function SelectQCT {
 	SelectOption "Run_QCTools" "QCT_option_again" "Fmd5_option_again"
 }
 
-function SelectTools {
-	# Prompts user to run metadata tools
-	echo -e "\n*************************************************\n
-If you select \"yes,\" this will be the final prompt and applications will run after this response!\n
-Otherwise, you will be asked about each tool individually.
-\n*************************************************"
-	sleep 1
-
-	meta_option_again=yes
-	SelectMeta
-
-	if [[ "$Run_meta" -eq "0" ]]; then
-		tree_option_again=yes
-		SelectTree
-	fi
-
-	if [[ "$meta_option_again" = "yes" ]]; then 
-		unset Run_meta
-		SelectMeta
-		SelectTree
-	fi
-	
-	if [[ "$Run_meta" -eq "0" ]]; then
-		sf_option_again=yes
-		SelectSF
-	fi
-
-	if [[ "$tree_option_again" = "yes" ]]; then
-		unset Run_tree
-		SelectTree
-		SelectSF
-	fi
-
-	if [[ "$Run_meta" -eq "0" ]]; then
-		mi_option_again=yes
-		SelectMI
-	fi
-
-	if [[ "$sf_option_again" = "yes" ]]; then
-		unset Run_sf
-		SelectSF
-		SelectMI
-	fi
-
-	if [[ "$Run_meta" -eq "0" ]]; then
-		exif_option_again=yes
-		SelectExif
-	fi
-	
-	if [[ "$mi_option_again" = "yes" ]]; then
-		unset Run_mediainfo
-		SelectMI
-		SelectExif
-	fi
-
-	if [[ "$Run_meta" -eq "0" ]]; then
-		Fmd5_option_again=yes
-		SelectFmd5
-	fi
-	
-	if [[ "$exif_option_again" = "yes" ]]; then
-		unset Run_exif
-		SelectExif
-		SelectFmd5
-	fi
-
-	if [[ "$Run_meta" -eq "0" ]]; then
-		QCT_option_again=yes
-		SelectQCT
-	fi
-
-	if [[ "$Fmd5_option_again" = "yes" ]]; then
-		unset Run_framemd5
-		SelectFmd5
-		SelectQCT
-	fi
-
+function ConfirmQCT {
 	if [[ "$Run_QCTools" -eq "1" ]]; then
 		echo -e "\nConfirm you would like to create QCTools reports for each of the video files in $SDir:"
 		select QCT_confirm in "yes" "no"; do
@@ -176,9 +112,109 @@ Otherwise, you will be asked about each tool individually.
 			esac
 		done
 	fi
+}
+
+function SelectTools {
+
+	if [[ -z "$Run_meta" ]]; then
+		# Prompts user to run metadata tools
+		echo -e "\n*************************************************\nIf you select \"yes,\" this will be the final prompt and applications will run after this response!\n
+Otherwise, you will be asked about each tool individually.
+\n*************************************************"
+		sleep 1
+		meta_option_again=yes
+		SelectMeta
+	fi
+
+	if [[ "$Run_meta" -eq "0" ]]; then
+		CheckCSV $Run_tree Run_tree tree_option_again 
+		if [[ -z "${Run_tree}" ]] ; then
+			tree_option_again=yes
+			SelectTree
+		fi
+	fi
+
+	if [[ "$meta_option_again" = "yes" ]]; then 
+		unset Run_meta
+		SelectMeta
+		SelectTree
+	fi
+	
+	if [[ "$Run_meta" -eq "0" ]]; then
+		CheckCSV $Run_sf Run_sf sf_option_again 
+		if [[ -z "${Run_sf}" ]]; then
+			sf_option_again=yes
+			SelectSF
+		fi
+	fi
+
+	if [[ "$tree_option_again" = "yes" ]]; then
+		unset Run_tree
+		SelectTree
+		SelectSF
+	fi
+
+	if [[ "$Run_meta" -eq "0" ]]; then
+		CheckCSV $Run_mediainfo Run_mediainfo mi_option_again 
+		if [[ -z "${Run_mediainfo}" ]]; then
+			mi_option_again=yes
+			SelectMI
+		fi
+	fi
+
+	if [[ "$sf_option_again" = "yes" ]]; then
+		unset Run_sf
+		SelectSF
+		SelectMI
+	fi
+
+	if [[ "$Run_meta" -eq "0" ]]; then
+		CheckCSV $Run_exif Run_exif exif_option_again 
+		if [[ -z "${Run_exif}" ]]; then
+			exif_option_again=yes
+			SelectExif
+		fi
+	fi
+	
+	if [[ "$mi_option_again" = "yes" ]]; then
+		unset Run_mediainfo
+		SelectMI
+		SelectExif
+	fi
+
+	if [[ "$Run_meta" -eq "0" ]]; then
+		CheckCSV $Run_framemd5 Run_framemd5 Fmd5_option_again 
+		if [[ -z "${Run_framemd5}" ]]; then
+			Fmd5_option_again=yes
+			SelectFmd5
+		fi
+	fi
+	
+	if [[ "$exif_option_again" = "yes" ]]; then
+		unset Run_exif
+		SelectExif
+		SelectFmd5
+	fi
+
+	if [[ "$Run_meta" -eq "0" ]]; then
+		CheckCSV $Run_QCTools Run_QCTools QCT_option_again 
+		if [[ -z "${Run_QCTools}" ]]; then
+			QCT_option_again=yes
+			SelectQCT
+			ConfirmQCT
+		fi
+	fi
+
+	if [[ "$Fmd5_option_again" = "yes" ]]; then
+		unset Run_framemd5
+		SelectFmd5
+		SelectQCT
+		ConfirmQCT
+	fi
 
 	if [[ "$QCT_option_again" = "yes" ]]; then
 		unset Run_QCTools
 		SelectQCT
+		ConfirmQCT
 	fi
 }
