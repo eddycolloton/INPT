@@ -159,4 +159,41 @@ function MoveOldLogs {
   fi
 }
 
+write_to_csv() {
+  local csv_file="$1"
+    
+  # Check if the CSV file already exists, if not, create it with header
+  if [ ! -e "$csv_file" ]; then
+      echo "ArtistFirstName,First" > "$csv_file"
+      echo "ArtistLastName,Last" >> "$csv_file"
+      echo "title,title" >> "$csv_file"
+      echo "accession," >> "$csv_file"
+      echo "ArtFile," >> "$csv_file"
+      echo "SDir," >> "$csv_file"
+      echo "Volume," >> "$csv_file"
+      echo "techdir," >> "$csv_file"
+      echo "sidecardir," >> "$csv_file"
+      echo "reportdir," >> "$csv_file"
+      echo "ArtFilePath," >> "$csv_file"
+      echo "TBMADroBoPath," >> "$csv_file"
+  fi
+
+  # Get the variable names dynamically
+  local variable_names=($(declare -p | grep -Eo ' [^=]+=' | sed 's/ $//'))
+
+  # Append values to the CSV file
+  for variable in "${variable_names[@]}"; do
+      # Remove leading space from variable name
+      variable="${variable:1}"
+      # Get the value of the variable
+      value="${!variable}"
+      echo "$variable,$value" >> "$csv_file"
+  done
+
+  echo "Data has been written to $csv_file"
+}
+
+# Call the function to write to the CSV file
+#write_to_csv "output.csv"
+
 set +a
