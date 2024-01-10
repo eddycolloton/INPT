@@ -1,9 +1,0 @@
-Move all files to staging directory,0
-Select files to move to staging directory,0
-Run all tools,0
-Run tree on volume,0
-Run siegfried on files in staging directory,0
-Run MediaInfo on video files in staging directory,0
-Run Exiftool on media files in staging directory,0
-Create framdemd5 output for video files in staging directory,0
-Create QCTools reports for video files in staging directory,0

@@ -4,7 +4,7 @@ script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && 
 parent_dir="$(dirname "$script_dir")"
 
 
-if [[ -z "${fullInput_csv}" ]] ; then
+if [[ -z ${fullInput_csv} ]] ; then
 	source "${script_dir}"/input_functions/makelog.sh
 	MakeLog
 	source "${script_dir}"/output_functions/findvarfile.sh
@@ -48,11 +48,46 @@ if [[ -z "${fullInput_csv}" ]] ; then
 	searchArtFile
 fi
 
-if [[ "$#" -lt 1 ]]; then
-    logNewLine "No output CSV provided!" "$RED"
-else
-    output_csv=$1
-	logNewLine "Reading variables from input csv: ${output_csv}" "$CYAN"
+if [[ -n "${output_csv}" ]] ; then
+	logNewLine "Output CSV file previously identified: $output_csv" "$WHITE"
+elif [[ -n "${input_csv}" && "$#" -lt 2 ]] ; then
+	logNewLine "Input CSV provided, but no additional output CSV found." "$RED"
+elif [[ -n "${input_csv}" && "$#" = 2 ]] ; then
+	# Assign the first argument to a variable
+	input_file2_path=$2
+	# Check if the file exists
+	if [ ! -f "$input_file2_path" ]; then
+		logNewLine "The provided file ${input_file2_path} does not exist." "$RED"
+	fi
+	# Check the content of the file to determine its type
+	first_line2=$(head -n 1 "$input_file2_path")
+	# Check if it's an output CSV file
+	if [[ "$first_line2" == "Move all files to staging directory,"* ]]; then
+		output_csv=$input_file2_path
+		logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+	else
+		logNewLine "Error: Unsupported CSV file format." "$RED"
+	fi
+elif [[ -z "${input_csv}" && "$#" -lt 1 ]] ; then
+	# Assign the first argument to a variable
+	input_file_path=$1
+	# Check if the file exists
+	if [ ! -f "$input_file_path" ]; then
+		logNewLine "The provided file ${input_file_path} does not exist." "$RED"
+	fi
+	# Check the content of the file to determine its type
+	first_line=$(head -n 1 "$input_file_path")
+	# Check if it's an output CSV file
+	if [[ "$first_line" == "Move all files to staging directory,"* ]]; then
+		output_csv=$input_file_path
+		logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+	else
+		logNewLine "Error: Unsupported CSV file format." "$RED"
+	fi
+fi
+
+if [[ -n "${output_csv}" ]]; then
+	logNewLine "Reading variables from output csv: ${output_csv}" "$CYAN"
 	source "${script_dir}"/input_functions/inputs.sh
 	# remove_special_chars function is stored in inputs.sh
 	if test -f "${output_csv}"; then

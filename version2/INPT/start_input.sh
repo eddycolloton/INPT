@@ -12,9 +12,33 @@ MakeLog
 CleanupLogDir
 
 if [[ "$#" -lt 1 ]]; then
-    logNewLine "No input CSV provided!" "$RED"
+    logNewLine "No input CSV files provided!" "$RED"
+fi
+
+# Assign the first argument to a variable
+input_file_path=$1
+
+# Check if the file exists
+if [ ! -f "$input_file_path" ]; then
+    logNewLine "The provided file ${input_file_path} does not exist." "$RED"
+fi
+
+# Check the content of the file to determine its type
+first_line=$(head -n 1 "$input_file_path")
+
+# Check if it's an input CSV file
+if [[ "$first_line" == "Artist's First Name,"* ]]; then
+    input_csv=$input_file_path
+    logNewLine "Input CSV file detected: $input_csv" "$WHITE"
+# Check if it's an output CSV file
+elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
+    output_csv=$input_file_path
+    logNewLine "Output CSV file detected: $output_csv" "$WHITE"
 else
-    input_csv=$1
+    logNewLine "Error: Unsupported CSV file format." "$RED"
+fi
+
+if [[ -n "${input_csv}" ]] ; then
     logNewLine "Reading variables from input csv: ${input_csv}" "$CYAN"
     source "${script_dir}"/input_functions/inputs.sh
     # remove_special_chars function is stored in inputs.sh
@@ -42,10 +66,12 @@ else
             value=$(remove_special_chars "$value" | tr -d '"')
             # Assign the value to a variable named after the key
             declare "$key=$value"
+            ## consider creating an array here of assigned variables to simplify the rest of the script
+            ## if assigned vars are in an array then you could run 'if $var not in $array ; then' 
             # Print debug information
             # echo "Key: $key, Value: $value"
         done < "${input_csv}"
-        logNewLine "successfully read variables from ${input_csv}" "$CYAN"
+        logNewLine "Successfully read variables from ${input_csv}" "$CYAN"
     else
         logNewLine "Unable to read variables from ${input_csv}" "$RED"
         unset input_csv
@@ -103,6 +129,7 @@ else
         fi 
         FindAccessionNumber 
         logNewLine "The accession number manually input: ${accession}" "$CYAN"
+    fi
 fi
 
 if [[ -n "${input_csv}" ]] ; then
@@ -166,9 +193,7 @@ fi
 
 LogVars
 
-fullInput_csv="${techdir}"/"${ArtistLastName}_${accession}_${timestamp}.csv"
-WriteVarsToCSV "${fullInput_csv}"
-export fullInput_csv="${fullInput_csv}"
+WriteVarsToCSV
 
 source "${script_dir}"/start_output.sh
 

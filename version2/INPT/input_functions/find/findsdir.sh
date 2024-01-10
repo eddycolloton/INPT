@@ -15,7 +15,7 @@ function FindTBMADroBoPath {
 			#Strips a trailing space from the input. 
 			#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
 			#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-			echo "The path to the Staging Directories is: $TBMADroBoPath"
+			logNewLine "The path to the "Time Based Media Artwork" directory on the TBMA DroBo manually input: $TBMADroBoPath" "$CYAN"
 			export TBMADroBoPath="${TBMADroBoPath}"
 		fi
 	fi
@@ -32,7 +32,7 @@ function MakeStagingDirectory {
 	fi
 	mkdir -pv "${TBMADroBoPath%/}"/"$SDir_Accession"_"$ArtistLastName"
 	SDir="${TBMADroBoPath%/}"/"$SDir_Accession"_"$ArtistLastName"
-	echo -e "The Staging Directory is $SDir \n"
+	logNewLine "Path to the staging directory: ${SDir}" "$MAGENTA" 
 	export SDir="${SDir}"
 }
 
@@ -76,13 +76,3 @@ function FindSDir {
 	#	export SDir="${SDir}"
 	#fi
 }
-
-
-# FindTBMADroBoPath
-## Moving functions call to start_input script
-
-#if [[ -z "${SDir}" ]];
-#then
-	#FindSDir
-#fi
-

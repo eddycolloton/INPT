@@ -140,7 +140,7 @@ function MoveOldLogs {
     
     # Check if there are .log files
     if [ ${#log_files[@]} -gt 0 ]; then
-      old_logs_dir="$techdir/old_logs"
+      old_logs_dir="${techdir%/}/old_logs"
       
       # Check if old_logs directory exists
       if [ -d "$old_logs_dir" ]; then
@@ -159,26 +159,28 @@ function MoveOldLogs {
   fi
 }
 
-WriteVarsToCSV() {
-  local csv_file="$1"
+function WriteVarsToCSV {
+  fullInput_csv_name="${ArtistLastName}"_"${accession}"_`date '+%Y-%m-%d-%H.%M.%S'`
+  fullInput_csv_name+='.csv'
+  fullInput_csv="${techdir}/${fullInput_csv_name}"
+  touch "${fullInput_csv}"
     
-  # Check if the CSV file already exists, if not, create it with header
-  if [ ! -e "$csv_file" ]; then
-      echo "Artist's First Name,"${ArtistFirstName}"" > "$csv_file"
-      echo "Artist's Last Name,"${ArtistLastName}"" >> "$csv_file"
-      echo "Artwork Title,"${title}"" >> "$csv_file"
-      echo "Accession Number,"${accession}"" >> "$csv_file"
-      echo "Path to Artwork File on T: Drive,"${ArtFile}"" >> "$csv_file"
-      echo "Staging Directory on DroBo,"${SDir}"" >> "$csv_file"
-      echo "Path to hard drive,"${Volume}"" >> "$csv_file"
-      echo "Path to Technical Info_Specs directory,"${techdir}"" >> "$csv_file"
-      echo "Path to Technical Info_Specs/Sidecars directory,"${sidecardir}"" >> "$csv_file"
-      echo "Path to Condition_Tmt Reports directory,"${reportdir}"" >> "$csv_file"
-      echo "Path Artwork Files parent directory,"${ArtFilePath}"" >> "$csv_file"
-      echo "Path to the Time-based Media Artworks directory on the TBMA DroBo,"${TBMADroBoPath}"" >> "$csv_file"
-  fi
+  # Check if the CSV file already exists, if not, create it
+  echo "Artist's First Name,"${ArtistFirstName}"" > "$fullInput_csv"
+  echo "Artist's Last Name,"${ArtistLastName}"" >> "$fullInput_csv"
+  echo "Artwork Title,"${title}"" >> "$fullInput_csv"
+  echo "Accession Number,"${accession}"" >> "$fullInput_csv"
+  echo "Path to Artwork File on T: Drive,"${ArtFile}"" >> "$fullInput_csv"
+  echo "Staging Directory on DroBo,"${SDir}"" >> "$fullInput_csv"
+  echo "Path to hard drive,"${Volume}"" >> "$fullInput_csv"
+  echo "Path to Technical Info_Specs directory,"${techdir}"" >> "$fullInput_csv"
+  echo "Path to Technical Info_Specs/Sidecars directory,"${sidecardir}"" >> "$fullInput_csv"
+  echo "Path to Condition_Tmt Reports directory,"${reportdir}"" >> "$fullInput_csv"
+  echo "Path Artwork Files parent directory,"${ArtFilePath}"" >> "$fullInput_csv"
+  echo "Path to the Time-based Media Artworks directory on the TBMA DroBo,"${TBMADroBoPath}"" >> "$fullInput_csv"
 
-  logNewLine "Declared variables have been written to $csv_file"
+  logNewLine "Declared variables have been written to $fullInput_csv" "$YELLOW"
+  export fullInput_csv="${fullInput_csv}"
 }
 
 set +a
