@@ -113,8 +113,14 @@ else
 fi
 
 LogVars
-MakeVarfile
-logNewLine "The varfile has been created using the file name $varfilePath" "$YELLOW"
+
+csv_file="${techdir}"/"${ArtistLastName}_${accession}_${timestamp}.csv"
+WriteVarsToCSV "${csv_file}"
+export csv_file="${csv_file}"
+
+
+#MakeVarfile
+#logNewLine "The varfile has been created using the file name $varfilePath" "$YELLOW"
 
 source "${script_dir}"/start_output.sh
 

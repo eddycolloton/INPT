@@ -9,21 +9,46 @@ script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && 
 parent_dir="$(dirname "$script_dir")"
 
 
-if [[ -z "${varfilePath}" ]] ; then
+if [[ -z "${csv_file}" ]] ; then
 	source "${script_dir}"/input_functions/makelog.sh
 	MakeLog
 	source "${script_dir}"/output_functions/findvarfile.sh
-	findVarfile
+	findCSV
 	if [[ -z "${sourcefile}" ]] ; then
-		echo -e "No varfile found!"
+		echo -e "No input CSV found!"
 	else
-		logNewLine -e "varfile found! Artwork File is here: ${ArtFile}\n Staging directory is here: ${SDir}" "$MAGENTA"
+		csv_file="${sourcefile}"
+		while IFS=, read -r key value || [ -n "$key" ]
+		do
+			# Replace variable names with descriptions
+			case $key in
+				"Artist's First Name") key="ArtistFirstName" ;;
+				"Artist's Last Name") key="ArtistLastName" ;;
+				"Artwork Title") key="title" ;;
+				"Accession Number") key="accession" ;;
+				"Path to Artwork File on T: Drive") key="ArtFile" ;;
+				"Staging Directory on DroBo") key="SDir" ;;
+				"Path to hard drive") key="Volume" ;;
+				"Path to Technical Info_Specs directory") key="techdir" ;;
+				"Path to Technical Info_Specs/Sidecars directory") key="sidecardir" ;;
+				"Path to Condition_Tmt Reports directory") key="reportdir" ;;
+				"Path Artwork Files parent directory") key="ArtFilePath" ;;
+				"Path to the Time-based Media Artworks directory on the TBMA DroBo") key="TBMADroBoPath" ;;
+			esac
+			# Remove quotes and special characters from the key and value
+			key=$(remove_special_chars "$key" | tr -d '"')
+			value=$(remove_special_chars "$value" | tr -d '"')
+			# Assign the value to a variable named after the key
+			declare "$key=$value"
+			# Print debug information
+			# echo "Key: $key, Value: $value"
+		done < "${csv_file}"
+		logNewLine "Input variables read from $csv_file" "$CYAN"
+		logNewLine "Input CSV found! Artwork File is here: $ArtFile Staging directory is here: $SDir" "$MAGENTA"
 	fi
 	if [[ -z "${techdir}" ]] ; then
     	source "${script_dir}"/input_functions/find/findreportdir.sh
     	FindTechDir
-	else
-    	echo "Technical Info and Specs: $techdir"
 	fi
 	searchArtFile
 fi

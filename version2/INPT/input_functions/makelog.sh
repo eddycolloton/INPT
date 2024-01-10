@@ -136,7 +136,7 @@ export varfilePath="${varfilePath}"
 function MoveOldLogs {
   # Check if $techdir exists
   if [ -d "$techdir" ]; then
-    log_files=("$techdir"/*.log)
+    log_files=("$techdir"/*".log")
     
     # Check if there are .log files
     if [ ${#log_files[@]} -gt 0 ]; then
@@ -145,13 +145,13 @@ function MoveOldLogs {
       # Check if old_logs directory exists
       if [ -d "$old_logs_dir" ]; then
         # Move .log files to old_logs
-        mv "$techdir"/*.log "$old_logs_dir/"
-        logNewLine "Moved .log files to $old_logs_dir" "$YELLOW"
+        mv "$techdir"/*."log" "$old_logs_dir/"
+        logNewLine "Moved pre-existing log files to $old_logs_dir" "$Bright_Yellow"
       else
         # Create old_logs directory and move .log files
         mkdir "$old_logs_dir"
         mv "$techdir"/*.log "$old_logs_dir/"
-        logNewLine "Created $old_logs_dir and moved pre-existing .log files" "$YELLOW"
+        logNewLine "Created $old_logs_dir and moved pre-existing .log files" "$Bright_Yellow"
       fi
     fi
   else
@@ -159,41 +159,26 @@ function MoveOldLogs {
   fi
 }
 
-write_to_csv() {
+WriteVarsToCSV() {
   local csv_file="$1"
     
   # Check if the CSV file already exists, if not, create it with header
   if [ ! -e "$csv_file" ]; then
-      echo "ArtistFirstName,First" > "$csv_file"
-      echo "ArtistLastName,Last" >> "$csv_file"
-      echo "title,title" >> "$csv_file"
-      echo "accession," >> "$csv_file"
-      echo "ArtFile," >> "$csv_file"
-      echo "SDir," >> "$csv_file"
-      echo "Volume," >> "$csv_file"
-      echo "techdir," >> "$csv_file"
-      echo "sidecardir," >> "$csv_file"
-      echo "reportdir," >> "$csv_file"
-      echo "ArtFilePath," >> "$csv_file"
-      echo "TBMADroBoPath," >> "$csv_file"
+      echo "Artist's First Name,"${ArtistFirstName}"" > "$csv_file"
+      echo "Artist's Last Name,"${ArtistLastName}"" >> "$csv_file"
+      echo "Artwork Title,"${title}"" >> "$csv_file"
+      echo "Accession Number,"${accession}"" >> "$csv_file"
+      echo "Path to Artwork File on T: Drive,"${ArtFile}"" >> "$csv_file"
+      echo "Staging Directory on DroBo,"${SDir}"" >> "$csv_file"
+      echo "Path to hard drive,"${Volume}"" >> "$csv_file"
+      echo "Path to Technical Info_Specs directory,"${techdir}"" >> "$csv_file"
+      echo "Path to Technical Info_Specs/Sidecars directory,"${sidecardir}"" >> "$csv_file"
+      echo "Path to Condition_Tmt Reports directory,"${reportdir}"" >> "$csv_file"
+      echo "Path Artwork Files parent directory,"${ArtFilePath}"" >> "$csv_file"
+      echo "Path to the Time-based Media Artworks directory on the TBMA DroBo,"${TBMADroBoPath}"" >> "$csv_file"
   fi
 
-  # Get the variable names dynamically
-  local variable_names=($(declare -p | grep -Eo ' [^=]+=' | sed 's/ $//'))
-
-  # Append values to the CSV file
-  for variable in "${variable_names[@]}"; do
-      # Remove leading space from variable name
-      variable="${variable:1}"
-      # Get the value of the variable
-      value="${!variable}"
-      echo "$variable,$value" >> "$csv_file"
-  done
-
-  echo "Data has been written to $csv_file"
+  logNewLine "Declared variables have been written to $csv_file"
 }
-
-# Call the function to write to the CSV file
-#write_to_csv "output.csv"
 
 set +a

@@ -30,6 +30,39 @@ function findVarfile {
 	set +a
 }
 
+function findCSV {
+	set -a
+
+	#This function will search the user input, which should be the artwork file (a directory), to find a varfile created by the make_dirs.sh script. When successful, this will re-assignt he variables assigned in the make_dirs.sh script.
+	echo -e "type or drag and drop the path of the artwork file\n"
+	#Asks for the user input which will be passed to the findVarfile function defined at the beginning of the script
+	read -e ArtFileInput
+	#Asks for user input and assigns it to variable
+	ArtFile="$(echo -e "${ArtFileInput}" | sed -e 's/[[:space:]]*$//')"
+	#Strips a trailing space from the input. 
+	#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
+	#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+	export ArtFile="${ArtFile}"
+
+	sourcefile=$(find "${ArtFile%/}" -type f \( -iname "*.csv" \))
+	#Searches user input for a file with a .varfile extension
+	if [[ -z $sourcefile ]]; then
+		echo -e "No CSV found!"
+	else
+		echo -e "\nthe CSV is "${sourcefile}"\n\n" 
+	fi
+
+	set +a
+}
+
+function remove_special_chars {
+    local str=$1
+    str=$(printf '%s' "$str" | LC_ALL=C tr -dc '[:print:]\n')
+    str="${str#"${str%%[![:space:]]*}"}"   # Remove leading whitespace
+    str="${str%"${str##*[![:space:]]}"}"   # Remove trailing whitespace
+    echo "$str"
+}
+
 function searchArtFile {
 #This function searches the artwork file for sidecars created by the make_meta.sh script. 
 	set -a
