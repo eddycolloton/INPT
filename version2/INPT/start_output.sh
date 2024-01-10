@@ -1,15 +1,10 @@
 #!/bin/bash
 
-## Want this script to work in 2 different scenarios: 
-### 1: going directly from start_input.sh
-### 2: resuming processing data that is partially complete, where variables can be sourced from the 'varfile'
-
-
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 parent_dir="$(dirname "$script_dir")"
 
 
-if [[ -z "${csv_file}" ]] ; then
+if [[ -z "${fullInput_csv}" ]] ; then
 	source "${script_dir}"/input_functions/makelog.sh
 	MakeLog
 	source "${script_dir}"/output_functions/findvarfile.sh
@@ -17,7 +12,8 @@ if [[ -z "${csv_file}" ]] ; then
 	if [[ -z "${sourcefile}" ]] ; then
 		echo -e "No input CSV found!"
 	else
-		csv_file="${sourcefile}"
+		logNewLine "Reading input variables from $fullInput_csv" "$CYAN"
+		fullInput_csv="${sourcefile}"
 		while IFS=, read -r key value || [ -n "$key" ]
 		do
 			# Replace variable names with descriptions
@@ -42,8 +38,7 @@ if [[ -z "${csv_file}" ]] ; then
 			declare "$key=$value"
 			# Print debug information
 			# echo "Key: $key, Value: $value"
-		done < "${csv_file}"
-		logNewLine "Input variables read from $csv_file" "$CYAN"
+		done < "${fullInput_csv}"
 		logNewLine "Input CSV found! Artwork File is here: $ArtFile Staging directory is here: $SDir" "$MAGENTA"
 	fi
 	if [[ -z "${techdir}" ]] ; then
@@ -53,39 +48,47 @@ if [[ -z "${csv_file}" ]] ; then
 	searchArtFile
 fi
 
-source "${script_dir}"/input_functions/inputs.sh
-if test -f "${parent_dir}"/output_template.csv; then
-# Read the CSV file
-    while IFS=, read -r key value || [ -n "$key" ]
-    do
-        # Replace variable names with descriptions
-        case $key in
-            "Move all files to staging directory") key="Run_Copyit" ;;
-			"Select files to move to staging directory") key="Run_UserSelectFiles" ;;
-			"Run all tools") key="Run_meta" ;;
-            "Run tree on volume") key="Run_tree" ;;
-            "Run siegfried on files in staging directory") key="Run_sf" ;;
-            "Run MediaInfo on video files in staging directory") key="Run_mediainfo" ;;
-            "Run Exiftool on media files in staging directory") key="Run_exif" ;;
-            "Create framdemd5 output for video files in staging directory") key="Run_framemd5" ;;
-            "Create QCTools reports for video files in staging directory") key="Run_QCTools" ;;
-        esac
-        # Remove quotes and special characters from the key and value
-        key=$(remove_special_chars "$key" | tr -d '"')
-        value=$(remove_special_chars "$value" | tr -d '"')
-        # Assign the value to a variable named after the key
-        declare "$key=$value"
-        # Print debug information
-        # echo "Key: $key, Value: $value"
-    done < "${parent_dir}"/output_template.csv
-    logNewLine "output csv found at "${parent_dir}"/output_template.csv" "$CYAN"
+if [[ "$#" -lt 1 ]]; then
+    logNewLine "No output CSV provided!" "$RED"
 else
-    logNewLine "No output csv found" "$RED"
+    output_csv=$1
+	logNewLine "Reading variables from input csv: ${output_csv}" "$CYAN"
+	source "${script_dir}"/input_functions/inputs.sh
+	# remove_special_chars function is stored in inputs.sh
+	if test -f "${output_csv}"; then
+	# test that input_csv is a file
+		while IFS=, read -r key value || [ -n "$key" ]
+		do
+			# Replace variable names with descriptions
+			case $key in
+				"Move all files to staging directory") key="Run_Copyit" ;;
+				"Select files to move to staging directory") key="Run_UserSelectFiles" ;;
+				"Run all tools") key="Run_meta" ;;
+				"Run tree on volume") key="Run_tree" ;;
+				"Run siegfried on files in staging directory") key="Run_sf" ;;
+				"Run MediaInfo on video files in staging directory") key="Run_mediainfo" ;;
+				"Run Exiftool on media files in staging directory") key="Run_exif" ;;
+				"Create framdemd5 output for video files in staging directory") key="Run_framemd5" ;;
+				"Create QCTools reports for video files in staging directory") key="Run_QCTools" ;;
+			esac
+			# Remove quotes and special characters from the key and value
+			key=$(remove_special_chars "$key" | tr -d '"')
+			value=$(remove_special_chars "$value" | tr -d '"')
+			# Assign the value to a variable named after the key
+			declare "$key=$value"
+			# Print debug information
+			# echo "Key: $key, Value: $value"
+		done < "${output_csv}"
+		logNewLine "successfully read variables from ${output_csv}" "$CYAN"
+	else
+		logNewLine logNewLine "Unable to read variables from ${output_csv}" "$RED"
+        unset output_csv
+	fi
 fi
 
-if [[ $Run_Copyit = "0" ]] ; then
+if [[ -n "${output_csv}" && $Run_Copyit = "0" ]] ; then
 	logNewLine "From Output CSV - Not all files from ${Volume} will be moved to ${SDir}" "$WHITE"
-elif [[ $Run_Copyit = "1" ]] ; then
+elif [[ -n "${output_csv}" && $Run_Copyit = "1" ]] ; then
 	logNewLine "From Output CSV - All files from ${Volume} will be moved to ${SDir}" "$WHITE"
 else
 	if [[ -z $(find "${techdir}" -iname "*_manifest.md5") ]]; then
