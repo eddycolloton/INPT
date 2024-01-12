@@ -93,7 +93,7 @@ fi
 
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${ArtFile}" ]] ; then
-        echo -e "\nNo path to the artwork file found in input csv\n"
+        logNewLine "No path to the artwork file found in input csv" "$WHITE"
         source "${script_dir}"/input_functions/find/findartfile.sh
         FindArtworkFilesPath
         FindArtworkFile
@@ -134,7 +134,7 @@ fi
 
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${Volume}" ]] ; then
-        echo -e "\nNo volume path in input csv"
+        logNewLine "No volume path in input csv" "$WHITE"
         source "${script_dir}"/input_functions/find/findvolume.sh
         FindVolume
     else
@@ -147,7 +147,7 @@ fi
 
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${SDir}" ]] ; then
-        echo -e "\nNo path to Staging Directory found in input csv\n"
+        logNewLine "No path to Staging Directory found in input csv" "$WHITE"
         source "${script_dir}"/input_functions/find/findsdir.sh
         if [[ -z "${TBMADroBoPath}" ]]; then
             FindTBMADroBoPath
@@ -167,7 +167,7 @@ fi
 
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${techdir}" ]] ; then
-        echo -e "\nNo path to the Technical Info and Specs directory found in input csv\n"
+        logNewLine "No path to the Technical Info and Specs directory found in input csv" "$WHITE"
         source "${script_dir}"/input_functions/find/findreportdir.sh
         FindTechDir
     else
@@ -180,7 +180,7 @@ fi
 
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${reportdir}" ]] ; then
-        echo -e "\nNo path to the Condition_Tmt Reports directory found in input csv\n"
+        logNewLine "No path to the Condition_Tmt Reports directory found in input csv" "$WHITE"
         source "${script_dir}"/input_functions/find/findreportdir.sh
         FindConditionDir
     else

@@ -121,7 +121,7 @@ function MoveOldLogs {
       found_logs+=("$REPLY")
     done < <(find "${techdir}" -maxdepth 1 -name "*.log" -print0)
     # Check if there are .log files
-    if [ ${#found_logs[@]} -gt 0 ]; then
+    if [[ ${#found_logs[@]} -gt 0 ]]; then
       old_logs_dir="${techdir%/}/old_logs"
       
       # Check if old_logs directory exists
