@@ -194,6 +194,8 @@ fi
 LogVars
 
 WriteVarsToCSV
+CompareCSV "${fullInput_csv}"
+MoveOldCSVs
 
 source "${script_dir}"/start_output.sh
 

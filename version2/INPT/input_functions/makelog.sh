@@ -136,22 +136,28 @@ export varfilePath="${varfilePath}"
 function MoveOldLogs {
   # Check if $techdir exists
   if [ -d "$techdir" ]; then
-    log_files=("$techdir"/*".log")
-    
+    found_logs=()
+    while IFS=  read -r -d $'\0'; do
+      found_logs+=("$REPLY")
+    done < <(find "${techdir}" -maxdepth 1 -name "*.log" -print0)
     # Check if there are .log files
-    if [ ${#log_files[@]} -gt 0 ]; then
+    if [ ${#found_logs[@]} -gt 1 ]; then
       old_logs_dir="${techdir%/}/old_logs"
       
       # Check if old_logs directory exists
       if [ -d "$old_logs_dir" ]; then
         # Move .log files to old_logs
-        mv "$techdir"/*."log" "$old_logs_dir/"
-        logNewLine "Moved pre-existing log files to $old_logs_dir" "$Bright_Yellow"
+        for log in "${found_logs[@]}"; do
+          mv "${log}" "$old_logs_dir"
+        done
+        logNewLine "Moved pre-existing log files to $(basename "${old_logs_dir%/}")" "$YELLOW"
       else
         # Create old_logs directory and move .log files
         mkdir "$old_logs_dir"
-        mv "$techdir"/*.log "$old_logs_dir/"
-        logNewLine "Created $old_logs_dir and moved pre-existing .log files" "$Bright_Yellow"
+        for log in "${found_logs[@]}"; do
+          mv "${log}" "$old_logs_dir"
+        done
+        logNewLine "Created $(basename "${old_logs_dir%/}") and moved pre-existing .log files" "$YELLOW"
       fi
     fi
   else
@@ -181,6 +187,71 @@ function WriteVarsToCSV {
 
   logNewLine "Declared variables have been written to $fullInput_csv" "$YELLOW"
   export fullInput_csv="${fullInput_csv}"
+}
+
+function MoveOldCSVs {
+  # Check if $techdir exists
+  if [ -d "$techdir" ]; then
+    found_CSVs=()
+    while IFS=  read -r -d $'\0'; do
+      found_CSVs+=("$REPLY")
+    done < <(find "${techdir}" -maxdepth 1 -name "*.csv" -print0)
+    # Check if there are .log files
+    if [ ${#found_CSVs[@]} -gt 0 ]; then
+      old_CSVs_dir="${techdir%/}/old_CSVs"
+      
+      # Check if old_logs directory exists
+      if [ -d "$old_CSVs_dir" ]; then
+        # Move .log files to old_logs
+        for each_csv in "${found_CSVs[@]}"; do
+          mv "${each_csv}" "$old_CSVs_dir"
+        done
+        logNewLine "Moved pre-existing CSV files to $(basename "${old_CSVs_dir%/}")" "$YELLOW"
+      else
+        # Create old_logs directory and move .log files
+        mkdir "$old_CSVs_dir"
+        for each_csv in "${found_CSVs[@]}"; do
+          mv "${each_csv}" "$old_CSVs_dir"
+        done
+        logNewLine "Created $(basename "${old_CSVs_dir%/}") and moved pre-existing CSV files" "$YELLOW"
+      fi
+    fi
+  else
+    logNewLine "Directory $techdir does not exist" "$RED"
+  fi
+}
+
+CompareCSV () {
+  existing_csv_files=()
+  while IFS=  read -r -d $'\0'; do
+    existing_csv_files+=("$REPLY")
+  done < <(find "${techdir}" -maxdepth 1 -name "*.csv" -print0)
+
+  if [ ${#existing_csv_files[@]} -eq 0 ]; then
+      echo "No existing CSV files found in ${techdir}"
+  fi
+
+  # Loop through existing CSV files and compare with the new CSV
+  for existing_csv in "${existing_csv_files[@]}"; do
+      if [ "$existing_csv" != "$1" ]; then
+          echo "Comparing "$(basename "$1")" with "$(basename "$existing_csv")""
+
+          # Use awk to compare the first column and print differences in the second column
+          csv_diff=$(awk -F ',' 'NR==FNR{a[$1]=$2; next} $1 in a && a[$1]!=$2{print $1 "," $2 "," a[$1]}' "$1" "$existing_csv")
+
+          # Check if differences were found and print the message
+          if [ -n "$csv_diff" ]; then
+              echo "Differences found:"
+              echo "$csv_diff" | while IFS=, read -r col1 new_val existing_val; do
+                  echo "'$col1' has different values:"
+                  echo "- New: $new_val"
+                  echo "- Existing: $existing_val"
+              done
+          else
+              echo "No differences found."
+          fi
+      fi
+  done
 }
 
 set +a
