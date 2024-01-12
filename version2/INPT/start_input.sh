@@ -195,7 +195,9 @@ LogVars
 
 WriteVarsToCSV
 CompareCSV "${fullInput_csv}"
-MoveOldCSVs
+if [[ "${old_csv_again}" = "yes" ]] ; then
+    CompareCSV "${fullInput_csv}"
+fi
 
 source "${script_dir}"/start_output.sh
 
