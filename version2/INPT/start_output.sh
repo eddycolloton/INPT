@@ -58,31 +58,33 @@ elif [[ -n "${input_csv}" && "$#" = 2 ]] ; then
 	# Check if the file exists
 	if [ ! -f "$input_file2_path" ]; then
 		logNewLine "The provided file ${input_file2_path} does not exist." "$RED"
-	fi
-	# Check the content of the file to determine its type
-	first_line2=$(head -n 1 "$input_file2_path")
-	# Check if it's an output CSV file
-	if [[ "$first_line2" == "Move all files to staging directory,"* ]]; then
-		output_csv=$input_file2_path
-		logNewLine "Output CSV file detected: $output_csv" "$WHITE"
 	else
-		logNewLine "Error: Unsupported CSV file format." "$RED"
+		# Check the content of the file to determine its type
+		first_line2=$(head -n 1 "$input_file2_path")
+		# Check if it's an output CSV file
+		if [[ "$first_line2" == "Move all files to staging directory,"* ]]; then
+			output_csv=$input_file2_path
+			logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+		else
+			logNewLine "Error: Unsupported CSV file format." "$RED"
+		fi
 	fi
-elif [[ -z "${input_csv}" && "$#" -lt 1 ]] ; then
+elif [[ -z "${input_csv}" && "$#" = 1 ]] ; then
 	# Assign the first argument to a variable
 	input_file_path=$1
 	# Check if the file exists
 	if [ ! -f "$input_file_path" ]; then
 		logNewLine "The provided file ${input_file_path} does not exist." "$RED"
-	fi
-	# Check the content of the file to determine its type
-	first_line=$(head -n 1 "$input_file_path")
-	# Check if it's an output CSV file
-	if [[ "$first_line" == "Move all files to staging directory,"* ]]; then
-		output_csv=$input_file_path
-		logNewLine "Output CSV file detected: $output_csv" "$WHITE"
 	else
-		logNewLine "Error: Unsupported CSV file format." "$RED"
+		# Check the content of the file to determine its type
+		first_line=$(head -n 1 "$input_file_path")
+		# Check if it's an output CSV file
+		if [[ "$first_line" == "Move all files to staging directory,"* ]]; then
+			output_csv=$input_file_path
+			logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+		else
+			logNewLine "Error: Unsupported CSV file format." "$RED"
+		fi
 	fi
 fi
 

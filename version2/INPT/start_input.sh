@@ -13,29 +13,29 @@ CleanupLogDir
 
 if [[ "$#" -lt 1 ]]; then
     logNewLine "No input CSV files provided!" "$RED"
+else
+    # Assign the first argument to a variable
+    input_file_path=$1
 fi
-
-# Assign the first argument to a variable
-input_file_path=$1
 
 # Check if the file exists
 if [ ! -f "$input_file_path" ]; then
     logNewLine "The provided file ${input_file_path} does not exist." "$RED"
-fi
-
-# Check the content of the file to determine its type
-first_line=$(head -n 1 "$input_file_path")
-
-# Check if it's an input CSV file
-if [[ "$first_line" == "Artist's First Name,"* ]]; then
-    input_csv=$input_file_path
-    logNewLine "Input CSV file detected: $input_csv" "$WHITE"
-# Check if it's an output CSV file
-elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
-    output_csv=$input_file_path
-    logNewLine "Output CSV file detected: $output_csv" "$WHITE"
 else
-    logNewLine "Error: Unsupported CSV file format." "$RED"
+    # Check the content of the file to determine its type
+    first_line=$(head -n 1 "$input_file_path")
+
+    # Check if it's an input CSV file
+    if [[ "$first_line" == "Artist's First Name,"* ]]; then
+        input_csv=$input_file_path
+        logNewLine "Input CSV file detected: $input_csv" "$WHITE"
+    # Check if it's an output CSV file
+    elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
+        output_csv=$input_file_path
+        logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+    else
+        logNewLine "Error: Unsupported CSV file format." "$RED"
+    fi
 fi
 
 if [[ -n "${input_csv}" ]] ; then
