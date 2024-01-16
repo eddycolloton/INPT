@@ -123,7 +123,6 @@ function MoveOldLogs {
     # Check if there are .log files
     if [[ ${#found_logs[@]} -gt 0 ]]; then
       old_logs_dir="${techdir%/}/old_logs"
-      
       # Check if old_logs directory exists
       if [ -d "$old_logs_dir" ]; then
         # Move .log files to old_logs
