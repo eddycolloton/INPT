@@ -136,7 +136,7 @@ function MoveOldLogs {
         for log in "${found_logs[@]}"; do
           mv "${log}" "$old_logs_dir"
         done
-        logNewLine "Created $(basename "${old_logs_dir%/}") and moved pre-existing .log files" "$YELLOW"
+        logNewLine "Created $(basename "${old_logs_dir%/}") directory and moved pre-existing .log files" "$YELLOW"
       fi
     fi
   else

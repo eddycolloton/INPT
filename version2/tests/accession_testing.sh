@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ArtFile="/Users/eddy/Desktop/hmsg_directoires/artwork_files/Last, First/"
+ArtFile="/Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/"
 
 ConfirmInput () {
     local var="$1"
@@ -26,7 +26,7 @@ function CheckAccession {
     while [[ "$accession_again" = yes ]] ; do
         echo -e "\n*************************************************\nInput accession number" && read accession
         #prompts user for accession number and reads input
-        echo "The accession number manually input: ${accession}"
+        logNewLine "The accession number manually input: ${accession}" "$CYAN"
         echo -e "\nIs the accession number correct?"
         ConfirmInput accession accession_again
         if [[ "$accession_again" = yes ]] ;
@@ -44,7 +44,7 @@ ParseAccession () {
     parsed_accession=$(echo "$dir_name" | awk -F'[ _]' '{print $1}')
     #sed command cuts everything before and after ##.# in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
     if [[  $(echo -n "$parsed_accession" | wc -c) =~ $count ]]; then
-        echo "The accession number is ${parsed_accession} found in the artwork folder ${found_dir}"
+        logNewLine "The accession number is ${parsed_accession} found in the artwork folder ${found_dir}" "$MAGENTA"
         export accession="${parsed_accession}"
     else
         CheckAccession 
@@ -59,13 +59,12 @@ title_dir_results=$(find "${ArtFile}" -mindepth 0 -maxdepth 4 -type d -iname '*[
 #I don't know how xargs works, I got that bit from https://stackoverflow.com/questions/20165321/operating-on-multiple-results-from-find-command-in-bash
 #wc -l counts the lines from the output of the find command, this should give the number of directories found that have an accession number in them
 #The final xargs removes white space from the output of wc so that theoutput can be evalutated by the "if" statement below
-echo "$title_dir_results"
 if [[ "$title_dir_results" > 1 ]]; then
-	echo "$title_dir_results > 1"
+	logNewLine "More than one directory containing an accession number found." "$MAGENTA"
     #If the variable title_dir_results stores more than one result
 	#This is to determine if there is more than one dir in the ArtFile that has an accession number (typically means there are two artworks by the same artist)
 	CheckAccession
-	accession_dir=$(find "${ArtFile}" -mindepth 0 -maxdepth 4 -type d -iname "*${accession}*")
+	accession_dir=$(find "${ArtFile%/}" -mindepth 0 -maxdepth 4 -type d -iname "*${accession}*")
 	#defines the accession_dir variable as a directory stored inside the ArtFile that has the accession number in it's name
 	#This is to define a more specific variable, if there is more than one artwork in the ArtFile
 	if [[ -z "${accession_dir}" ]]; then
@@ -84,7 +83,7 @@ if [[ "$title_dir_results" > 1 ]]; then
                 fi
 			export title="${title}"
 		    done
-		accession_dir=$(find "${ArtFile}" -mindepth 0 -maxdepth 4 -type d -iname "*${title}*")
+		accession_dir=$(find "${ArtFile%/}" -mindepth 0 -maxdepth 4 -type d -iname "*${title}*")
 		done
         #defines the accession_dir variable as a directory stored inside the ArtFile that has the title in it's name
 		#This is to define a more specific variable, if there is more than one artwork in the ArtFile, or the directory is named in a way that is unexpected (i.e. with no accession number or accession number written ##-##)
@@ -101,7 +100,7 @@ if [[ "$title_dir_results" > 1 ]]; then
 			case $parentdir_option in 
 				"$ArtFile") accession_dir="$ArtFile"
 				#if ArtFile is selected, it is assigned the variable $accession_dir
-					echo "The Artwork File is $accession_dir"
+					logNewLine "The Artwork File is $accession_dir" "$MAGENTA"
 				break;;
 				"Enter path to parent directory") echo "Enter path to parent directory, use tab complete to help:" &&
 					read -e parentdir_input &&
@@ -110,7 +109,7 @@ if [[ "$title_dir_results" > 1 ]]; then
 					#Strips a trailing space from the input. 
 					#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
 					#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-					echo "The Artwork File is now $accession_dir"
+					logNewLine "The Artwork File is now $accession_dir" "$MAGENTA"
 				break;;
 				"Quit") echo "Quitting now..." && exit 1
 				#ends the script, exits
@@ -118,10 +117,10 @@ if [[ "$title_dir_results" > 1 ]]; then
 		    done;
 		    unset IFS
 		else 
-            echo "The Artwork File is now $accession_dir"
+            logNewLine "The Artwork File is now $accession_dir" "$MAGENTA"
 		fi
 	else 
-        echo "The Artwork File is now $accession_dir"
+        logNewLine "The Artwork File is now $accession_dir" "$MAGENTA"
 	fi
 fi
 
