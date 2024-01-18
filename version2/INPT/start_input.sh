@@ -81,13 +81,13 @@ fi
 if [[ -n "${input_csv}" ]] ; then
 # if input_csv has been assigned, then
     if [[ -z "${ArtistLastName}" ]] ; then
-        source "${script_dir}"/input_functions/inputs.sh
+        source "${script_dir}"/input_functions/find/findartfile.sh
         InputArtistsName
     else
         logNewLine "Artist name found in CSV: ${ArtistFirstName} ${ArtistLastName}" "$WHITE"
     fi
 else
-    source "${script_dir}"/input_functions/inputs.sh
+    source "${script_dir}"/input_functions/find/findartfile.sh
     InputArtistsName
 fi
 
@@ -106,7 +106,7 @@ else
     FindArtworkFile
 fi
 
-# This chunk has gotten messy and I think unnecessarily so, need to investigate the possibility of not having accession number in csv AND not having it from FindArtworkFile...
+# TO DO: Go through input functions and rephrase echo statement for confirming manual inputs
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${accession}" ]] ; then
         echo "No accession number in input csv"

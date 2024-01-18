@@ -2,16 +2,45 @@
 
 set -a
 
-# Find Artwork File:
-	
-	#if artfile var exists, do nothing
-	#else, search art files for artist last name
-		#if none found:
-			#use options from make_dirs
-		#if multiple found
-			#check inside artwork folder for accession number
-		#else
-			#assign artwork file and get accession (if empty)	
+# Function to remove BOM and non-printable characters
+function remove_special_chars {
+    local str=$1
+    str=$(printf '%s' "$str" | LC_ALL=C tr -dc '[:print:]\n')
+    str="${str#"${str%%[![:space:]]*}"}"   # Remove leading whitespace
+    str="${str%"${str##*[![:space:]]}"}"   # Remove trailing whitespace
+    echo "$str"
+}
+
+function InputArtistsName {
+    name_again=yes
+    while [[ "$name_again" = yes ]]
+    do
+    echo -e "\n*************************************************\nInput artist's first name"
+    read -e ArtistFirstName
+    #Asks for user input and assigns it to variable
+    echo -e "\n*************************************************\nInput artist's last name"
+    read -e ArtistLastName
+    #Asks for user input and assigns it to variable
+	cowsay "Just checking for typos - Is the Artist's Name entered correctly?"
+    logNewLine "Artist name manually input: ${ArtistFirstName} ${ArtistLastName}" "$CYAN"
+    IFS=$'\n'; select name_option in "Yes" "No, go back a step" ; do
+    if [[ $name_option = "Yes" ]] ;
+        then
+            name_again=no
+    elif [[ $name_option = "No, go back a step" ]] ;
+        then 
+            unset ArtistFirstName ArtistLastName
+    fi
+    break           
+    done;
+
+    if [[ "$name_again" = yes ]]
+    then echo -e "Let's try again"
+    fi
+    
+    done
+
+}	
 
 #This function finds the Artwork file path
 function FindArtworkFilesPath {
@@ -42,10 +71,10 @@ function MakeArtworkFile {
 	while [[ -z "$accession" ]] ; do
 		accession_again=yes
     	while [[ "$accession_again" = yes ]] ; do
-			echo "Enter Accession Number in '####.###' format" && read accession
+			echo -e "\nEnter Accession Number in '####.###' format" && read accession
 			#prompts user for accession number and reads input
+			cowsay "Just checking for typos - Is the accession number entered correctly?"
 			logNewLine "The accession number manually input: ${accession}" "$CYAN"
-			echo -e "\nIs the accession number correct?"
 		    IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
 		    if [[ $accession_option = "Yes" ]] ;
 		        then
@@ -66,10 +95,10 @@ function MakeArtworkFile {
 	while [[ -z "$title" ]] ; do
 		title_again=yes
     	while [[ "$title_again" = yes ]] ; do
-			echo "Enter Artwork Title" && read title
+			echo -e "\nEnter Artwork Title" && read title
 			#prompts user for artwork title and reads input
+			cowsay "Just checking for typos - Is the artwork title entered correctly?"
 			logNewLine "The title manually input: ${title}" "$CYAN"
-			echo -e "\nIs the title correct?"
 		    IFS=$'\n'; select title_option in "Yes" "No, go back a step" ; do
 		    if [[ $title_option = "Yes" ]] ;
 		        then
@@ -87,7 +116,7 @@ function MakeArtworkFile {
 		done
 		export title="${title}"
 	done
-	mkdir -pv "${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/"time-based media"/"$accession""_""$title"/{"Acquisition and Registration","Artist Interaction","Cataloging","Conservation"/{"Condition_Tmt Reports","DAMS","Equipment Reports"},"Iteration Reports_Exhibition Info"/"Equipment Reports","Photo-Video Documentation","Research"/"Correspondence","Technical Info_Specs"/{"Past installations_Pics","Sidecars"},"Trash"}
+	mkdir -p "${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/"time-based media"/"$accession""_""$title"/{"Acquisition and Registration","Artist Interaction","Cataloging","Conservation"/{"Condition_Tmt Reports","DAMS","Equipment Reports"},"Iteration Reports_Exhibition Info"/"Equipment Reports","Photo-Video Documentation","Research"/"Correspondence","Technical Info_Specs"/{"Past installations_Pics","Sidecars"},"Trash"}
 	#creates Artwork File directories
 	#I've removed the path to the HMSG shared drive below for security reasons
 	ArtFile="${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/
@@ -121,8 +150,8 @@ function CheckAccession {
     while [[ "$accession_again" = yes ]] ; do
         echo -e "\n*************************************************\nInput accession number" && read accession
         #prompts user for accession number and reads input
+		cowsay "Just checking for typos - Is the accession number entered correctly?"
         logNewLine "The accession number manually input: ${accession}" "$CYAN"
-        echo -e "\nIs the accession number correct?"
         ConfirmInput accession accession_again
         if [[ "$accession_again" = yes ]] ;
             then echo -e "Let's try again"
@@ -170,8 +199,8 @@ if [[ "$title_dir_results" > 1 ]]; then
             while [[ "$title_again" = yes ]] ; do
                 echo -e "\n*************************************************\nInput the artwork's title" && read title
                 #prompts user for artwork title and reads input
-                echo "The title manually input: ${title}"
-                echo -e "\nIs the title correct?"
+                cowsay "Just checking for typos - Is the artwork title entered correctly?"
+				logNewLine "The title manually input: ${title}" "$CYAN"
                 ConfirmInput title title_again
                 if [[ "$title_again" = yes ]] ;
                     then echo -e "Let's try again"
@@ -266,8 +295,8 @@ if [[ -z "${FindArtFile}" ]]; then
 				#Strips a trailing space from the input. 
 				#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
 				#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+				cowsay "Just checking for typos - Is the path to the artwork file entered correctly?"
 				logNewLine "The artwork file manually input is ${ArtFile}" "$CYAN"
-				echo -e "\nIs the artwork file correct?"
 			    IFS=$'\n'; select artfile_option in "Yes" "No, go back a step" ; do
 			    if [[ $artfile_option = "Yes" ]] ;
 		        then
