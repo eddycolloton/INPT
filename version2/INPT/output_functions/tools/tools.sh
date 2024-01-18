@@ -11,7 +11,8 @@ function RunTree {
 	echo -e "\n***** tree output ***** \n" >> "${reportdir}/${accession}_appendix.txt"
 	cat "${SDir}/${accession}_tree_output.txt" >> "${reportdir}/${accession}_appendix.txt"  
 	cp "${SDir}/${accession}_tree_output.txt" "$sidecardir"
-	if [[ -f "${SDir}/${accession}_tree_output.txt" ]]; then
+	if [[ -n $(find "${SDir}" -name "${accession}_tree_output.txt" -newermt "$(date -v-10S '+%Y-%m-%d %H:%M:%S')") ]]; then
+	
 		duration=$SECONDS
 		logNewLine "===================> tree complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "tree output written to ${accession}_appendix.txt, and saved as sidecar file ${accession}_tree_output.txt." "$YELLOW"
@@ -60,7 +61,8 @@ function RunSF {
 		echo -e "\n***** siegfried output ***** \n" >> "${reportdir}/${accession}_appendix.txt"
 		cat "$t" >> "${reportdir}/${accession}_appendix.txt"
 	done 
-	if [[ -n $(find "${SDir}" -name "*_sf.txt") ]] ; then
+	if [[ -n $(find "${SDir}" -name "*_sf.txt" -newermt "$(date -v-10S '+%Y-%m-%d %H:%M:%S')") ]] ; then
+	# the -newermt option along with the date command finds files modified within the last 10 seconds. The $(date -v-10S) command generates a timestamp representing the time 10 seconds ago, and the -newermt option filters files modified after that timestamp.
 		duration=$SECONDS
 		logNewLine "===================> siegfried complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "siegfried output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
@@ -106,7 +108,8 @@ function RunMI {
 		echo -e "\n***** mediainfo -f output ***** \n" >> "${reportdir}/${accession}_appendix.txt"
 		cat "$t" >>  "${reportdir}/${accession}_appendix.txt"
 	done
-	if [[ -n $(find "${SDir}" -name "*_mediainfo.txt") ]]; then 
+	if [[ -n $(find "${SDir}" -name "*_mediainfo.txt" -newermt "$(date -v-10S '+%Y-%m-%d %H:%M:%S')") ]] ; then
+	# the -newermt option along with the date command finds files modified within the last 10 seconds.
 		duration=$SECONDS
 		logNewLine "===================> MediaInfo completed! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "MediaInfo output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
@@ -154,7 +157,8 @@ function RunExif {
 			echo -e "\n***** Exiftool output ***** \n" >> "${reportdir}/${accession}_appendix.txt"
 			cat "$t" >> "${reportdir}/${accession}_appendix.txt"
 	done
-	if [[ -n $(find "${SDir}" -name "*_exif.txt") ]]; then
+	if [[ -n $(find "${SDir}" -name "*_exif.txt" -newermt "$(date -v-10S '+%Y-%m-%d %H:%M:%S')") ]] ; then
+	# the -newermt option along with the date command finds files modified within the last 10 seconds.
 		duration=$SECONDS
 		logNewLine "===================> Exiftool complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "Exiftool output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
@@ -199,7 +203,8 @@ function Make_Framemd5 {
 	while IFS= read -r -d '' t; 
 		do cp "$t" "$sidecardir"
 	done
-	if [[ -n $(find "${SDir}" -name "*_framemd5.txt") ]]; then
+	if [[ -n $(find "${SDir}" -name "*_framemd5.txt" -newermt "$(date -v-10S '+%Y-%m-%d %H:%M:%S')") ]] ; then
+	# the -newermt option along with the date command finds files modified within the last 10 seconds.
 		duration=$SECONDS
 		logNewLine "===================> framemd5 complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "framemd5 output copied to $(basename ${SDir})" "$YELLOW"
@@ -243,7 +248,8 @@ function Make_QCT {
 	while IFS= read -r -d '' t; 
 		do cp "$t" "$sidecardir"
 	done
-	if [[ -n $(find "${SDir}" -name "*.qctools*") ]]; then
+	if [[ -n $(find "${SDir}" -name "*.qctools*" -newermt "$(date -v-10S '+%Y-%m-%d %H:%M:%S')") ]] ; then
+	# the -newermt option along with the date command finds files modified within the last 10 seconds.
 		duration=$SECONDS
 		logNewLine "===================> QCTools complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "QCTools output copied to $(basename $SDir)" "$YELLOW"
