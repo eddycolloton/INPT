@@ -12,7 +12,7 @@ function RunTree {
 	cat "${SDir}/${accession}_tree_output.txt" >> "${reportdir}/${accession}_appendix.txt"  
 	cp "${SDir}/${accession}_tree_output.txt" "$sidecardir"
 	if [[ -n $(find "${SDir}" -name "${accession}_tree_output.txt" -newermt "$(date -v-10S '+%Y-%m-%d %H:%M:%S')") ]]; then
-	
+	# the -newermt option along with the date command finds files modified within the last 10 seconds.
 		duration=$SECONDS
 		logNewLine "===================> tree complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
 		logNewLine "tree output written to ${accession}_appendix.txt, and saved as sidecar file ${accession}_tree_output.txt." "$YELLOW"
