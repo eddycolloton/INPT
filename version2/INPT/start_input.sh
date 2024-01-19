@@ -40,7 +40,7 @@ fi
 
 if [[ -n "${input_csv}" ]] ; then
     logNewLine "Reading variables from input csv: ${input_csv}" "$CYAN"
-    source "${script_dir}"/input_functions/inputs.sh
+    source "${script_dir}"/input_functions/findartfile.sh
     # remove_special_chars function is stored in inputs.sh
     if test -f "${input_csv}"; then
     # test that input_csv is a file
