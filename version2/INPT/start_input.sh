@@ -40,7 +40,7 @@ fi
 
 if [[ -n "${input_csv}" ]] ; then
     logNewLine "Reading variables from input csv: ${input_csv}" "$CYAN"
-    source "${script_dir}"/input_functions/findartfile.sh
+    source "${script_dir}"/input_functions/find/findartfile.sh
     # remove_special_chars function is stored in inputs.sh
     if test -f "${input_csv}"; then
     # test that input_csv is a file
@@ -62,8 +62,8 @@ if [[ -n "${input_csv}" ]] ; then
                 "Path to the Time-based Media Artworks directory on the TBMA DroBo") key="TBMADroBoPath" ;;
             esac
             # Remove quotes and special characters from the key and value
-            key=$(remove_special_chars "$key" | tr -d '"')
-            value=$(remove_special_chars "$value" | tr -d '"')
+            key=$(remove_special_chars "$key")
+            value=$(remove_special_chars "$value")
             # Assign the value to a variable named after the key
             declare "$key=$value"
             ## consider creating an array here of assigned variables to simplify the rest of the script

@@ -5,10 +5,12 @@ set -a
 # Function to remove BOM and non-printable characters
 function remove_special_chars {
     local str=$1
-    str=$(printf '%s' "$str" | LC_ALL=C tr -dc '[:print:]\n')
+    local accented_chars='éèêëàáâäãåæçèéêëìíîïðñòóôõöùúûüýÿ'
+    str=$(printf '%s' "$str" | LC_ALL=C sed -E "s/[^[:print:]\n\r\t$accented_chars]//g")
     str="${str#"${str%%[![:space:]]*}"}"   # Remove leading whitespace
     str="${str%"${str##*[![:space:]]}"}"   # Remove trailing whitespace
-    echo "$str"
+    str="${str//[\"]}"
+    echo "${str//[\']}"
 }
 
 function InputArtistsName {
