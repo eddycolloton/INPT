@@ -27,10 +27,10 @@ Each of these is a CLI application that is available from the package manager Ho
 To install all dependencies with Homebrew run dependency_check.sh
 
 # Usage
-INPT is divided into 2 stages:
+INPT is divided into 2 stages: INPT and OUTPUT. The steps can be run independently or together. 
 
 ## INPT
-Collect information.
+**Collect information.**
 
 `start_input.sh <optional input.csv> <optional output.csv>`
 
@@ -53,10 +53,14 @@ You can choose to input any of this information prior to running the script usin
 Any information not provided in the input.csv will be input manually in terminal through a series of prompts, or inferred based on provided infromation. 
 For example once the artist's name has been input, the Artwork Files directory on the T:\ drive is searched for an existing artwork file. If one is found the user will not need to manually input the path to the artwork file. 
 
+You can also provide the output.csv (described in the next section) to start_input. 
+
+A populated input csv is output at the end when start_input.sh and can be provided to start_output to resume processing an artwork started by INPT.
+
 Once start_input completes start_output begins automatically. 
 
 ## OUTPUT
-Create information.
+**Create information.**
 
 `start_output.sh <optional input.csv> <optional output.csv>`
 
@@ -72,5 +76,6 @@ start_output provides the following options:
 - Create QCTools reports for video files in staging directory
 
 Like with the first stage, you can choose to input any of your choices prior to running the script using a CSV. A template for the output.csv is here: csv_templates/output_template.csv
-You can provide the input.csv to start_output.sh as well. A populated input csv is output at the end when start_input.sh and can be provided to start_output to resume processing an artwork started by INPT.
+
+You can provide the input.csv to start_output.sh as well. 
 
