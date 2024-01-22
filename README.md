@@ -75,7 +75,7 @@ start_output provides the following options:
 - Create framdemd5 output for video files in staging directory
 - Create QCTools reports for video files in staging directory
 
-Like with the first stage, you can choose to input any of your choices prior to running the script using a CSV. A template for the output.csv is here: csv_templates/output_template.csv
+Like with the first stage, you can choose to input any of your choices prior to running the script using a CSV. A "1" in the 2nd column of the CSV indicates the option will be run, a "0" indicates it will not. A template for the output.csv is here: csv_templates/output_template.csv
 
 You can provide the input.csv to start_output.sh as well. 
 
