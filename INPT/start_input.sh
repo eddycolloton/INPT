@@ -2,27 +2,36 @@
 
 set -a
 
+## defines directory of script and parent directory
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+## command breakdown:
+# BASH_SOURCE[0] refers to the name of the currently executing script.
+# "$( dirname -- "${BASH_SOURCE[0]:-$0}" )" extracts the directory portion of the script's path.
+# cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}" )" &> /dev/null changes the current working directory to the script's directory.
+# pwd 2> /dev/null prints the current working directory to standard output while suppressing any error messages.
 parent_dir="$(dirname "$script_dir")"
 
 figlet INPT
 
+## Create log and if check logs directory. If there are 20+ logs, delete all but most recent 5 logs. 
+# more details in input_functions/makelog.sh
 source "${script_dir}"/input_functions/makelog.sh
 MakeLog
 CleanupLogDir
 
 if [[ "$#" -lt 1 ]]; then
+# If command line arguments are less than 1, then:
     logNewLine "No input CSV files provided!" "$RED"
 else
-    # Assign the first argument to a variable
     input_file_path=$1
+    # Assign the first argument to a variable
 fi
 
-# Check if the file exists
+# Check if the input file exists
 if [ ! -f "$input_file_path" ]; then
     logNewLine "The provided file ${input_file_path} does not exist." "$RED"
 else
-    # Check the content of the file to determine its type
+    # Check the content of the file to determine it matches expected first line of input.csv or output.csv
     first_line=$(head -n 1 "$input_file_path")
 
     # Check if it's an input CSV file
@@ -38,10 +47,11 @@ else
     fi
 fi
 
+# After checking the first line, if an input file has been identified then read inputs and assign them to variables
 if [[ -n "${input_csv}" ]] ; then
     logNewLine "Reading variables from input csv: ${input_csv}" "$CYAN"
     source "${script_dir}"/input_functions/find/findartfile.sh
-    # remove_special_chars function is stored in inputs.sh
+    # remove_special_chars function is stored in findartfile.sh
     if test -f "${input_csv}"; then
     # test that input_csv is a file
         while IFS=, read -r key value || [ -n "$key" ]
@@ -66,9 +76,7 @@ if [[ -n "${input_csv}" ]] ; then
             value=$(remove_special_chars "$value")
             # Assign the value to a variable named after the key
             declare "$key=$value"
-            ## consider creating an array here of assigned variables to simplify the rest of the script
-            ## if assigned vars are in an array then you could run 'if $var not in $array ; then' 
-            # Print debug information
+            # Print debug information but uncommenting line below:
             # echo "Key: $key, Value: $value"
         done < "${input_csv}"
         logNewLine "Successfully read variables from ${input_csv}" "$CYAN"
@@ -81,6 +89,7 @@ fi
 if [[ -n "${input_csv}" ]] ; then
 # if input_csv has been assigned, then
     if [[ -z "${ArtistLastName}" ]] ; then
+    # if artist's name has not been assigned, then:
         source "${script_dir}"/input_functions/find/findartfile.sh
         InputArtistsName
     else
@@ -152,7 +161,6 @@ if [[ -n "${input_csv}" ]] ; then
             FindTBMADroBoPath
         fi
         FindSDir
-        # added logging functions for sdir to input_functions/find/findsdir.sh
     else
         logNewLine "Path to the staging directory from CSV: ${SDir}" "$WHITE"
     fi
@@ -190,14 +198,17 @@ else
     FindConditionDir
 fi
 
+# Write all assigned variables to log
 LogVars
 
+# Write all assigned variables to csv, then compare to any existing csvs in the artwork file
 WriteVarsToCSV
 CompareCSV "${fullInput_csv}"
 if [[ "${old_csv_again}" = "yes" ]] ; then
     CompareCSV "${fullInput_csv}"
 fi
 
+# run start_output
 source "${script_dir}"/start_output.sh
 
 set +a

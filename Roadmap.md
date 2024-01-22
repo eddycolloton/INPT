@@ -10,3 +10,7 @@ Planned updates to INPT scripts
   - Read applicable data from the artwork file’s Technical Info_Specs directory 
   - Place relevant metadata into spreadsheet that conforms with SI DAMS metadata template
   - When provided to DAMS upon ingest, can’t reduce redundant metadata entered into SI DAMS manually
+- homebrew installation
+  - create homebrew installation to be able to call scripts and functions with commands?
+- Preferences config
+  - Store settings (for instance, to run typo checks) in a config file to toggle settings on/off
