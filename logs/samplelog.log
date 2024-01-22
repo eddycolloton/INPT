@@ -1,0 +1,59 @@
+This is a sample log from the HMSG bash scripting project INPT. Logs created by these scripts will look very similar to this one. The log is intended to aid in troubleshooting and as documentation of the automated processes performed by INPT. 
+
+The log will be created when the scripts begin running. The logos will be named using the following file naming convention: YYYY-MM-DD-HH.MM.SS_INPT.log. 
+
+If the process completes successfully, a copy of the log will be copied to the artwork file in the Technical Info_Specs directory with the other outputs from INPT. The completed log will be renamed using the following naming convention: ArtistLastName_accession_YYYY-MM-DD-HH.MM.SS_INPT.log
+
+The logs directory (the one this file is in) also stores the logs created by the copyit.py python script. The copyit.py script is part of the open source project IFIscripts, (c) 2015-2018 Kieran O'Leary for the Irish Film Institute.
+
+Sample log below:
+
+====== Script started at 2023-12-16 - 15.12.31 ======
+2023-12-16 - 15.12.32 - input csv found at /path/to/input_template.csv
+2023-12-16 - 15.12.37 - Artist name manually input: Some Name
+2023-12-16 - 15.12.38 - The acession number is: 1999.000
+2023-12-16 - 15.12.46 - The path to the volume manually input: /Users/eddy/Desktop/volume/
+2023-12-16 - 15.12.51 - Path to the staging directory manually input: /path/to/1999-000_Name
+2023-12-16 - 15.12.51 - start_input.sh complete:
+----------------------->The artist name is Some Name
+----------------------->The title of the work is Untitled
+----------------------->The accession number is XXXX.XXX
+----------------------->The artwork folder is /path/to/artwork_files/Name, Some
+----------------------->The staging directory is /path/to/XXXX-XXX_Name
+----------------------->The volume path is /Volumes/some_volume
+2023-12-16 - 15.13.07 - The selected files are: /Volumes/some_volume/artwork_ch1.mov
+
+2023-12-16 - 15.13.24 ******** generating md5 checksums on selected files ******** 
+md5deep will be run on /Volumes/some_volume
+2023-12-16 - 15.13.24 ******** md5 checksum manifest from /Volumes/some_volume completed ******** 
+
+		md5deep Results:
+		copied to /path/to/1999-000_Name and 
+		/path/to/artwork_files/Name, Some/time-based media/1999.000_something/Conservation/Condition_Tmt Reports/1999.000_appendix.txt
+		===================> Total Execution Time: 0 m 0 s
+
+2023-12-16 - 15.13.24 ******** copying files started ******** 
+	copying individual files from the volume
+
+	list of files copied below:
+	/Volumes/some_volume/artwork_ch1.mov
+
+2023-12-16 - 15.13.25 ******** file copying and md5 checksum manifest from /Users/eddy/Desktop/hmsg_directoires/staging_directories/1999-000_Name completed ******** 
+
+		rsync Results:
+		manifest copied to /path/to/1999-000_Name and 
+		/path/to/artwork_files/Name, Some/time-based media/1999.000_something/Conservation/Condition_Tmt Reports/1999.000_appendix.txt 
+ rsync logs in /path/to/artwork_files/Name, Some/time-based media/1999.000_something/Technical Info_Specs
+		===================> Total Execution Time: 0 m 1 s
+2023-12-16 - 15.13.25 ******** checksum manifests match ******** 
+
+		===================> Total Execution Time: 0 m 1 s
+
+2023-12-16 - 15.13.22 ******** siegfried started ******** 
+ siegfried will be run on /path/to/1999-000_Name
+2023-12-16 - 15.13.24 ******** siegfried completed ******** 
+
+		sf Results:
+		copied to /path/to/1999-000_Name and 
+		/path/to/artwork_files/Name, Some/time-based media/1999.000_something/Conservation/Condition_Tmt Reports/1999.000_appendix.txt
+		===================> Total Execution Time: 0 m 2 s

@@ -1,0 +1,58 @@
+====== Script started at 2024-01-16 - 15.16.17 ======
+2024-01-16 - 15.16.18 - No input CSV files provided!
+2024-01-16 - 15.16.18 - The provided file  does not exist.
+2024-01-16 - 15.16.18 - Error: Unsupported CSV file format.
+2024-01-16 - 15.16.42 - Artist name manually input: First Last
+2024-01-16 - 15.17.09 - The path to the Artwork Files is: /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/
+2024-01-16 - 15.17.48 - The accession number manually input: 1999.001
+2024-01-16 - 15.18.02 - The title manually input: Untitled
+2024-01-16 - 15.18.05 - The artwork file has been created: /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/
+2024-01-16 - 15.21.58 - The path to the volume manually input: /Users/eddycolloton/git/HMSG_auto/version2/sample_files/
+2024-01-16 - 15.22.27 - The path to the Time
+2024-01-16 - 15.22.31 - Path to the staging directory: /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+2024-01-16 - 15.22.31 - Path to the staging directory: /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+2024-01-16 - 15.22.31 - Path to the Technical Info_Specs directory: /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Technical Info_Specs
+2024-01-16 - 15.22.31 - Metadata output will be written to sidecar files in /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Technical Info_Specs/Sidecars
+2024-01-16 - 15.22.31 - Path to the Condition_Tmt Reports directory: /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Conservation/Condition_Tmt Reports
+2024-01-16 - 15.22.31 - Metadata output will be written to the appendix.txt file in /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Conservation/Condition_Tmt Reports
+2024-01-16 - 15.22.31 - start_input.sh complete:
+----------------------->The artist name is First Last
+----------------------->The title of the work is Untitled
+----------------------->The accession number is 1999.001
+----------------------->The artwork folder is /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/
+----------------------->The staging directory is /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+----------------------->The volume path is /Users/eddycolloton/git/HMSG_auto/version2/sample_files/
+2024-01-16 - 15.22.31 - Declared variables have been written to /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Technical Info_Specs/Last_1999.001_2024-01-16-15.22.31.csv
+2024-01-16 - 15.22.31 - The provided file  does not exist.
+2024-01-16 - 15.22.31 - Error: Unsupported CSV file format.
+
+2024-01-16 - 15.22.51 ******** copyit.py started ******** 
+ -------------------> copyit.py will be run on all contents of the volume
+2024-01-16 - 15.22.51 ******** copyit.py completed ******** 
+
+		copyit.py Results:
+		all files copied to the /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+		===================> Total Execution Time: 0 m 0 s
+2024-01-16 - 15.22.51 - tree started! tree running on /Users/eddycolloton/git/HMSG_auto/version2/sample_files/
+2024-01-16 - 15.22.51 - ===================> tree complete! Total Execution Time: 0 m 0 s
+2024-01-16 - 15.22.51 - tree output written to 1999.001_appendix.txt, and saved as sidecar file 1999.001_tree_output.txt.
+2024-01-16 - 15.22.51 - sf started! siegfried will be run on /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+2024-01-16 - 15.22.51 - sf run on smpte_bars_prores.mov
+2024-01-16 - 15.22.51 - ===================> siegfried complete! Total Execution Time: 0 m 0 s
+2024-01-16 - 15.22.51 - siegfried output written to 1999.001_appendix.txt and saved as a sidecar file
+2024-01-16 - 15.22.51 - MediaInfo started! MediaInfo will be run on audio and video files in /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+2024-01-16 - 15.22.52 - mediainfo run on smpte_bars_prores.mov
+2024-01-16 - 15.22.52 - ===================> MediaInfo completed! Total Execution Time: 0 m 1 s
+2024-01-16 - 15.22.52 - MediaInfo output written to 1999.001_appendix.txt and saved as a sidecar file
+2024-01-16 - 15.22.52 - Exiftool started! Exiftool will be run on files in /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+2024-01-16 - 15.22.52 - exiftool run on smpte_bars_prores.mov
+2024-01-16 - 15.22.52 - ===================> Exiftool complete! Total Execution Time: 0 m 0 s
+2024-01-16 - 15.22.52 - Exiftool output written to 1999.001_appendix.txt and saved as a sidecar file
+2024-01-16 - 15.22.52 - framemd5 started! framemd5 will be run on video files in /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+2024-01-16 - 15.22.52 - framemd5 running on smpte_bars_prores.mov
+2024-01-16 - 15.22.53 - ===================> framemd5 complete! Total Execution Time: 0 m 1 s
+2024-01-16 - 15.22.53 - framemd5 output copied to 1999-001_Last
+2024-01-16 - 15.22.53 - QCTools started! QCTools run on video files in /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+2024-01-16 - 15.22.55 - qctools run on smpte_bars_prores.mov
+2024-01-16 - 15.22.55 - ===================> QCTools complete! Total Execution Time: 0 m 2 s
+2024-01-16 - 15.22.55 - QCTools output copied to 1999-001_Last

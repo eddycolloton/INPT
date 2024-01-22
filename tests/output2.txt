@@ -1,0 +1,5 @@
+    Text! with, \n\n
+some@ special characters$ é, è, ê, ü, ñ,€ (Euro), £ (Pound Sterling), ¥ (Yen   
+Text! with, \n\n
+some@ special characters$ é, è, ê, ü, ñ,� (Euro), � (Pound Sterling), � (Yen
+text

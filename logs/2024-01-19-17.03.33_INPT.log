@@ -1,0 +1,24 @@
+====== Script started at 2024-01-19 - 17.03.33 ======
+2024-01-19 - 17.03.34 - Input CSV file detected: /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Technical Info_Specs/Last_1999.001_2024-01-19-16.58.04.csv
+2024-01-19 - 17.03.34 - Reading variables from input csv: /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Technical Info_Specs/Last_1999.001_2024-01-19-16.58.04.csv
+2024-01-19 - 17.03.34 - Successfully read variables from /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Technical Info_Specs/Last_1999.001_2024-01-19-16.58.04.csv
+2024-01-19 - 17.03.34 - Artist name found in CSV: First Last
+2024-01-19 - 17.03.34 - The artwork file path from CSV: /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First
+2024-01-19 - 17.03.34 - The accession number from CSV: 1999.001
+2024-01-19 - 17.03.34 - The path to the volume from CSV: /Users/eddycolloton/git/HMSG_auto/version2/sample_files/
+2024-01-19 - 17.03.34 - Path to the staging directory from CSV: /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+2024-01-19 - 17.03.34 - Technical Info and Specs: /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Technical Info_Specs
+2024-01-19 - 17.03.34 - Condition Report: /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Conservation/Condition_Tmt Reports 
+Sidecar directory: /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Technical Info_Specs/Sidecars
+2024-01-19 - 17.03.34 - start_input.sh complete:
+----------------------->The artist name is First Last
+----------------------->The title of the work is title
+----------------------->The accession number is 1999.001
+----------------------->The artwork folder is /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First
+----------------------->The staging directory is /Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
+----------------------->The volume path is /Users/eddycolloton/git/HMSG_auto/version2/sample_files/
+2024-01-19 - 17.03.34 - Declared variables have been written to /Users/eddycolloton/Documents/hmsg_directories/artwork_folders/Last, First/time-based media/1999.001_Untitled/Technical Info_Specs/Last_1999.001_2024-01-19-17.03.34.csv
+2024-01-19 - 17.03.34 - Comparing Last_1999.001_2024-01-19-17.03.34.csv with Last_1999.001_2024-01-19-16.58.04.csv
+2024-01-19 - 17.03.34 - No differences between new CSV: Last_1999.001_2024-01-19-17.03.34.csv and old CSV: Last_1999.001_2024-01-19-16.58.04.csv. 
+Old CSV removed
+2024-01-19 - 17.03.34 - Input CSV provided, but no additional output CSV found.
