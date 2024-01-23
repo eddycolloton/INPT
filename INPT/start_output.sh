@@ -1,17 +1,21 @@
 #!/bin/bash
 
+# defines directory of script and parent directory
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+# script_dir assignment command is a bit complicated, see start_input for explanation of command
 parent_dir="$(dirname "$script_dir")"
 
-
+## Check to see if $fullInput_csv is assigned. It will be assigned if start_input has just run.
+# If start_input didn't just run, then this is a new process. Start log, search for input csv.   
 if [[ -z ${fullInput_csv} ]] ; then
 	source "${script_dir}"/input_functions/makelog.sh
 	MakeLog
-	source "${script_dir}"/output_functions/findvarfile.sh
+	source "${script_dir}"/input_functions/find/findartfile.sh
 	findCSV
 	if [[ -z "${sourcefile}" ]] ; then
 		echo -e "No input CSV found!"
 	else
+		# if an input file has been identified then read inputs and assign them to variables
 		logNewLine "Reading input variables from $fullInput_csv" "$CYAN"
 		fullInput_csv="${sourcefile}"
 		while IFS=, read -r key value || [ -n "$key" ]
@@ -48,6 +52,7 @@ if [[ -z ${fullInput_csv} ]] ; then
 	searchArtFile
 fi
 
+## Checks for input.csv or output.csv provided as arguments either to start_input or start_output
 if [[ -n "${output_csv}" ]] ; then
 	logNewLine "Output CSV file previously identified: $output_csv" "$WHITE"
 elif [[ -n "${input_csv}" && "$#" -lt 2 ]] ; then
@@ -55,11 +60,11 @@ elif [[ -n "${input_csv}" && "$#" -lt 2 ]] ; then
 elif [[ -n "${input_csv}" && "$#" = 2 ]] ; then
 	# Assign the first argument to a variable
 	input_file2_path=$2
-	# Check if the file exists
+	# Check if the input.csv file exists
 	if [ ! -f "$input_file2_path" ]; then
 		logNewLine "The provided file ${input_file2_path} does not exist." "$RED"
 	else
-		# Check the content of the file to determine its type
+		# Check the content of the file to determine it matches expected first line of input.csv or output.csv
 		first_line2=$(head -n 1 "$input_file2_path")
 		# Check if it's an output CSV file
 		if [[ "$first_line2" == "Move all files to staging directory,"* ]]; then
@@ -88,10 +93,11 @@ elif [[ -z "${input_csv}" && "$#" = 1 ]] ; then
 	fi
 fi
 
+# if an output file has been identified then read selected options and assign them to variables
 if [[ -n "${output_csv}" ]]; then
 	logNewLine "Reading variables from output csv: ${output_csv}" "$CYAN"
-	source "${script_dir}"/input_functions/inputs.sh
-	# remove_special_chars function is stored in inputs.sh
+	source "${script_dir}"/input_functions/find/findartfile.sh
+    # remove_special_chars function is stored in findartfile.sh
 	if test -f "${output_csv}"; then
 	# test that input_csv is a file
 		while IFS=, read -r key value || [ -n "$key" ]
