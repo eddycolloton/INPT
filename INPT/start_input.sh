@@ -3,12 +3,7 @@
 set -a
 
 ## defines directory of script and parent directory
-script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
-## command breakdown:
-# BASH_SOURCE[0] refers to the name of the currently executing script.
-# "$( dirname -- "${BASH_SOURCE[0]:-$0}" )" extracts the directory portion of the script's path.
-# cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}" )" &> /dev/null changes the current working directory to the script's directory.
-# pwd 2> /dev/null prints the current working directory to standard output while suppressing any error messages.
+script_dir=$(realpath $(dirname $0))
 parent_dir="$(dirname "$script_dir")"
 
 figlet INPT
@@ -25,27 +20,27 @@ if [[ "$#" -lt 1 ]]; then
 else
     input_file_path=$1
     # Assign the first argument to a variable
-fi
-
-# Check if the input file exists
-if [ ! -f "$input_file_path" ]; then
-    logNewLine "The provided file ${input_file_path} does not exist." "$RED"
-else
-    # Check the content of the file to determine it matches expected first line of input.csv or output.csv
-    first_line=$(head -n 1 "$input_file_path")
-
-    # Check if it's an input CSV file
-    if [[ "$first_line" == "Artist's First Name,"* ]]; then
-        input_csv=$input_file_path
-        logNewLine "Input CSV file detected: $input_csv" "$WHITE"
-    # Check if it's an output CSV file
-    elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
-        output_csv=$input_file_path
-        logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+    if [[ ! -f "$input_file_path" ]]; then
+    # if $input_file_path is not a file then,
+        logNewLine "The provided file ${input_file_path} does not exist." "$RED"
     else
-        logNewLine "Error: Unsupported CSV file format." "$RED"
+        # Check the content of the file to determine it matches expected first line of input.csv or output.csv
+        first_line=$(head -n 1 "$input_file_path")
+        # Check if it's an input CSV file
+        if [[ "$first_line" == "Artist's First Name,"* ]]; then
+            input_csv=$input_file_path
+            logNewLine "Input CSV file detected: $input_csv" "$WHITE"
+        # Check if it's an output CSV file
+        elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
+            output_csv=$input_file_path
+            logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+        else
+            logNewLine "Error: Unsupported CSV file format." "$RED"
+        fi
     fi
 fi
+
+
 
 # After checking the first line, if an input file has been identified then read inputs and assign them to variables
 if [[ -n "${input_csv}" ]] ; then
@@ -93,6 +88,7 @@ if [[ -n "${input_csv}" ]] ; then
         source "${script_dir}"/input_functions/find/findartfile.sh
         InputArtistsName
     else
+        # consdier adding a check here. If artist's name doesn't match any in artwork folders then confirm? Use different artist name database?
         logNewLine "Artist name found in CSV: ${ArtistFirstName} ${ArtistLastName}" "$WHITE"
     fi
 else

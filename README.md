@@ -24,12 +24,12 @@ INPT has the following dependencies:
 
 Each of these is a CLI application that is available from the package manager Homebrew. 
 
-To install all dependencies with Homebrew run dependency_check.sh
+To install all dependencies with Homebrew run `dependency_check.sh`
 
 # Usage
-INPT is divided into 2 stages: INPT and OUTPUT. The steps can be run independently or together. 
+INPT is divided into 2 stages: INPUT and OUTPUT. The steps can be run independently or together. 
 
-## INPT
+## INPUT
 **Collect information.**
 
 `start_input.sh <optional input.csv> <optional output.csv>`

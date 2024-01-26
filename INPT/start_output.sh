@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # defines directory of script and parent directory
-script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+script_dir=$(realpath $(dirname $0))
 # script_dir assignment command is a bit complicated, see start_input for explanation of command
 parent_dir="$(dirname "$script_dir")"
 
