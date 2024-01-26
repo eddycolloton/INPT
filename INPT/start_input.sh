@@ -137,19 +137,6 @@ else
 fi
 
 if [[ -n "${input_csv}" ]] ; then
-    if [[ -z "${Volume}" ]] ; then
-        logNewLine "No volume path in input csv" "$WHITE"
-        source "${script_dir}"/input_functions/find/findvolume.sh
-        FindVolume
-    else
-        logNewLine "The path to the volume from CSV: ${Volume}" "$WHITE"
-    fi
-else
-    source "${script_dir}"/input_functions/find/findvolume.sh
-    FindVolume
-fi
-
-if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${SDir}" ]] ; then
         logNewLine "No path to Staging Directory found in input csv" "$WHITE"
         source "${script_dir}"/input_functions/find/findsdir.sh
@@ -166,6 +153,19 @@ else
         FindTBMADroBoPath
     fi
     FindSDir
+fi
+
+if [[ -n "${input_csv}" ]] ; then
+    if [[ -z "${Volume}" ]] ; then
+        logNewLine "No volume path in input csv" "$WHITE"
+        source "${script_dir}"/input_functions/find/findvolume.sh
+        FindVolume
+    else
+        logNewLine "The path to the volume from CSV: ${Volume}" "$WHITE"
+    fi
+else
+    source "${script_dir}"/input_functions/find/findvolume.sh
+    FindVolume
 fi
 
 if [[ -n "${input_csv}" ]] ; then
