@@ -126,16 +126,16 @@ def get_script_version(scriptname):
     return script_version
 
 ### For INPT:
-### I've changed the two functions below to coresspond with how this project is organized
+### I've changed the two functions below to correspond with how this project is organized
 def make_logs_dir():
-    logs_dir = os.path.join((os.path.dirname(os.path.dirname(os.getcwd()))), 'logs/copyit/copyit_logs/')
+    logs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), 'logs/copyit/copyit_logs/')
     if not os.path.isdir(logs_dir):
         #I should probably ask permission here, or ask for alternative location
         os.makedirs(logs_dir)
     return logs_dir
 
 def make_manifest_dir():
-    manifest_dir = os.path.join((os.path.dirname(os.getcwd())), 'logs/copyit/manifests')
+    manifest_dir = os.path.join((os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))), 'logs/copyit/manifests')
     if not os.path.isdir(manifest_dir):
         #I should probably ask permission here, or ask for alternative location
         os.makedirs(manifest_dir)
