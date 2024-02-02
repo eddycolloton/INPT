@@ -18,29 +18,36 @@ if [[ "$#" -lt 1 ]]; then
 # If command line arguments are less than 1, then:
     logNewLine "No input CSV files provided!" "$RED"
 else
-    input_file_path=$1
-    # Assign the first argument to a variable
-    if [[ ! -f "$input_file_path" ]]; then
-    # if $input_file_path is not a file then,
-        logNewLine "The provided file ${input_file_path} does not exist." "$RED"
-    else
-        # Check the content of the file to determine it matches expected first line of input.csv or output.csv
-        first_line=$(head -n 1 "$input_file_path")
-        # Check if it's an input CSV file
-        if [[ "$first_line" == "Artist's First Name,"* ]]; then
-            input_csv=$input_file_path
-            logNewLine "Input CSV file detected: $input_csv" "$WHITE"
-        # Check if it's an output CSV file
-        elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
-            output_csv=$input_file_path
-            logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+    for arg in "$@"; do
+        if [[ $arg == -* ]]; then
+            if [[ "$arg" == "-t" ]] || [[ "$arg" == "--typos" ]]; then
+                typo_check=true
+            fi
+            # Can add more if statements here for other flags
         else
-            logNewLine "Error: Unsupported CSV file format." "$RED"
+            input_file_path=$arg
+            # Assign the first argument to a variable
+            if [[ ! -f "$input_file_path" ]]; then
+            # if $input_file_path is not a file then,
+                logNewLine "The provided file ${input_file_path} does not exist." "$RED"
+            else
+                # Check the content of the file to determine it matches expected first line of input.csv or output.csv
+                first_line=$(head -n 1 "$input_file_path")
+                # Check if it's an input CSV file
+                if [[ "$first_line" == "Artist's First Name,"* ]]; then
+                    input_csv=$input_file_path
+                    logNewLine "Input CSV file detected: $input_csv" "$WHITE"
+                # Check if it's an output CSV file
+                elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
+                    output_csv=$input_file_path
+                    logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+                else
+                    logNewLine "Error: Unsupported CSV file format." "$RED"
+                fi
+            fi
         fi
-    fi
+    done
 fi
-
-
 
 # After checking the first line, if an input file has been identified then read inputs and assign them to variables
 if [[ -n "${input_csv}" ]] ; then
