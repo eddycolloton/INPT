@@ -1,5 +1,36 @@
 #!/bin/bash
 
+InputPath () {
+	read -e input
+	# Asks for user input and assigns it to variable
+	echo -e $input | sed -e 's/[[:space:]]*$//'
+	# Strips a trailing space from the input. 
+	# If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
+	# I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+}
+
+ConfirmInputPath () {
+	while [[ "$input_again" = yes ]] ; do
+		UserInput=$(InputPath)
+        eval $1="$UserInput"
+		cowsay "Just checking for typos - Is the path to the $2 entered correctly?"
+		logNewLine "The $2 path manually input: ${UserInput}" "$CYAN"
+    	IFS=$'\n'; select path_option in "Yes" "No, go back a step" ; do
+			if [[ $path_option = "Yes" ]] ; then
+				input_again=no
+			elif [[ $path_option = "No, go back a step" ]] ; then 
+				input_again=no
+				unset $1
+			fi
+    	break           
+    	done;
+
+    	if [[ "$input_again" = yes ]] ; then 
+			echo -e "Let's try again"
+		fi
+	done
+}
+
 #This function finds the Staging Directory file path
 function FindTBMADroBoPath {
 	if [[ -z "${TBMADroBoPath}" ]]; then
@@ -9,23 +40,50 @@ function FindTBMADroBoPath {
 			export TBMADroBoPath="${TBMADroBoPath}"
 		else
 			cowsay -W 30 "Please input the path to the "Time Based Media Artwork" directory on the TBMA DroBo. Feel free to drag and drop the directory into terminal:"
-			read -e TBMADroBoPathInput
-			#Asks for user input and assigns it to variable
-			TBMADroBoPath="$(echo -e "${TBMADroBoPathInput}" | sed -e 's/[[:space:]]*$//')"
-			#Strips a trailing space from the input. 
-			#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
-			#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+			if [[ "$typo_check" == true ]] ; then
+				input_again=yes
+				ConfirmInputPath TBMADroBoPath "TBMA DroBo"
+			else
+				TBMADroBoPath=$(InputPath)
+			fi
 			logNewLine "The path to the Time Based Media Artwork directory on the TBMA DroBo manually input: $TBMADroBoPath" "$CYAN"
 			export TBMADroBoPath="${TBMADroBoPath}"
 		fi
 	fi
 }
 
+function ConfirmAccession {
+	while [[ "$accession_again" = yes ]] ; do
+		echo "Enter Accession Number in '####-###' format" && read SDir_Accession
+		cowsay "Just checking for typos - Is the Artist's Name entered correctly?"
+		IFS=$'\n'; select accession_option in "Yes" "No, go back a step" ; do
+			if [[ $accession_option = "Yes" ]] ; then
+				accession_again=no
+			elif [[ $accession_option = "No, go back a step" ]] ; then
+				unset SDir_Accession
+			fi
+		break           
+		done;
+
+		if [[ "$accession_again" = yes ]]; then
+			echo -e "Let's try again"
+		fi
+    done
+}
+
 #This function makes the staging directory if one does not exist
 function MakeStagingDirectory {
 	if [ -z "${accession+x}" ]; then
 		while [[ -z "$SDir_Accession" ]] ; do 
-		echo "Enter Accession Number in '####-###' format" && read SDir_Accession
+			if [[ "$typo_check" == true ]] ; then
+				accession_again=yes
+				ConfirmAccession
+			else
+				echo -e "\n*************************************************\nEnter Accession Number in '####.###' format" && read accession
+        		#prompts user for accession number and reads input
+			fi
+		logNewLine "The accession number manually input: ${accession}" "$CYAN"
+		export accession="${accession}"
 		done;
 	else SDir_Accession=`echo "$accession" | sed 's/\./-/g'` ;
 	#The sed command replaces the period in the accession variable with a dash. Found it here: https://stackoverflow.com/questions/6123915/search-and-replace-with-sed-when-dots-and-underscores-are-present 
@@ -44,31 +102,29 @@ function FindSDir {
 		cowsay "Enter a number to set the path to the Staging Directory on the TBMA DroBo:"
 		#Prompts for either identifying the staging directory or creating one using the function defined earlier. Defines that path as "$SDir"
 		IFS=$'\n'; select SDir_option in $(find "${TBMADroBoPath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
-		if [[ $SDir_option = "Input path" ]]
-  		then while [[ -z "$SDir" ]] ; do 
-			echo "Input path to Staging Directory:"
-			read -e SDirInput 
-			#Takes user input. might be ok with either a "/" or no "/"?? Is that possible?
-			SDir="$(echo -e "${SDirInput}" | sed -e 's/[[:space:]]*$//')"
-			#Strips a trailing space from the input. 
-			#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
-			#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-			export SDir="${SDir}"
-			#Confirms that the SDir variable is defined
-			logNewLine "Path to the staging directory manually input: ${SDir}" "$CYAN" 
-			sleep 1
-			done
-		elif [[ $SDir_option = "Create Staging Directory" ]]
-  		then MakeStagingDirectory
-		logNewLine "Path to the staging directory: ${SDir}" "$MAGENTA" 
-		#Runs MakeStagingDirectory function defined in make_meta.config
-		else
-			SDir=$SDir_option
-			#assigns variable to the users selection from the select menu
-			export SDir="${SDir}"
-			logNewLine "Path to the staging directory: ${SDir}" "$MAGENTA" 
-			sleep 1
-		fi
+			if [[ $SDir_option = "Input path" ]] ; then
+				while [[ -z "$SDir" ]] ; do 
+					echo -e "\nInput path to Staging Directory:"
+					if [[ "$typo_check" == true ]] ; then
+						input_again=yes
+						ConfirmInputPath SDir "Staging Directory"
+					else 
+						SDir=$(InputPath)
+					export SDir="${SDir}"
+					#Confirms that the SDir variable is defined
+					logNewLine "Path to the staging directory manually input: ${SDir}" "$CYAN" 
+					sleep 1
+					fi
+				done
+			elif [[ $SDir_option = "Create Staging Directory" ]] ; then 
+				MakeStagingDirectory
+			else
+				SDir=$SDir_option
+				#assigns variable to the users selection from the select menu
+				export SDir="${SDir}"
+				logNewLine "Path to the staging directory: ${SDir}" "$MAGENTA" 
+				sleep 1
+			fi
 		break			
 		done;
 	#else
