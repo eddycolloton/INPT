@@ -10,88 +10,72 @@ parent_dir="$(dirname "$script_dir")"
 if [[ -z ${fullInput_csv} ]] ; then
 	source "${script_dir}"/input_functions/makelog.sh
 	MakeLog
-	source "${script_dir}"/input_functions/find/findartfile.sh
-	findCSV
-	if [[ -z "${sourcefile}" ]] ; then
-		echo -e "No input CSV found!"
+	if [[ "$#" -lt 1 ]]; then
+		# If command line arguments are less than 1, then:
+    	logNewLine "No input/output CSV files provided!" "$RED"
+		findCSV
+		if [[ -n "${foundCSV}" ]] ; then
+			# if an input file has been identified then read inputs and assign them to variables
+			ReadCSV "${foundCSV}"
+		fi
 	else
-		# if an input file has been identified then read inputs and assign them to variables
-		logNewLine "Reading input variables from $fullInput_csv" "$CYAN"
-		fullInput_csv="${sourcefile}"
-		while IFS=, read -r key value || [ -n "$key" ]
-		do
-			# Replace variable names with descriptions
-			case $key in
-				"Artist's First Name") key="ArtistFirstName" ;;
-				"Artist's Last Name") key="ArtistLastName" ;;
-				"Artwork Title") key="title" ;;
-				"Accession Number") key="accession" ;;
-				"Path to Artwork File on T: Drive") key="ArtFile" ;;
-				"Staging Directory on DroBo") key="SDir" ;;
-				"Path to hard drive") key="Volume" ;;
-				"Path to Technical Info_Specs directory") key="techdir" ;;
-				"Path to Technical Info_Specs/Sidecars directory") key="sidecardir" ;;
-				"Path to Condition_Tmt Reports directory") key="reportdir" ;;
-				"Path Artwork Files parent directory") key="ArtFilePath" ;;
-				"Path to the Time-based Media Artworks directory on the TBMA DroBo") key="TBMADroBoPath" ;;
-			esac
-			# Remove quotes and special characters from the key and value
-			key=$(remove_special_chars "$key" | tr -d '"')
-			value=$(remove_special_chars "$value" | tr -d '"')
-			# Assign the value to a variable named after the key
-			declare "$key=$value"
-			# Print debug information
-			# echo "Key: $key, Value: $value"
-		done < "${fullInput_csv}"
-		logNewLine "Input CSV found! Artwork File is here: $ArtFile Staging directory is here: $SDir" "$MAGENTA"
+		for arg in "$@"; do
+			if [[ $arg == -* ]]; then
+				if [[ "$arg" == "-t" ]] || [[ "$arg" == "--typos" ]]; then
+					typo_check=true
+				fi
+				# Can add more if statements here for other flags
+			else
+				input_file_path=$arg
+				# Assign the first argument to a variable
+				if [[ ! -f "$input_file_path" ]]; then
+				# if $input_file_path is not a file then,
+					logNewLine "The provided file ${input_file_path} does not exist." "$RED"
+				fi
+				ReadCSV "${input_file_path}"
+			fi
+		done
 	fi
-	if [[ -z "${techdir}" ]] ; then
-    	source "${script_dir}"/input_functions/find/findreportdir.sh
-    	FindTechDir
-	fi
-	searchArtFile
 fi
 
-## Checks for input.csv or output.csv provided as arguments either to start_input or start_output
-if [[ -n "${output_csv}" ]] ; then
-	logNewLine "Output CSV file previously identified: $output_csv" "$WHITE"
-elif [[ -n "${input_csv}" && "$#" -lt 2 ]] ; then
-	logNewLine "Input CSV provided, but no additional output CSV found." "$RED"
-elif [[ -n "${input_csv}" && "$#" = 2 ]] ; then
-	# Assign the first argument to a variable
-	input_file2_path=$2
-	# Check if the input.csv file exists
-	if [ ! -f "$input_file2_path" ]; then
-		logNewLine "The provided file ${input_file2_path} does not exist." "$RED"
-	else
-		# Check the content of the file to determine it matches expected first line of input.csv or output.csv
-		first_line2=$(head -n 1 "$input_file2_path")
-		# Check if it's an output CSV file
-		if [[ "$first_line2" == "Move all files to staging directory,"* ]]; then
-			output_csv=$input_file2_path
-			logNewLine "Output CSV file detected: $output_csv" "$WHITE"
-		else
-			logNewLine "Error: Unsupported CSV file format." "$RED"
-		fi
-	fi
-elif [[ -z "${input_csv}" && "$#" = 1 ]] ; then
-	# Assign the first argument to a variable
-	input_file_path=$1
-	# Check if the file exists
-	if [ ! -f "$input_file_path" ]; then
-		logNewLine "The provided file ${input_file_path} does not exist." "$RED"
-	else
-		# Check the content of the file to determine its type
-		first_line=$(head -n 1 "$input_file_path")
-		# Check if it's an output CSV file
-		if [[ "$first_line" == "Move all files to staging directory,"* ]]; then
-			output_csv=$input_file_path
-			logNewLine "Output CSV file detected: $output_csv" "$WHITE"
-		else
-			logNewLine "Error: Unsupported CSV file format." "$RED"
-		fi
-	fi
-fi
+if [[ -z ${fullInput_csv} && -n ${input_csv} ]] ; then
+# After checking the first line, if an input file has been identified then read inputs and assign them to variables
+    logNewLine "Reading variables from input csv: ${input_csv}" "$CYAN"
+    source "${script_dir}"/input_functions/find/findartfile.sh
+    # remove_special_chars function is stored in findartfile.sh
+    if test -f "${input_csv}"; then
+    # test that input_csv is a file
+        while IFS=, read -r key value || [ -n "$key" ]
+        do
+            # Replace variable names with descriptions
+            case $key in
+                "Artist's First Name") key="ArtistFirstName" ;;
+                "Artist's Last Name") key="ArtistLastName" ;;
+                "Artwork Title") key="title" ;;
+                "Accession Number") key="accession" ;;
+                "Path to Artwork File on T: Drive") key="ArtFile" ;;
+                "Staging Directory on DroBo") key="SDir" ;;
+                "Path to hard drive") key="Volume" ;;
+                "Path to Technical Info_Specs directory") key="techdir" ;;
+                "Path to Technical Info_Specs/Sidecars directory") key="sidecardir" ;;
+                "Path to Condition_Tmt Reports directory") key="reportdir" ;;
+                "Path Artwork Files parent directory") key="ArtFilePath" ;;
+                "Path to the Time-based Media Artworks directory on the TBMA DroBo") key="TBMADroBoPath" ;;
+            esac
+            # Remove quotes and special characters from the key and value
+            key=$(remove_special_chars "$key")
+            value=$(remove_special_chars "$value")
+            # Assign the value to a variable named after the key
+            declare "$key=$value"
+            # Print debug information but uncommenting line below:
+            # echo "Key: $key, Value: $value"
+        done < "${input_csv}"
+        logNewLine "Successfully read variables from ${input_csv}" "$CYAN"
+    else
+        logNewLine "Unable to read variables from ${input_csv}" "$RED"
+        unset input_csv
+    fi
+fi 
 
 # if an output file has been identified then read selected options and assign them to variables
 if [[ -n "${output_csv}" ]]; then

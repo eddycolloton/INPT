@@ -224,4 +224,155 @@ CompareCSV () {
   done
 }
 
+# Function to find the most recent CSV file
+find_most_recent_csv() {
+    # Initialize variables
+    most_recent_timestamp=0
+    most_recent_csv=""
+    # Iterate over each CSV filename in the array
+    for csv_file in "${foundCSV[@]}"; do
+        # Extract date and time from the filename
+        datetime="${csv_file##*_}"
+        datetime="${datetime%.csv}"
+        # Convert date and time to Unix timestamp
+        timestamp=$(date -d "$datetime" +"%s")
+        # Check if the current timestamp is greater than the most recent one found
+        if [ $timestamp -gt $most_recent_timestamp ]; then
+            most_recent_timestamp=$timestamp
+            most_recent_csv=$csv_file
+        fi
+    done
+    # Print the most recent CSV filename
+    logNewLine "Most recent CSV found in Artwork File: $most_recent_csv" "$CYAN"
+}
+
+function findCSV {
+	set -a
+
+	echo -e "type or drag and drop the path of the artwork file\n"
+	read -e ArtFileInput
+	ArtFile="$(echo -e "${ArtFileInput}" | sed -e 's/[[:space:]]*$//')"
+	#Strips a trailing space from the input. 
+	#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
+	#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+	export ArtFile="${ArtFile}"
+
+	allFoundCSVs=$(find "${ArtFile%/}" -type f \( -iname "*.csv" \) | wc -l)
+  if [[ ${allFoundCSVs} -lt 1 ]] ; then 
+    logNewLine "No input csv found in Artwork File. Either run start_input to create necessary inputs or re-run start_output with input csv.\nUsage: ./start_output.sh <input.csv> <optional_output.csv>" "$RED"
+    exit 1
+  elif [[ ${allFoundCSVs} -eq 1 ]] ; then
+    foundCSV=$(find "${ArtFile%/}" -type f \( -iname "*.csv" \))
+    logNewLine "Found ${foundCSV} in ${ArtFile}"
+	elif [[ $(echo ${foundCSV} | wc -l) -gt 1 ]]; then
+		foundCSV=(${foundCSV[@]})
+		most_recent_foundCSV=$(find_most_recent_csv "${foundCSV[@]}")
+		echo "\nMore than one CSV found in Art File. Use most recent?"
+		IFS=$'\n'; select recentCSV_option in "Yes" "No, show all CSVs" ; do
+			if [[ $recentCSV_option = "Yes" ]] ; then
+				foundCSV="${most_recent_foundCSV}"
+        logNewLine "Found "${foundCSV}" in "${ArtFile}"" 
+			elif [[ $recentCSV_option = "No, show all CSVs" ]] ; then 
+				IFS=$'\n'; select selectedCSV in $(find "${ArtFile%/}" -type f \( -iname "*.csv" \)) "None of these" ; do
+          if [[ $selectedCSV = "None of these" ]] ; then
+            logNewLine "No operable input csv found. Either run start_input to create necessary inputs or re-run start_output with desired input csv.\nUsage: ./start_output.sh <input.csv> <optional_output.csv>" "$RED"
+            exit 1
+          else
+            foundCSV=$recentCSV_option
+            logNewLine "\nFound ${foundCSV} in ${ArtFile}" 
+          fi
+        break
+        done;
+			fi
+		break           
+		done
+	fi
+
+	set +a
+} 
+
+ReadCSV () {
+  if [[ -n ${1} ]] ; then
+	logNewLine "Reading CSV file: $(basename "${1}")" "$MAGENTA"
+	# Check the content of the file to determine it matches expected first line of input.csv or output.csv
+	first_line=$(head -n 1 "$1")
+	# Check if it's an input CSV file
+	if [[ "$first_line" == "Artist's First Name,"* ]]; then
+		input_csv=$1
+		logNewLine "Input CSV file detected: $input_csv" "$WHITE"
+	# Check if it's an output CSV file
+	elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
+		output_csv=$1
+		logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+	else
+		logNewLine "Error: Unsupported CSV file format." "$RED"
+	fi
+fi
+}
+
+function searchArtFile {
+#This function searches the artwork file for sidecars created by the make_meta.sh script. 
+	set -a
+	if [[ -z $(find "${techdir}" -iname "*_manifest.md5") ]]; then 
+	#if no file with "mainfest.md5" is in the technical info and specs directory, then
+		echo -e "No md5 manifest found"
+		md5_report=0
+	else
+		echo -e "md5 manifest found"
+		md5_report=1
+    	#assigns a value to the $md5_report variable depending ont he results of the find command in the if statement above
+	fi
+	if [[ -f "${techdir}/${accession}_tree_output.txt" ]]; then
+		echo -e "No tree text file found"
+		tree_report=0
+	else
+		echo -e "tree text file found"
+		tree_report=1
+	fi	
+	if [[ -f "${techdir}/${accession}_disktype_output.txt" ]]; then
+		echo -e "No disktype report found"
+		dt_report=0
+	else
+		echo -e "disktype report found"
+		dt_report=1
+	fi
+	if [[ -z $(find "${techdir}" -iname "*_sf.txt") ]] ; then 
+		echo -e "No siegfried report found"
+		sf_report=0
+	else
+		echo -e "siegfried report found"
+		sf_report=1
+	fi	
+	if [[ -z $(find "${techdir}" -iname "*_mediainfo.txt") ]]; then 
+		echo -e "No MediaInfo report found"
+		mi_report=0
+	else
+		echo -e "MediaInfo report found"
+		mi_report=1
+	fi
+	if [[ -z $(find "${techdir}" -iname "*_exif.txt") ]]; then
+		echo -e "No exiftool report found"
+		exif_report=0
+	else
+		echo -e "exiftool report found"
+		exif_report=1
+	fi
+	if [[ -z $(find "${techdir}" -iname "*_framemd5.txt") ]]; then
+		echo -e "No framemd5 text file found"
+		fmd5_report=0
+	else
+		echo -e "framemd5 text file found"
+		fmd5_report=1
+	fi
+	if [[ -z $(find "${techdir}" -iname "*.qctools*") ]]; then
+		echo -e "No qctools report found"
+		qct_report=0
+	else
+		echo -e "qctools report found"
+		qct_report=1
+	fi
+	sleep 1
+	set +a
+}
+
 set +a

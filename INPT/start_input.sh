@@ -93,14 +93,24 @@ if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${ArtistLastName}" ]] ; then
     # if artist's name has not been assigned, then:
         source "${script_dir}"/input_functions/find/findartfile.sh
-        InputArtistsName
+        if [[ "$typo_check" == true ]] ; then
+            name_again=yes
+            ConfirmArtistsName
+        else
+            InputArtistsName
+        fi
     else
         # consdier adding a check here. If artist's name doesn't match any in artwork folders then confirm? Use different artist name database?
         logNewLine "Artist name found in CSV: ${ArtistFirstName} ${ArtistLastName}" "$WHITE"
     fi
 else
     source "${script_dir}"/input_functions/find/findartfile.sh
-    InputArtistsName
+    if [[ "$typo_check" == true ]] ; then
+        name_again=yes
+        ConfirmArtistsName
+    else
+        InputArtistsName
+    fi
 fi
 
 if [[ -n "${input_csv}" ]] ; then
