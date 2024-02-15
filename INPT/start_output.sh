@@ -38,6 +38,18 @@ if [[ -z ${fullInput_csv} ]] ; then
 	fi
 fi
 
+# Check if a file path has escaped characters
+has_escaped_characters() {
+    local path="$1"
+    local escaped_pattern="\\"
+
+    if [[ "$path" == *"$escaped_pattern"* ]]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
 if [[ -z ${fullInput_csv} && -n ${input_csv} ]] ; then
 # After checking the first line, if an input file has been identified then read inputs and assign them to variables
     logNewLine "Reading variables from input csv: ${input_csv}" "$CYAN"
@@ -65,6 +77,18 @@ if [[ -z ${fullInput_csv} && -n ${input_csv} ]] ; then
             # Remove quotes and special characters from the key and value
             key=$(remove_special_chars "$key")
             value=$(remove_special_chars "$value")
+
+            # For variables that store paths, check for "escaped characters" (like this: '/Lastname\,\ Firstname/time-based\ media/')
+            # If escaped characters are found, remove them and convert to a normal path (like this: '/Lastname, Firstname/time-based media/')
+            case $key in
+                "ArtFile" | "SDir" | "Volume" | "techdir" | "sidecardir" | "reportdir" | "ArtFilePath" | "TBMADroBoPath")
+                    # Check if the value contains escaped characters
+                    if [[ $(has_escaped_characters "$value") == true ]]; then
+                        value=$(echo "$value" | sed 's/\\//g')
+                    fi
+                    ;;
+            esac
+
             # Assign the value to a variable named after the key
             declare "$key=$value"
             # Print debug information but uncommenting line below:
