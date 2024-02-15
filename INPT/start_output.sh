@@ -115,6 +115,10 @@ fi
 
 if [[ -n "${output_csv}" && $Run_Copyit = "0" ]] ; then
 	logNewLine "From Output CSV - Not all files from ${Volume} will be moved to ${SDir}" "$WHITE"
+	if [[ $Run_UserSelectFiles = "1" ]] ; then
+			source "${script_dir}"/output_functions/move/selectfiles.sh
+			UserSelectFiles
+	fi
 elif [[ -n "${output_csv}" && $Run_Copyit = "1" ]] ; then
 	logNewLine "From Output CSV - All files from ${Volume} will be moved to ${SDir}" "$WHITE"
 else

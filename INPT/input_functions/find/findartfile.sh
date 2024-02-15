@@ -384,4 +384,31 @@ else
 fi
 }
 
+ParseArtFile () {
+    # Get the directory path from the argument
+    dir_path="$1"
+    
+    # Extract the directory name immediately after $ArtFilePath
+    dir_name="${dir_path#"$ArtFilePath"}"
+
+    # Remove any leading or trailing '/' characters
+    dir_name="${dir_name#/}"
+    dir_name="${dir_name%/}"
+
+    # Split the directory name into parts using ',' and '/'
+    IFS='/' read -r -a parts <<< "$dir_name"
+
+    # Extract the last part which contains the name and split it using ','
+    IFS=',' read -r -a name_parts <<< "$parts"
+
+    # Assign the parts to $ArtistLastName and $ArtistFirstName
+    ArtistLastName="${name_parts[0]}"
+    ArtistFirstName="${name_parts[1]}"
+
+	logNewLine "Artist name found in Artwork File: ${ArtistFirstName} ${ArtistLastName}" "$Bright_Magenta"
+
+    export ArtistFirstName="${ArtistFirstName}"
+    export ArtistLastName="${ArtistLastName}"
+}
+
 set +a

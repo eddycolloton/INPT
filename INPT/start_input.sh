@@ -14,6 +14,18 @@ source "${script_dir}"/input_functions/makelog.sh
 MakeLog
 CleanupLogDir
 
+# Check if a file path has escaped characters
+has_escaped_characters() {
+    local path="$1"
+    local escaped_pattern="\\"
+
+    if [[ "$path" == *"$escaped_pattern"* ]]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
 if [[ "$#" -lt 1 ]]; then
 # If command line arguments are less than 1, then:
     logNewLine "No input CSV files provided!" "$RED"
@@ -73,9 +85,22 @@ if [[ -n "${input_csv}" ]] ; then
                 "Path Artwork Files parent directory") key="ArtFilePath" ;;
                 "Path to the Time-based Media Artworks directory on the TBMA DroBo") key="TBMADroBoPath" ;;
             esac
+
             # Remove quotes and special characters from the key and value
             key=$(remove_special_chars "$key")
             value=$(remove_special_chars "$value")
+
+            # For variables that store paths, check for "escaped characters" (like this: '/Lastname\,\ Firstname/time-based\ media/')
+            # If escaped characters are found, remove them and convert to a normal path (like this: '/Lastname, Firstname/time-based media/')
+            case $key in
+                "ArtFile" | "SDir" | "Volume" | "techdir" | "sidecardir" | "reportdir" | "ArtFilePath" | "TBMADroBoPath")
+                    # Check if the value contains escaped characters
+                    if [[ $(has_escaped_characters "$value") == true ]]; then
+                        value=$(echo "$value" | sed 's/\\//g')
+                    fi
+                    ;;
+            esac
+
             # Assign the value to a variable named after the key
             declare "$key=$value"
             # Print debug information but uncommenting line below:
@@ -90,6 +115,14 @@ fi
 	
 if [[ -n "${input_csv}" ]] ; then
 # if input_csv has been assigned, then
+    if [[ -n "${ArtFile}" ]] ; then
+    # if artwork file has been assigned, 
+        source "${script_dir}"/input_functions/find/findartfile.sh
+        ParseArtFile "${ArtFile}"
+        # parse artwork file path for artist first and last name
+        FindAccessionNumber 
+        # parse artwork file for accession
+    fi
     if [[ -z "${ArtistLastName}" ]] ; then
     # if artist's name has not been assigned, then:
         source "${script_dir}"/input_functions/find/findartfile.sh
