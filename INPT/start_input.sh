@@ -14,56 +14,7 @@ source "${script_dir}"/input_functions/makelog.sh
 MakeLog
 CleanupLogDir
 
-# Check if a file path has escaped characters
-has_escaped_characters() {
-    local path="$1"
-    local escaped_pattern="\\"
-
-    if [[ "$path" == *"$escaped_pattern"* ]]; then
-        echo "true"
-    else
-        echo "false"
-    fi
-}
-
-if [[ "$#" -lt 1 ]]; then
-# If command line arguments are less than 1, then:
-    logNewLine "No input CSV files provided!" "$RED"
-else
-    for arg in "$@"; do
-        if [[ $arg == -* ]]; then
-            # Can add more if statements here for other flags
-            if [[ "$arg" == "-t" ]] || [[ "$arg" == "--typos" ]]; then
-                typo_check=true
-            fi
-            if [[ "$arg" == "-h" ]] || [[ "$arg" == "--help" ]]; then
-                echo -e "INPT is a bash scripting project created for TBMA processing at HMSG.\n\n./start_input [options] [optional input.csv] [optional output.csv]\n\nOptions:--typos, -t\n\tConfirm manually input text\n--help, -h\n\tDisplay this text."
-                exit 1
-            fi
-        else
-            input_file_path=$arg
-            # Assign the first argument to a variable
-            if [[ ! -f "$input_file_path" ]]; then
-            # if $input_file_path is not a file then,
-                logNewLine "The provided file ${input_file_path} does not exist." "$RED"
-            else
-                # Check the content of the file to determine it matches expected first line of input.csv or output.csv
-                first_line=$(head -n 1 "$input_file_path")
-                # Check if it's an input CSV file
-                if [[ "$first_line" == "Artist's First Name,"* ]]; then
-                    input_csv=$input_file_path
-                    logNewLine "Input CSV file detected: $input_csv" "$WHITE"
-                # Check if it's an output CSV file
-                elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
-                    output_csv=$input_file_path
-                    logNewLine "Output CSV file detected: $output_csv" "$WHITE"
-                else
-                    logNewLine "Error: Unsupported CSV file format." "$RED"
-                fi
-            fi
-        fi
-    done
-fi
+ParseArgs "$@"
 
 # After checking the first line, if an input file has been identified then read inputs and assign them to variables
 if [[ -n "${input_csv}" ]] ; then
@@ -91,15 +42,15 @@ if [[ -n "${input_csv}" ]] ; then
             esac
 
             # Remove quotes and special characters from the key and value
-            key=$(remove_special_chars "$key")
-            value=$(remove_special_chars "$value")
+            key=$(RemoveSpecialChars "$key")
+            value=$(RemoveSpecialChars "$value")
 
             # For variables that store paths, check for "escaped characters" (like this: '/Lastname\,\ Firstname/time-based\ media/')
             # If escaped characters are found, remove them and convert to a normal path (like this: '/Lastname, Firstname/time-based media/')
             case $key in
                 "ArtFile" | "SDir" | "Volume" | "techdir" | "sidecardir" | "reportdir" | "ArtFilePath" | "TBMADroBoPath")
                     # Check if the value contains escaped characters
-                    if [[ $(has_escaped_characters "$value") == true ]]; then
+                    if [[ $(FindEscapedCharacters "$value") == true ]]; then
                         value=$(echo "$value" | sed 's/\\//g')
                     fi
                     ;;
@@ -259,7 +210,12 @@ if [[ "${old_csv_again}" = "yes" ]] ; then
     CompareCSV "${fullInput_csv}"
 fi
 
-# run start_output
-source "${script_dir}"/start_output.sh
+if [[ "$stop_input" == true ]] ; then
+    logNewLine "start_input.sh complete! Exiting..." "$RED"
+else
+    # run start_output
+    logNewLine "start_input.sh complete! Beginning start_output.sh"  "$MAGENTA"
+    source "${script_dir}"/start_output.sh
+fi
 
 set +a

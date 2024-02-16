@@ -10,45 +10,8 @@ parent_dir="$(dirname "$script_dir")"
 if [[ -z ${fullInput_csv} ]] ; then
 	source "${script_dir}"/input_functions/makelog.sh
 	MakeLog
-	if [[ "$#" -lt 1 ]]; then
-		# If command line arguments are less than 1, then:
-    	logNewLine "No input/output CSV files provided!" "$RED"
-		findCSV
-		if [[ -n "${foundCSV}" ]] ; then
-			# if an input file has been identified then read inputs and assign them to variables
-			ReadCSV "${foundCSV}"
-		fi
-	else
-		for arg in "$@"; do
-			if [[ $arg == -* ]]; then
-				if [[ "$arg" == "-t" ]] || [[ "$arg" == "--typos" ]]; then
-					typo_check=true
-				fi
-				# Can add more if statements here for other flags
-			else
-				input_file_path=$arg
-				# Assign the first argument to a variable
-				if [[ ! -f "$input_file_path" ]]; then
-				# if $input_file_path is not a file then,
-					logNewLine "The provided file ${input_file_path} does not exist." "$RED"
-				fi
-				ReadCSV "${input_file_path}"
-			fi
-		done
-	fi
+	ParseArgs "$@"
 fi
-
-# Check if a file path has escaped characters
-has_escaped_characters() {
-    local path="$1"
-    local escaped_pattern="\\"
-
-    if [[ "$path" == *"$escaped_pattern"* ]]; then
-        echo "true"
-    else
-        echo "false"
-    fi
-}
 
 if [[ -z ${fullInput_csv} && -n ${input_csv} ]] ; then
 # After checking the first line, if an input file has been identified then read inputs and assign them to variables
@@ -75,15 +38,15 @@ if [[ -z ${fullInput_csv} && -n ${input_csv} ]] ; then
                 "Path to the Time-based Media Artworks directory on the TBMA DroBo") key="TBMADroBoPath" ;;
             esac
             # Remove quotes and special characters from the key and value
-            key=$(remove_special_chars "$key")
-            value=$(remove_special_chars "$value")
+            key=$(RemoveSpecialChars "$key")
+            value=$(RemoveSpecialChars "$value")
 
             # For variables that store paths, check for "escaped characters" (like this: '/Lastname\,\ Firstname/time-based\ media/')
             # If escaped characters are found, remove them and convert to a normal path (like this: '/Lastname, Firstname/time-based media/')
             case $key in
                 "ArtFile" | "SDir" | "Volume" | "techdir" | "sidecardir" | "reportdir" | "ArtFilePath" | "TBMADroBoPath")
                     # Check if the value contains escaped characters
-                    if [[ $(has_escaped_characters "$value") == true ]]; then
+                    if [[ $(FindEscapedCharacters "$value") == true ]]; then
                         value=$(echo "$value" | sed 's/\\//g')
                     fi
                     ;;
@@ -123,8 +86,8 @@ if [[ -n "${output_csv}" ]]; then
 				"Create QCTools reports for video files in staging directory") key="Run_QCTools" ;;
 			esac
 			# Remove quotes and special characters from the key and value
-			key=$(remove_special_chars "$key" | tr -d '"')
-			value=$(remove_special_chars "$value" | tr -d '"')
+			key=$(RemoveSpecialChars "$key" | tr -d '"')
+			value=$(RemoveSpecialChars "$value" | tr -d '"')
 			# Assign the value to a variable named after the key
 			declare "$key=$value"
 			# Print debug information

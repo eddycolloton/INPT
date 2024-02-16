@@ -115,7 +115,7 @@ function RunMI {
 		logNewLine "MediaInfo output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
 		mi_again=no
 	else 
-		logeNewLine "No MediaInfo files found in $SDir" "$Bright_Red"
+		logNewLine "No MediaInfo files found in $SDir" "$Bright_Red"
 		echo -e "\n Run MediaInfo again? (Choose a number 1-2)"
 		select miAgain_option in "yes" "no"
 		do
@@ -164,7 +164,7 @@ function RunExif {
 		logNewLine "Exiftool output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
 		exif_again=no
 	else
-		logeNewLine "No exiftool files found in $SDir" "$Bright_Red"
+		logNewLine "No exiftool files found in $SDir" "$Bright_Red"
 		echo -e "\n Run Exiftool again? (Choose a number 1-2)"
 		select exifAgain_option in "yes" "no"
 		do

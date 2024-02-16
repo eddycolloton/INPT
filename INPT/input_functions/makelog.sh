@@ -293,21 +293,21 @@ function findCSV {
 
 ReadCSV () {
   if [[ -n ${1} ]] ; then
-	logNewLine "Reading CSV file: $(basename "${1}")" "$MAGENTA"
-	# Check the content of the file to determine it matches expected first line of input.csv or output.csv
-	first_line=$(head -n 1 "$1")
-	# Check if it's an input CSV file
-	if [[ "$first_line" == "Artist's First Name,"* ]]; then
-		input_csv=$1
-		logNewLine "Input CSV file detected: $input_csv" "$WHITE"
-	# Check if it's an output CSV file
-	elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
-		output_csv=$1
-		logNewLine "Output CSV file detected: $output_csv" "$WHITE"
-	else
-		logNewLine "Error: Unsupported CSV file format." "$RED"
-	fi
-fi
+    logNewLine "Reading CSV file: $(basename "${1}")" "$MAGENTA"
+    # Check the content of the file to determine it matches expected first line of input.csv or output.csv
+    first_line=$(head -n 1 "$1")
+    # Check if it's an input CSV file
+    if [[ "$first_line" == "Artist's First Name,"* ]]; then
+      input_csv=$1
+      logNewLine "Input CSV file detected: $input_csv" "$WHITE"
+    # Check if it's an output CSV file
+    elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
+      output_csv=$1
+      logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+    else
+      logNewLine "Error: Unsupported CSV file format." "$RED"
+    fi
+  fi
 }
 
 function searchArtFile {
@@ -373,6 +373,58 @@ function searchArtFile {
 	fi
 	sleep 1
 	set +a
+}
+
+# Check if a file path has escaped characters
+FindEscapedCharacters() {
+    local path="$1"
+    local escaped_pattern="\\"
+
+    if [[ "$path" == *"$escaped_pattern"* ]]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+ParseArgs() {
+    if [[ "$#" -lt 1 ]]; then
+    # If command line arguments are less than 1, then:
+        logNewLine "No input CSV files provided!" "$RED"
+    else
+        for arg in "$@"; do
+            if [[ $arg == -* ]]; then
+                # Can add more if statements here for other flags
+                if [[ "$arg" == "-t" ]] || [[ "$arg" == "--typos" ]]; then
+                    typo_check=true
+                    export typo_check="${typo_check}"
+                fi
+                if [[ "$arg" == "-s" ]] || [[ "$arg" == "--stop" ]]; then
+                    stop_input=true
+                    export stop_input="{$stop_input}"
+                fi
+                if [[ "$arg" == "-h" ]] || [[ "$arg" == "--help" ]]; then
+                    echo -e "INPT is a bash scripting project created for TBMA processing at HMSG.\n\n./start_input [options] [optional input.csv] [optional output.csv]\n\nOptions:\n--help, -h\n\tDisplay this text.\n--stop, -s\n\tStop process after start_input.sh, do not proceed to start_output.sh\n--typos, -t\n\tConfirm manually input text\n"
+                    exit 1
+                fi
+            else
+                input_file_path=$arg
+                # Assign the first argument to a variable
+                ReadCSV "${input_file_path}"
+            fi
+        done
+    fi
+}
+
+# Function to remove BOM and non-printable characters
+function RemoveSpecialChars {
+    local str=$1
+    local accented_chars='éèêëàáâäãåæçèéêëìíîïðñòóôõöùúûüýÿ'
+    str=$(printf '%s' "$str" | LC_ALL=C sed -E "s/[^[:print:]\n\r\t$accented_chars]//g")
+    str="${str#"${str%%[![:space:]]*}"}"   # Remove leading whitespace
+    str="${str%"${str##*[![:space:]]}"}"   # Remove trailing whitespace
+    str="${str//[\"]}"
+    echo "${str//[\']}"
 }
 
 set +a
