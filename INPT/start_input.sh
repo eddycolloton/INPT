@@ -32,10 +32,14 @@ if [[ "$#" -lt 1 ]]; then
 else
     for arg in "$@"; do
         if [[ $arg == -* ]]; then
+            # Can add more if statements here for other flags
             if [[ "$arg" == "-t" ]] || [[ "$arg" == "--typos" ]]; then
                 typo_check=true
             fi
-            # Can add more if statements here for other flags
+            if [[ "$arg" == "-h" ]] || [[ "$arg" == "--help" ]]; then
+                echo -e "INPT is a bash scripting project created for TBMA processing at HMSG.\n\n./start_input [options] [optional input.csv] [optional output.csv]\n\nOptions:--typos, -t\n\tConfirm manually input text\n--help, -h\n\tDisplay this text."
+                exit 1
+            fi
         else
             input_file_path=$arg
             # Assign the first argument to a variable
@@ -132,9 +136,10 @@ if [[ -n "${input_csv}" ]] ; then
         else
             InputArtistsName
         fi
-    else
-        # consdier adding a check here. If artist's name doesn't match any in artwork folders then confirm? Use different artist name database?
+    elif [[ -n "${ArtistLastName}" ]] && [[ -z "${ArtFile}" ]]; then
+    # if the artist's last name is known and the Artwork File path is still unknown, then assume artist's name is from csv
         logNewLine "Artist name found in CSV: ${ArtistFirstName} ${ArtistLastName}" "$WHITE"
+        # consdier adding a check here. If artist's name doesn't match any in artwork folders then confirm? Use different artist name database?
     fi
 else
     source "${script_dir}"/input_functions/find/findartfile.sh
