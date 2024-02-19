@@ -323,4 +323,190 @@ ParseArtFile () {
     export ArtistLastName="${ArtistLastName}"
 }
 
+MakeOutputDirectory() {
+    if [[ "$dir_type" == "techdir" ]]; then
+        sidecardir=$(find "${!dir_type%/}" -maxdepth 2 -type d -iname "*Sidecars*")
+        if [[ -z "$sidecardir" ]]; then
+            mkdir -p "${dir_type_parent%/}/${dir_label}/Sidecars"
+            dir_path="${dir_type_parent%/}/${dir_label}"
+			eval "$dir_type=\"\$dir_path\""
+            sidecardir="${dir_type_parent%/}/${dir_label}/Sidecars" 
+        fi
+	fi
+    mkdir -p "${dir_type_parent%/}/${dir_label}"
+    dir_path=${dir_type_parent%/}/${dir_label}
+	eval "$dir_type=\"\$dir_path\""
+}
+
+AssignDirectory() {
+    local dir_type="$1"
+    local dir_label="$2"
+    local parent_dir="$3"
+
+    if [[ -z "${!dir_type}" ]]; then
+        echo -e "\n*************************************************\n \nThe artwork file does not match expected directory structure. \nCannot find $dir_label directory\nSee directories listed below \n"
+        sleep 1
+		tree "$parent_dir"
+		sleep 1
+        cowsay "Select a directory to create the $dir_label directory, or choose to quit:"
+        IFS=$'\n'; select dir_option in "$parent_dir" "Enter path to parent directory" "Quit"; do
+            case $dir_option in 
+                "$parent_dir") dir_type_parent="$parent_dir"
+                            MakeOutputDirectory
+                            break;;
+                "Enter path to parent directory") ConfirmInput dir_type_parent "Enter the path to the parent directory of the new $dir_label directory, use tab complete to help:"
+                                                    MakeOutputDirectory
+                                                    break;;
+                "Quit") echo "Quitting now..."
+                        exit 1;;
+            esac
+        done
+        unset IFS
+        logNewLine "Path to the $dir_label directory: ${!dir_type}" "$Bright_Magenta"
+    else
+        logNewLine "Path to the $dir_label directory: ${!dir_type}" "$Bright_Magenta"
+    fi
+}
+
+function FindConditionDir {
+if [[ -z "$accession_dir" ]]; then
+	# if the $accession_dir variable is empty (unassigned - which would mean there was only one artwork found in the Art File, then) 
+	reportdir=$(find "${ArtFile%/}" -maxdepth 4 -type d -iname "*Condition*")
+	# looks for a directory with Condition in the name that is a subdirectory of $ArtFile and, if found, assigns it to the $reportdir variable
+	# The "%/" removes the trailing "/" on the end of the ArtFile
+	AssignDirectory "reportdir" "Condition_Tmt Reports" "${ArtFile%/}"
+else
+	reportdir=$(find "${accession_dir%/}" -maxdepth 4 -type d -iname "*Condition*")
+	# looks for a directory with Condition in the name that is a subdirectory $accession_dir, if found, assigns it to the $reportdir variable
+	# The "%/" removes the trailing "/" on the end of the ArtFile
+	AssignDirectory "reportdir" "Condition_Tmt Reports" "${accession_dir%/}"
+fi
+export reportdir="${reportdir}"
+}
+
+function FindTechDir {
+if [[ -z "$accession_dir" ]]; then
+	techdir=$(find "${ArtFile%/}" -maxdepth 4 -type d -iname "*Technical Info*")
+	# looks for the Technical Info_Specs directory
+	# The "%/" removes the trailing "/" on the end of the ArtFile
+	AssignDirectory  "techdir" "Technical Info_Specs" "${ArtFile%/}"
+else
+	techdir=$(find "${accession_dir%/}" -maxdepth 4 -type d -iname "*Technical Info*")
+	# looks for the Technical Info_Specs directory
+	# The "%/" removes the trailing "/" on the end of the ArtFile
+	AssignDirectory  "techdir" "Technical Info_Specs"  "${accession_dir%/}"
+fi
+
+if [[ -z "$sidecardir" ]]; then
+# if the $sidecardir variable is empty (unassigned), then
+	sidecardir=$(find "${techdir%/}" -maxdepth 2 -type d -iname "*Sidecars*")
+	# if the find command fails to find a directory called "sidecars" in the techdir, then
+	if [[ -z "$sidecardir" ]]; then
+		mkdir -p "${techdir%/}/Sidecars"
+		sidecardir="${techdir%/}/Sidecars" 
+		logNewLine "Metadata output will be written to sidecar files in $sidecardir" "$MAGENTA"
+	else
+		logNewLine "Metadata output will be written to sidecar files in $sidecardir" "$MAGENTA"
+	fi
+else
+	logNewLine "Metadata output will be written to sidecar files in $sidecardir" "$MAGENTA"
+fi
+
+export techdir="${techdir}"
+export sidecardir="${sidecardir}"
+}
+
+# This function finds the Staging Directory file path
+function FindTBMADroBoPath {
+	if [[ -z "${TBMADroBoPath}" ]]; then
+		if [[ -d /Volumes/TBMA\ Drobo/Time\ Based\ Media\ Artwork ]]; then
+			TBMADroBoPath=/Volumes/TBMA\ Drobo/Time\ Based\ Media\ Artwork
+			echo "found TBMA DroBo at $TBMADroBoPath"
+			export TBMADroBoPath="${TBMADroBoPath}"
+		else
+			ConfirmInput TBMADroBoPath "Please input the path to the "Time Based Media Artwork" directory on the TBMA DroBo. Feel free to drag and drop the directory into terminal:"
+			export TBMADroBoPath="${TBMADroBoPath}"
+		fi
+	fi
+}
+
+# This function makes the staging directory if one does not exist
+function MakeStagingDirectory {
+	if [ -z "${accession+x}" ]; then
+		ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
+	fi
+	SDir_Accession=`echo "$accession" | sed 's/\./-/g'` ;
+	# The sed command replaces the period in the accession variable with a dash. Found it here: https://stackoverflow.com/questions/6123915/search-and-replace-with-sed-when-dots-and-underscores-are-present 
+	mkdir -pv "${TBMADroBoPath%/}"/"$SDir_Accession"_"$ArtistLastName"
+	SDir="${TBMADroBoPath%/}"/"$SDir_Accession"_"$ArtistLastName"
+	logNewLine "Path to the staging directory: ${SDir}" "$MAGENTA" 
+	export SDir="${SDir}"
+}
+
+function FindSDir {
+	cowsay "Enter a number to set the path to the Staging Directory on the TBMA DroBo:"
+	# Prompts for either identifying the staging directory or creating one using the function defined earlier. Defines that path as "$SDir"
+	IFS=$'\n'; select SDir_option in $(find "${TBMADroBoPath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
+		if [[ $SDir_option = "Input path" ]] ; then
+			ConfirmInput SDir "Input path to Staging Directory:"
+			export SDir="${SDir}"
+		elif [[ $SDir_option = "Create Staging Directory" ]] ; then 
+			MakeStagingDirectory
+		else
+			SDir=$SDir_option
+			# assigns variable to the users selection from the select menu
+			export SDir="${SDir}"
+			logNewLine "Path to the staging directory: ${SDir}" "$MAGENTA" 
+			sleep 1
+		fi
+	break			
+	done;
+}
+
+function FindVolume {
+	if [[ -z "${title}" ]] ; then
+	# fi the variable $title has not been assigned then:
+		VolumesMatch=$(find "/Volumes" -maxdepth 1 -type d -iname "*$ArtistLastName*" | wc -l | xargs)
+		# Gives number of results in the /Volumes/ directory that contain either the artist's last name or the title of the artwork
+		FindVolumes=$(find "/Volumes" -maxdepth 1 -type d -iname "*${ArtistLastName}*")
+	else
+		VolumesMatch=$(find "/Volumes" -maxdepth 1 -type d -iname "*$ArtistLastName*"  -o -iname "*$title*" | wc -l | xargs)
+		# Gives number of results in the /Volumes/ directory that contain either the artist's last name or the title of the artwork
+		FindVolumes=$(find "/Volumes" -maxdepth 1 -type d -iname "*${ArtistLastName}*" -o -iname "*${title}*")
+	fi
+
+	if [ "${VolumesMatch}" \> 1 ]; then
+	# If there is more than 1 line in the $FindVolumes variable, then
+		declare -a FindVolumes_array
+		IFS=$'\n'
+    	for line in $(find "/Volumes" -maxdepth 1 -type d -iname "*${ArtistLastName}*" -o -iname "*${title}*"); do
+			# Store each line in the array
+			FindVolumes_array+=("$line")
+		done
+	
+		IFS=$'\n'; select findvolume_option in ${FindVolumes_array[@]} "None of these" ; do
+			if [[ $findvolume_option = "None of these" ]] ; then 
+				ConfirmInput Volume "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
+        	elif [[ -n $findvolume_option ]] ; then
+				Volume=$findvolume_option
+			fi
+		break           
+		done;
+	elif [[ -z "${FindVolumes}" ]]; then
+		ConfirmInput Volume "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
+	else
+		echo -e "Is this the volume? \n${FindVolumes}"
+		IFS=$'\n'; select found_volume_option in "yes" "no" ; do
+			if [[ $found_volume_option = "yes" ]] ; then 
+				Volume="${FindVolumes}"
+        	elif [[ $found_volume_option = "no" ]] ; then
+				ConfirmInput Volume "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
+			fi
+		break           
+		done;
+	fi
+
+	export Volume="${Volume}"
+}
+
 set +a

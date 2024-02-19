@@ -14,13 +14,12 @@ source "${script_dir}"/input_functions/makelog.sh
 MakeLog
 CleanupLogDir
 
+source "${script_dir}"/input_functions/makecsv.sh
 ParseArgs "$@"
 
 # After checking the first line, if an input file has been identified then read inputs and assign them to variables
 if [[ -n "${input_csv}" ]] ; then
     logNewLine "Reading variables from input csv: ${input_csv}" "$CYAN"
-    source "${script_dir}"/input_functions/find/findartfile.sh
-    # remove_special_chars function is stored in findartfile.sh
     if test -f "${input_csv}"; then
     # test that input_csv is a file
         while IFS=, read -r key value || [ -n "$key" ]
@@ -72,7 +71,7 @@ if [[ -n "${input_csv}" ]] ; then
 # if input_csv has been assigned, then
     if [[ -n "${ArtFile}" ]] && [[ -z "${ArtistLastName}" ]] ; then
     # if artwork file has been assigned, but artist's name is unknown
-        source "${script_dir}"/input_functions/find/findartfile.sh
+        source "${script_dir}"/input_functions/finddirs.sh
         ParseArtFile "${ArtFile}"
         # parse artwork file path for artist first and last name
         FindAccessionNumber 
@@ -80,7 +79,7 @@ if [[ -n "${input_csv}" ]] ; then
     fi
     if [[ -z "${ArtistLastName}" ]] ; then
     # if artist's name has not been assigned, then:
-        source "${script_dir}"/input_functions/find/findartfile.sh
+        source "${script_dir}"/input_functions/finddirs.sh
         if [[ "$typo_check" == true ]] ; then
             name_again=yes
             ConfirmArtistsName
@@ -93,7 +92,7 @@ if [[ -n "${input_csv}" ]] ; then
         # consider adding a check here. If artist's name doesn't match any in artwork folders then confirm? Use different artist name database?
     fi
 else
-    source "${script_dir}"/input_functions/find/findartfile.sh
+    source "${script_dir}"/input_functions/finddirs.sh
     if [[ "$typo_check" == true ]] ; then
         name_again=yes
         ConfirmArtistsName
@@ -105,14 +104,14 @@ fi
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${ArtFile}" ]] ; then
         logNewLine "No path to the artwork file found in input csv" "$WHITE"
-        source "${script_dir}"/input_functions/find/findartfile.sh
+        source "${script_dir}"/input_functions/finddirs.sh
         FindArtworkFilesPath
         FindArtworkFile
     else
         logNewLine "The artwork file path from CSV: ${ArtFile}" "$WHITE"
     fi
 else
-    source "${script_dir}"/input_functions/find/findartfile.sh
+    source "${script_dir}"/input_functions/finddirs.sh
     FindArtworkFilesPath
     FindArtworkFile
 fi
@@ -120,7 +119,7 @@ fi
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${accession}" ]] ; then
         echo "No accession number in input csv"
-        source "${script_dir}"/input_functions/find/findartfile.sh
+        source "${script_dir}"/input_functions/finddirs.sh
         if [[ -z "${ArtFilePath}" ]] ;
         then
             FindArtworkFilesPath
@@ -133,7 +132,7 @@ if [[ -n "${input_csv}" ]] ; then
     fi
 else
     if [[ -z "${accession}" ]] ; then
-        source "${script_dir}"/input_functions/find/findartfile.sh
+        source "${script_dir}"/input_functions/finddirs.sh
         if [[ -z "${ArtFilePath}" ]] ;
         then
             FindArtworkFilesPath
@@ -146,7 +145,7 @@ fi
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${SDir}" ]] ; then
         logNewLine "No path to Staging Directory found in input csv" "$WHITE"
-        source "${script_dir}"/input_functions/find/findsdir.sh
+        source "${script_dir}"/input_functions/finddirs.sh
         if [[ -z "${TBMADroBoPath}" ]]; then
             FindTBMADroBoPath
         fi
@@ -155,7 +154,7 @@ if [[ -n "${input_csv}" ]] ; then
         logNewLine "Path to the staging directory from CSV: ${SDir}" "$WHITE"
     fi
 else
-    source "${script_dir}"/input_functions/find/findsdir.sh
+    source "${script_dir}"/input_functions/finddirs.sh
     if [[ -z "${TBMADroBoPath}" ]]; then
         FindTBMADroBoPath
     fi
@@ -165,39 +164,39 @@ fi
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${Volume}" ]] ; then
         logNewLine "No volume path in input csv" "$WHITE"
-        source "${script_dir}"/input_functions/find/findvolume.sh
+        source "${script_dir}"/input_functions/finddirs.sh
         FindVolume
     else
         logNewLine "The path to the volume from CSV: ${Volume}" "$WHITE"
     fi
 else
-    source "${script_dir}"/input_functions/find/findvolume.sh
+    source "${script_dir}"/input_functions/finddirs.sh
     FindVolume
 fi
 
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${techdir}" ]] ; then
         logNewLine "No path to the Technical Info and Specs directory found in input csv" "$WHITE"
-        source "${script_dir}"/input_functions/find/findreportdir.sh
+        source "${script_dir}"/input_functions/finddirs.sh
         FindTechDir
     else
         logNewLine "Technical Info and Specs: $techdir" "$WHITE"
     fi
 else
-    source "${script_dir}"/input_functions/find/findreportdir.sh
+    source "${script_dir}"/input_functions/finddirs.sh
     FindTechDir
 fi
 
 if [[ -n "${input_csv}" ]] ; then
     if [[ -z "${reportdir}" ]] ; then
         logNewLine "No path to the Condition_Tmt Reports directory found in input csv" "$WHITE"
-        source "${script_dir}"/input_functions/find/findreportdir.sh
+        source "${script_dir}"/input_functions/finddirs.sh
         FindConditionDir
     else
         logNewLine "Condition Report: $reportdir \nSidecar directory: $sidecardir" "$WHITE"
     fi
 else
-    source "${script_dir}"/input_functions/find/findreportdir.sh
+    source "${script_dir}"/input_functions/finddirs.sh
     FindConditionDir
 fi
 
