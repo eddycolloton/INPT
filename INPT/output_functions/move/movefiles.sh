@@ -36,17 +36,20 @@ function CopyitVolumeStaging {
 	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
 	do
 	SECONDS=0 &&
-	echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** copyit.py started ******** \n -------------------> copyit.py will be run on all contents of the volume" >> "${configLogPath}" &&
+	echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** copyit.py started ******** \n -------------------> copyit.py will be run on all contents of the volume" >> "${configLogPath}"  
 	#print timestamp and command to log
-	echo -e "******** copyit.py started ******** \n copyit.py will be run on all contents of the volume" &&
+	echo -e "******** copyit.py started ******** \n copyit.py will be run on all contents of the volume"  
 	#prints statement to log
-	python3 "${copyitPath%/}"/copyit.py "$Volume" "$SDir" &&
-	for t in "`find "$SDir" -name "*_manifest.md5"`" ; do cp "$t" "$techdir" && echo -e "\n***** md5 checksum manifest ***** \n" >> "${reportdir}/${accession}_appendix.txt" && cat "$t" >> "${reportdir}/${accession}_appendix.txt"
+	python3 "${copyitPath%/}"/copyit.py "$Volume" "$SDir"  
+	for t in "`find "$SDir" -name "*_manifest.md5"`" ; do 
+		cp "$t" "$techdir"   
+		echo -e "\n***** md5 checksum manifest ***** \n" >> "${reportdir}/${accession}_appendix.txt" 
+		cat "$t" >> "${reportdir}/${accession}_appendix.txt"
 	done
 	if [[ -n $(find "${SDir}" -name "*_manifest.md5") ]]; then 
 	### -> Consider: changing the name of the manifest file to include more specifics in the event of multiple manifests.
 	### -> As of right now, if *any* manifest exists 
-		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** copyit.py completed ******** \n\n\t\tcopyit.py Results:\n\t\tall files copied to the $SDir" >> "${configLogPath}" &&
+		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** copyit.py completed ******** \n\n\t\tcopyit.py Results:\n\t\tall files copied to the $SDir" >> "${configLogPath}"  
 		#prints timestamp once the command has exited
 		duration=$SECONDS
 		echo -e "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}"
@@ -81,9 +84,9 @@ function CopyitSelected {
 	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
 	do
 	SECONDS=0 &&
-	echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** copyit.py started ******** \n\tcopyit.py will be run on selected directories of the volume" >> "${configLogPath}" &&
+	echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** copyit.py started ******** \n\tcopyit.py will be run on selected directories of the volume" >> "${configLogPath}"  
 	#print timestamp and command to log
-	echo -e "******** copyit.py started ******** \n copyit.py will be run on selected directories of the volume" &&
+	echo -e "******** copyit.py started ******** \n copyit.py will be run on selected directories of the volume"  
 	#prints statement to terminal
 	declare -a SelectedDirs
 	#creates an empty array
@@ -102,15 +105,17 @@ function CopyitSelected {
 	#for each element in the array, do
 	    python3 "${copyitPath%/}"/copyit.py "$eachdir" "$SDir"
 	    #add echo statement to log here?
-	done &&
+	done  
 	#run the IFI copyit script and send each selected directory to the staging directory
 	#On 03/02/2021 I had all kinds of problems with python3 after an xcode update. I ran brew unlink python@3.9, brew unlink python@3.8, and brew link python@3.8. Then I ran echo 'export PATH="/usr/local/opt/python@3.8/bin:$PATH"' >> ~/.zshrc. This last step seemed to make it work, but I have to run pip3 with "sudo" now. Solution fond here: https://github.com/Homebrew/homebrew-core/issues/62911#issuecomment-733866503
 	find "$SDir" -type f \( -iname "*_manifest.md5" \) -print0 |
-		while IFS= read -r -d '' t; 
-			do cp "$t" "$techdir" && echo -e "\n***** md5 checksum manifest ***** \n" >> "${reportdir}/${accession}_appendix.txt" && cat "$t" >> "${reportdir}/${accession}_appendix.txt"
+		while IFS= read -r -d '' t ; do 
+			cp "$t" "$techdir"  
+			echo -e "\n***** md5 checksum manifest ***** \n" >> "${reportdir}/${accession}_appendix.txt" 
+			cat "$t" >> "${reportdir}/${accession}_appendix.txt"
 		done
 	if [[ -n $(find "${SDir}" -name "*_manifest.md5") ]]; then 
-		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** copyit.py completed ******** \n\n\t\tcopyit.py Results:\n\t\tselect directories copied to the $SDir" >> "${configLogPath}" &&
+		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** copyit.py completed ******** \n\n\t\tcopyit.py Results:\n\t\tselect directories copied to the $SDir" >> "${configLogPath}"  
 		#prints timestamp once the command has exited
 		duration=$SECONDS
 		echo "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}" 
@@ -143,8 +148,8 @@ function RunIndvMD5 {
 	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
 	do
 	SECONDS=0 &&
-	echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** generating md5 checksums on selected files ******** \nmd5deep will be run on ${Volume}" >> "${configLogPath}" &&
-	echo -e " ******** generating md5 checksums on selected files ******** \n md5deep will be run on ${Volume}" &&
+	echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** generating md5 checksums on selected files ******** \nmd5deep will be run on ${Volume}" >> "${configLogPath}"  
+	echo -e " ******** generating md5 checksums on selected files ******** \n md5deep will be run on ${Volume}"
 	#prints statement to terminal
 	declare -a SelectedFiles
 	#creates an empty array
@@ -161,15 +166,15 @@ function RunIndvMD5 {
 	#got this from https://peniwize.wordpress.com/2011/04/09/how-to-read-all-lines-of-a-file-into-a-bash-array/
 	for eachfile in "${SelectedFiles[@]}"; do 
 	#for each element in the array, do
-    	md5deep -b -e "$eachfile" >> "${SDir}/${accession}_Volume_manifest.txt"
+    	md5deep -b -e "$eachfile" >> "${SDir}/${accession}_Volume_ manifest.md5"
     	#runs md5deep on each element in the array, and prints it to a manifest text file
 	#maybe run echo statement to print to log?
 	done
-	echo -e "\n***** md5 manifest from ${Volume} ***** \n" >> "${reportdir}/${accession}_appendix.txt" &&
-	cat "${SDir}/${accession}_Volume_manifest.txt" >> "${reportdir}/${accession}_appendix.txt" &&
-	cp "${SDir}/${accession}_Volume_manifest.txt" "$techdir"
-	if [[ -f "${SDir}/${accession}_Volume_manifest.txt" ]]; then
-		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** md5 checksum manifest from ${Volume} completed ******** \n\n\t\tmd5deep Results:\n\t\tcopied to ${SDir} and \n\t\t${reportdir}/${accession}_appendix.txt" >> "${configLogPath}" &&
+	echo -e "\n***** md5 manifest from ${Volume} ***** \n" >> "${reportdir}/${accession}_appendix.txt"  
+	cat "${SDir}/${accession}_Volume_ manifest.md5" >> "${reportdir}/${accession}_appendix.txt"  
+	cp "${SDir}/${accession}_Volume_ manifest.md5" "$techdir"
+	if [[ -f "${SDir}/${accession}_Volume_ manifest.md5" ]]; then
+		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** md5 checksum manifest from ${Volume} completed ******** \n\n\t\tmd5deep Results:\n\t\tcopied to ${SDir} and \n\t\t${reportdir}/${accession}_appendix.txt" >> "${configLogPath}"  
 		#prints timestamp once the command has exited
 		duration=$SECONDS
 		echo -e "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}"
@@ -201,9 +206,9 @@ function CopyFiles {
 	# https://unix.stackexchange.com/questions/232761/get-script-to-run-again-if-input-is-yes
 	do
 	SECONDS=0 &&
-	echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** copying files started ******** \n\tcopying individual files from the volume" >> "${configLogPath}" &&
+	echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** copying files started ******** \n\tcopying individual files from the volume" >> "${configLogPath}"  
 	#print timestamp and command to log
-	echo -e "******** copying files started ******** \n copying individual files from the volume"  &&
+	echo -e "******** copying files started ******** \n copying individual files from the volume"   
 	#print statement to terminal
 	declare -a SelectedFiles
 	#creates an empty array
@@ -227,12 +232,12 @@ function CopyFiles {
 	    #prints a seperate log file for each of the individual files to the  techdir
 	    echo -e "\t${eachfile}" >> "${configLogPath}" 
 	    #prints the name of each file to the log
-	    md5deep -b -e "${SDir}/$(basename $eachfile)" >> "${SDir}/${accession}_SDir_manifest.txt"
-	done &&
-	echo -e "\n***** md5 manifest from ${SDir} ***** \n" >> "${reportdir}/${accession}_appendix.txt" &&
-	cat "${SDir}/${accession}_SDir_manifest.txt" >> "${reportdir}/${accession}_appendix.txt" &&
-	if [[ -f "${SDir}/${accession}_SDir_manifest.txt" ]]; then
-		echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** file copying and md5 checksum manifest from ${SDir} completed ******** \n\n\t\trsync Results:\n\t\tmanifest copied to ${SDir} and \n\t\t${reportdir}/${accession}_appendix.txt \n rsync logs in ${techdir}" >> "${configLogPath}" &&
+	    md5deep -b -e "${SDir}/$(basename $eachfile)" >> "${SDir}/${accession}_SDir_ manifest.md5"
+	done  
+	echo -e "\n***** md5 manifest from ${SDir} ***** \n" >> "${reportdir}/${accession}_appendix.txt"  
+	cat "${SDir}/${accession}_SDir_ manifest.md5" >> "${reportdir}/${accession}_appendix.txt"  
+	if [[ -f "${SDir}/${accession}_SDir_ manifest.md5" ]]; then
+		echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** file copying and md5 checksum manifest from ${SDir} completed ******** \n\n\t\trsync Results:\n\t\tmanifest copied to ${SDir} and \n\t\t${reportdir}/${accession}_appendix.txt \n rsync logs in ${techdir}" >> "${configLogPath}"  
 		#prints timestamp once the command has exited
 		duration=$SECONDS
 		echo -e "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}"
@@ -256,18 +261,19 @@ function CopyFiles {
 	then echo -e "!! Running copy again !! \n\n"
 	fi
 
-	Md5comp=$(diff "${SDir}/${accession}_Volume_manifest.txt" "${SDir}/${accession}_SDir_manifest.txt")
+	Md5comp=$(diff "${SDir}/${accession}_Volume_ manifest.md5" "${SDir}/${accession}_SDir_ manifest.md5")
 	#Sets the variable Md5comp to be the output of the diff command run on the two md5 manifests created if select individual files is chosen by the user
 	if [ "$Md5comp" != "" ]
 	#if the variable is empty then, (taken from https://stackoverflow.com/questions/3611846/bash-using-the-result-of-a-diff-in-a-if-statement)
 	then
 		echo "The ${Volume} md5 manifest and the ${SDir} md5 manifest do not match!"
 		echo -e "\n xxxxxxxx No manfiest file found in $SDir xxxxxxxx" >> "${configLogPath}"
-		diff -y "${SDir}/${accession}_Volume_manifest.txt" "${SDir}/${accession}_SDir_manifest.txt" > "${techdir}/${accession}_$(date "+%Y-%m-%d - %H.%M.%S")_md5_collision.txt"
+		diff -y "${SDir}/${accession}_Volume_ manifest.md5" "${SDir}/${accession}_SDir_ manifest.md5" > "${techdir}/${accession}_$(date "+%Y-%m-%d - %H.%M.%S")_md5_collision.txt"
+		logNewLine "MD5 comparison printed to ${techdir}" "$Bright_Red"
 	else
 		echo -e "Files moved to ${SDir} and the \nchecksums match!"
 		echo -e "All checksums match!" >> "${reportdir}/${accession}_appendix.txt"
-		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** checksum manifests match ******** \n" >> "${configLogPath}" &&
+		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** checksum manifests match ******** \n" >> "${configLogPath}"  
 		#prints timestamp once the command has exited
 		duration=$SECONDS
 		echo -e "\t\t===================> Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" >> "${configLogPath}" 
