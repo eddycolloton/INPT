@@ -70,8 +70,8 @@ fi
 	
 if [[ -n "${input_csv}" ]] ; then
 # if input_csv has been assigned, then
-    if [[ -n "${ArtFile}" ]] ; then
-    # if artwork file has been assigned, 
+    if [[ -n "${ArtFile}" ]] && [[ -z "${ArtistLastName}" ]] ; then
+    # if artwork file has been assigned, but artist's name is unknown
         source "${script_dir}"/input_functions/find/findartfile.sh
         ParseArtFile "${ArtFile}"
         # parse artwork file path for artist first and last name
@@ -90,7 +90,7 @@ if [[ -n "${input_csv}" ]] ; then
     elif [[ -n "${ArtistLastName}" ]] && [[ -z "${ArtFile}" ]]; then
     # if the artist's last name is known and the Artwork File path is still unknown, then assume artist's name is from csv
         logNewLine "Artist name found in CSV: ${ArtistFirstName} ${ArtistLastName}" "$WHITE"
-        # consdier adding a check here. If artist's name doesn't match any in artwork folders then confirm? Use different artist name database?
+        # consider adding a check here. If artist's name doesn't match any in artwork folders then confirm? Use different artist name database?
     fi
 else
     source "${script_dir}"/input_functions/find/findartfile.sh
@@ -127,8 +127,9 @@ if [[ -n "${input_csv}" ]] ; then
         fi 
         FindAccessionNumber 
         logNewLine "The accession number manually input: ${accession}" "$CYAN"
-    else
-        logNewLine "The accession number from CSV: ${accession}" "$WHITE"
+    #elif [[ -z "${accession_dir}" ]] && [[ -z "${titledir}" ]] ; then
+    # if these variables are empty then FindAccessionNumber didn't run, but accession is known, so the accession number was found in the CSV
+     #   logNewLine "The accession number from CSV: ${accession}" "$WHITE"
     fi
 else
     if [[ -z "${accession}" ]] ; then

@@ -57,72 +57,57 @@ function FindArtworkFilesPath {
 
 ConfirmInput () {
     local var="$1"
-    local var_again="$2"
-	select options in "yes" "no, go back a step"; do
-		case $options in
-			yes)
-				select_again=no
-                eval "$var_again=\$select_again"
-				break;;
-			"no, go back a step")
-				select_again=yes
-                eval "$var_again=$select_again"
-                unset var
-				break;;
-		esac
-	done
-}
-
-function ConfirmTitle {
-	while [[ "$title_again" = yes ]] ; do
-		echo -e "\n*************************************************\nInput the artwork's title" && read title
-        # prompts user for artwork title and reads input
-		cowsay "Just checking for typos - Is the artwork title entered correctly?"
-		logNewLine "The title manually input: ${title}" "$CYAN"
-		ConfirmInput title title_again
-		if [[ "$title_again" = yes ]] ;
-			then echo -e "Let's try again"
-		fi
-	export title="${title}"
-	done
-}
-
-function CheckAccession {
-    while [[ "$accession_again" = yes ]] ; do
-        echo -e "\n*************************************************\nInput accession number" && read accession
-        #prompts user for accession number and reads input
-		cowsay "Just checking for typos - Is the accession number entered correctly?"
-        logNewLine "The accession number manually input: ${accession}" "$CYAN"
-        ConfirmInput accession accession_again
-        if [[ "$accession_again" = yes ]] ;
-            then echo -e "Let's try again"
+    select_again=yes
+	while [[ "$select_again" = yes ]] ; do
+		echo -e "\nManually input the value for: $var"
+        if [[ ! -z "$2" ]] ; then
+        # Optional additional argument to provide context on prompt for input
+            echo "$2"
         fi
-    done
-    export accession="${accession}"
+		read -e user_input
+        # Read user input as variable $user_input
+        if [[ -e $user_input ]] ; then
+        # if user_input is a path then, 
+            user_input="$(echo -e "${user_input}" | sed -e 's/[[:space:]]*$//')"
+            # If the user_input path is dragged and dropped into terminal, the trailing whitespace can eventually be interpreted as a "\" which breaks the CLI tools. To prevent this, the sed command above is used.
+	        # I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+            # echo "path had trailing space removed, var is now $user_input"
+            # echo statement here for testing purposes
+        fi
+		logNewLine "The $var manually input: ${user_input}" "$CYAN"
+        if [[ "$typo_check" == true ]] ; then
+        # If typo check option is turned on, then confirm user_input
+            cowsay "Just checking for typos - Is the ${var} entered correctly?"
+            select options in "yes" "no, go back a step"; do
+                case $options in
+                    yes)
+                        select_again=no
+                        break;;
+                    "no, go back a step")
+                        select_again=yes
+                        unset user_input
+                        break;;
+                esac
+            done
+            if [[ "$select_again" = yes ]] ;
+                    then echo -e "Let's try again"
+            fi
+        else
+            select_again=no
+        fi
+	eval "${var}=\${user_input}"
+	export var="${var}"
+	done
 }
 
-#This function makes the nested directores of a Time-based Media Artwork File
+#This function makes the nested directories of a Time-based Media Artwork File
 function MakeArtworkFile {
 	while [[ -z "$accession" ]] ; do
-		if [[ "$typo_check" == true ]] ; then
-			accession_again=yes
-			CheckAccession
-		else
-			echo -e "\n*************************************************\nEnter Accession Number in '####.###' format" && read accession
-        	#prompts user for accession number and reads input
-			logNewLine "The accession number manually input: ${accession}" "$CYAN"
-		fi
+		ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
 		export accession="${accession}"
 	done
 	while [[ -z "$title" ]] ; do
-    	if [[ "$typo_check" == true ]] ; then
-			ConfirmTitle
-			title_again=yes
-		else
-			echo -e "\n*************************************************\nInput the artwork's title" && read title
-        	# prompts user for artwork title and reads input
-			logNewLine "The title manually input: ${title}" "$CYAN"
-		fi
+    	ConfirmInput title
 		export title="${title}"
 	done
 	mkdir -p "${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/"time-based media"/"$accession""_""$title"/{"Acquisition and Registration","Artist Interaction","Cataloging","Conservation"/{"Condition_Tmt Reports","DAMS","Equipment Reports"},"Iteration Reports_Exhibition Info"/"Equipment Reports","Photo-Video Documentation","Research"/"Correspondence","Technical Info_Specs"/{"Past installations_Pics","Sidecars"},"Trash"}
@@ -141,12 +126,13 @@ ParseAccession () {
     local count="$3"
     dir_name=$(basename "$found_dir")
     parsed_accession=$(echo "$dir_name" | awk -F'[ _]' '{print $1}')
-    #sed command cuts everything before and after ##.# in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
+    # sed command cuts everything before and after ##.# in the titledir variable name. I got the sed command from https://unix.stackexchange.com/questions/243207/how-can-i-delete-everything-until-a-pattern-and-everything-after-another-pattern/243236
     if [[  $(echo -n "$parsed_accession" | wc -c) =~ $count ]]; then
+	# if the number of characters (counted by 'wc -c') is equal to the provided count, then
         logNewLine "The accession number is ${parsed_accession} found in the artwork folder ${found_dir}" "$MAGENTA"
         export accession="${parsed_accession}"
     else
-        CheckAccession 
+        ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
     fi
 }
 
@@ -163,14 +149,7 @@ if [[ "$title_dir_results" > 1 ]]; then
     #If the variable title_dir_results stores more than one result
 	#This is to determine if there is more than one dir in the ArtFile that has an accession number (typically means there are two artworks by the same artist)
 	echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-    if [[ "$typo_check" == true ]] ; then
-		accession_again=yes
-		CheckAccession
-	else
-		echo -e "\n*************************************************\nInput accession number" && read accession
-        #prompts user for accession number and reads input
-		logNewLine "The accession number manually input: ${accession}" "$CYAN"
-	fi
+    ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
 	accession_dir=$(find "${ArtFile%/}" -mindepth 0 -maxdepth 4 -type d -iname "*${accession}*")
 	#defines the accession_dir variable as a directory stored inside the ArtFile that has the accession number in it's name
 	#This is to define a more specific variable, if there is more than one artwork in the ArtFile
@@ -178,14 +157,7 @@ if [[ "$title_dir_results" > 1 ]]; then
 	#if the accession_dir variable is empty
 	#This var will typically be empty if the find command did not return a result
 		while [[ -z "$title" ]] ; do
-            if [[ "$typo_check" == true ]] ; then
-				ConfirmTitle
-				title_again=yes
-			else
-				echo -e "\n*************************************************\nInput the artwork's title" && read title
-        		# prompts user for artwork title and reads input
-				logNewLine "The title manually input: ${title}" "$CYAN"
-			fi
+            ConfirmInput title
 		done
 		accession_dir=$(find "${ArtFile%/}" -mindepth 0 -maxdepth 4 -type d -iname "*${title}*")
         #defines the accession_dir variable as a directory stored inside the ArtFile that has the title in it's name
@@ -234,14 +206,7 @@ if [[ -z "${accession}" ]]; then
 	if [[ -z "$titledir" ]]; then 
 	#if the $titledir variable is empty, then
         echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-    	if [[ "$typo_check" == true ]] ; then
-			accession_again=yes
-			CheckAccession
-		else
-			echo -e "\n*************************************************\nInput accession number" && read accession
-        	# prompts user for accession number and reads input
-			logNewLine "The accession number manually input: ${accession}" "$CYAN"
-		fi
+    	ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
 	fi
 	acount=$(echo "$titledir" | grep -oE '[0-9]')
 	#this grep command prints every digit it finds in titledir on a new line, and assigns that output to the variable "acount"
@@ -256,47 +221,10 @@ if [[ -z "${accession}" ]]; then
         ParseAccession accession "${titledir}" "8"
 	else 
 		echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-    	if [[ "$typo_check" == true ]] ; then
-			accession_again=yes
-			CheckAccession
-		else
-			echo -e "\n*************************************************\nInput accession number" && read accession
-        	# prompts user for accession number and reads input
-			logNewLine "The accession number manually input: ${accession}" "$CYAN"
-		fi
+    	ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
 	fi
 fi
 unset IFS
-}
-
-function InputArtfile {
-	echo "Input path to Artwork File:"
-	read -e ArtFileInput
-	#Asks for user input and assigns it to variable
-	ArtFile="$(echo -e "${ArtFileInput}" | sed -e 's/[[:space:]]*$//')"
-	#Strips a trailing space from the input. 
-	#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
-	#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-}
-
-function ConfrimArtfile {
-	while [[ "$artfile_again" = yes ]] ; do
-		InputArtfile
-		cowsay "Just checking for typos - Is the path to the artwork file entered correctly?"
-		logNewLine "The artwork file manually input is ${ArtFile}" "$CYAN"
-		IFS=$'\n'; select artfile_option in "Yes" "No, go back a step" ; do
-			if [[ $artfile_option = "Yes" ]] ; then
-				artfile_again=no
-			elif [[ $artfile_option = "No, go back a step" ]] ; then 
-				unset ArtFile
-			fi
-		break           
-		done;
-
-		if [[ "$artfile_again" = yes ]] ; then
-			echo -e "Let's try again"
-		fi
-	done
 }
 
 function FindArtworkFile {
@@ -311,12 +239,7 @@ if [[ -z "${FindArtFile}" ]]; then
 		#lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
   		if [[ $artdir = "Input path" ]]
   		then while [[ -z "$ArtFile" ]] ; do 
-			if [[ "$typo_check" == true ]] ; then
-				artfile_again=yes
-				ConfrimArtfile
-			else
-				InputArtfile
-			fi
+			ConfirmInput ArtFile "Feel free to drag and drop Artwork File path below"
 			if [[ -z "${accession}" ]];
 			then
 				FindAccessionNumber

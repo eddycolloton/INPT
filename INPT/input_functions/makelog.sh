@@ -41,7 +41,7 @@ White_bg='\033[47m'
 ## Color code:
 # white - data found in csv
 # cyan - manual input
-# magenta - data found through context
+# magenta and bright_magenta - data found through context
 # yellow - directories and files created
 # bright_red - error
 
@@ -211,7 +211,7 @@ CompareCSV () {
                 # Create old_logs directory and move .log files
                 mkdir "$old_CSVs_dir"
                 mv "${existing_csv}" "$old_CSVs_dir"
-                logNewLine "Created $(basename "${old_CSVs_dir%/}") and moved pre-existing CSV file" "$YELLOW"
+                logNewLine "Created $(basename "${old_CSVs_dir%/}") directory and moved pre-existing CSV file" "$YELLOW"
               fi
               break;;
           esac
