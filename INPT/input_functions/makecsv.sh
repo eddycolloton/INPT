@@ -40,18 +40,35 @@ CompareCSV () {
   for existing_csv in "${existing_csv_files[@]}"; do
     if [ "$existing_csv" != "$1" ]; then 
       logNewLine "Comparing "$(basename "$1")" with "$(basename "$existing_csv")"" "$WHITE"
-      # Use awk to compare the first column and print differences in the second column
-      csv_diff=$(awk -F ',' 'NR==FNR{a[$1]=$2; next} $1 in a && a[$1]!=$2{print $1 "," $2 "," a[$1]}' "$1" "$existing_csv")
+      
+      unset csv_diff
+      # Reset csv_diff per CSV file
+      while IFS= read -r line1 && IFS= read -r line2 <&3; do
+        key1=$(echo "$line1" | cut -d ',' -f 1)
+        key2=$(echo "$line2" | cut -d ',' -f 1)
+
+        # Check if keys are the same
+        if [ "$key1" != "$key2" ]; then
+            echo "Keys do not match: $key1 in CSV1, $key2 in CSV2"
+            continue
+        fi
+
+        # Extract values
+        value1=$(echo "$line1" | cut -d ',' -f 2-)
+        value2=$(echo "$line2" | cut -d ',' -f 2-)
+
+        # Check if values are different
+        if [ "$value1" != "$value2" ]; then
+          echo -e "\n$key1 has different values:"
+          echo -e "${Bright_Magenta} -- New value: $value1 ${RESET}"
+          echo -e "${WHITE} -- Existing value: $value2 ${RESET}"
+          csv_diff=yes
+        fi
+      done < "$1" 3< "$existing_csv"
+      
       if [ -n "$csv_diff" ]; then
+        echo -e "\n"
         logNewLine "Differences in "$(basename "$existing_csv")" CSV found" "$Bright_Red"
-        echo "$csv_diff" | while IFS=, read -r col1 existing_val new_val; do
-          echo "'$col1' has different values:"
-          echo "- New value: ${new_val}"
-          echo "- Existing old: ${existing_val}"
-        done
-      fi
-      # Check if differences were found and print the message
-      if [ -n "$csv_diff" ]; then
         echo -e "\nWhat would you like to do with pre-existing CSV files in the Artwork File?"
         select old_csv_option in "Replace pre-existing CSV" "Archive old CSV" ; do
           case $old_csv_option in
