@@ -49,7 +49,7 @@ function FindArtworkFilesPath {
 		else
 			cowsay -W 30 "Please input the path to the ARTWORK FILES directory from the T:\ drive. Feel free to drag and drop the directory into terminal:"
 			read -e ArtFilePath
-			logNewLine "The path to the Artwork Files is: $ArtFilePath" "$Bright_Magenta"
+			logNewLine "The path to the Artwork Files manually input: $ArtFilePath" "$CYAN"
 		fi
 		export ArtFilePath="${ArtFilePath}"
 	fi

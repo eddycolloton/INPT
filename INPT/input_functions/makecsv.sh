@@ -124,11 +124,11 @@ find_most_recent_csv() {
 function findCSV {
 	set -a
 
-	echo -e "type or drag and drop the path of the artwork file\n"
+	echo -e "Required input variables for start_output.sh are not set. To define inputs, use start_input.sh.\nIf you would like to run start_output.sh on an artwork that has a completed input.csv, type or drag and drop the path of the artwork file:\n"
 	read -e ArtFileInput
 	ArtFile="$(echo -e "${ArtFileInput}" | sed -e 's/[[:space:]]*$//')"
 	#Strips a trailing space from the input. 
-	#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
+	#If the user drags and drops the directory into terminal, it adds a trailing space, which, if passed to other commands, can result in errors. the sed command above prevents this.
 	#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
 	export ArtFile="${ArtFile}"
 
@@ -163,6 +163,7 @@ function findCSV {
 		done
 	fi
 
+  export foundCSV="${foundCSV}"
 	set +a
 } 
 
@@ -205,7 +206,7 @@ ParseArgs() {
         for arg in "$@"; do
             if [[ $arg == -* ]]; then
                 # Can add more if statements here for other flags
-                if [[ "$arg" == "-t" ]] || [[ "$arg" == "--typos" ]]; then
+                if [[ "$arg" == "-t" ]] || [[ "$arg" == "--typo" ]]; then
                     typo_check=true
                     export typo_check="${typo_check}"
                 fi

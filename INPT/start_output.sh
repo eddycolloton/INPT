@@ -10,14 +10,19 @@ parent_dir="$(dirname "$script_dir")"
 if [[ -z ${fullInput_csv} ]] ; then
 	source "${script_dir}"/input_functions/makelog.sh
 	MakeLog
+	source "${script_dir}"/input_functions/makecsv.sh
 	ParseArgs "$@"
+fi
+
+if [[ -z ${fullInput_csv} && -z ${input_csv} ]] ; then
+	findCSV
+	ReadCSV "${foundCSV}"
 fi
 
 if [[ -z ${fullInput_csv} && -n ${input_csv} ]] ; then
 # After checking the first line, if an input file has been identified then read inputs and assign them to variables
     logNewLine "Reading variables from input csv: ${input_csv}" "$CYAN"
-    source "${script_dir}"/input_functions/find/findartfile.sh
-    # remove_special_chars function is stored in findartfile.sh
+    source "${script_dir}"/input_functions/makecsv.sh
     if test -f "${input_csv}"; then
     # test that input_csv is a file
         while IFS=, read -r key value || [ -n "$key" ]
@@ -67,8 +72,7 @@ fi
 # if an output file has been identified then read selected options and assign them to variables
 if [[ -n "${output_csv}" ]]; then
 	logNewLine "Reading variables from output csv: ${output_csv}" "$CYAN"
-	source "${script_dir}"/input_functions/find/findartfile.sh
-    # remove_special_chars function is stored in findartfile.sh
+	source "${script_dir}"/input_functions/makecsv.sh
 	if test -f "${output_csv}"; then
 	# test that input_csv is a file
 		while IFS=, read -r key value || [ -n "$key" ]
