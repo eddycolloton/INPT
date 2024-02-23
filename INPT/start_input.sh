@@ -126,8 +126,8 @@ if [[ -n "${input_csv}" ]] ; then
         fi 
         FindAccessionNumber 
         logNewLine "The accession number manually input: ${accession}" "$CYAN"
-    elif [[ -z "${accession_dir}" ]] && [[ -z "${titledir}" ]] ; then
-    # if these variables are empty then FindAccessionNumber didn't run, but accession is known, so the accession number was found in the CSV
+    elif [[ -z "${accession_dir}" ]] && [[ -z "${titledir}" ]] && [[ -z "${mkArtFile}" ]] ; then
+    # if these variables are empty then FindAccessionNumber or MakeArtworkFile didn't run, but accession is known, so the accession number was found in the CSV
         logNewLine "The accession number from CSV: ${accession}" "$WHITE"
     fi
 else

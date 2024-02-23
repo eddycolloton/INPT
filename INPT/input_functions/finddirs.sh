@@ -117,7 +117,9 @@ function MakeArtworkFile {
 	#assigns the ArtFile variable to the artwork file just created 
 	#I've removed the path to the HMSG shared drive below for security reasons
 	logNewLine "The artwork file has been created: ${ArtFile}" "$YELLOW"
+	mkArtFile=True
 	export ArtFile="${ArtFile}"
+	export mkArtFile="${mkArtFile}"
 } 
 
 ParseAccession () {
