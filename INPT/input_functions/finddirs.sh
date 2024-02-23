@@ -57,12 +57,14 @@ function FindArtworkFilesPath {
 
 ConfirmInput () {
     local var="$1"
+	local var_display_name="$2"
+	local prompt_context="$3"
     select_again=yes
 	while [[ "$select_again" = yes ]] ; do
-		echo -e "\nManually input the value for: $var"
-        if [[ ! -z "$2" ]] ; then
+		echo -e "\nManually input the ${var_display_name}"
+        if [[ ! -z "$prompt_context" ]] ; then
         # Optional additional argument to provide context on prompt for input
-            echo "$2"
+            echo "$prompt_context"
         fi
 		read -e user_input
         # Read user input as variable $user_input
@@ -74,10 +76,10 @@ ConfirmInput () {
             # echo "path had trailing space removed, var is now $user_input"
             # echo statement here for testing purposes
         fi
-		logNewLine "The $var manually input: ${user_input}" "$CYAN"
+		logNewLine "The ${var_display_name} manually input: ${user_input}" "$CYAN"
         if [[ "$typo_check" == true ]] ; then
         # If typo check option is turned on, then confirm user_input
-            cowsay "Just checking for typos - Is the ${var} entered correctly?"
+            cowsay "Just checking for typos - Is the ${var_display_name} entered correctly?"
             select options in "yes" "no, go back a step"; do
                 case $options in
                     yes)
@@ -103,11 +105,11 @@ ConfirmInput () {
 #This function makes the nested directories of a Time-based Media Artwork File
 function MakeArtworkFile {
 	while [[ -z "$accession" ]] ; do
-		ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
+		ConfirmInput accession "artwork's accession number" "For new acquisitions, enter accession number in '####.###' format"
 		export accession="${accession}"
 	done
 	while [[ -z "$title" ]] ; do
-    	ConfirmInput title
+    	ConfirmInput title "artwork's title"
 		export title="${title}"
 	done
 	mkdir -p "${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/"time-based media"/"$accession""_""$title"/{"Acquisition and Registration","Artist Interaction","Cataloging","Conservation"/{"Condition_Tmt Reports","DAMS","Equipment Reports"},"Iteration Reports_Exhibition Info"/"Equipment Reports","Photo-Video Documentation","Research"/"Correspondence","Technical Info_Specs"/{"Past installations_Pics","Sidecars"},"Trash"}
@@ -134,7 +136,7 @@ ParseAccession () {
         logNewLine "The accession number is ${parsed_accession} found in the artwork folder ${found_dir}" "$MAGENTA"
         export accession="${parsed_accession}"
     else
-        ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
+        ConfirmInput accession "artwork's accession number" "For new acquisitions, enter accession number in '####.###' format"
     fi
 }
 
@@ -151,7 +153,7 @@ if [[ "$title_dir_results" > 1 ]]; then
     #If the variable title_dir_results stores more than one result
 	#This is to determine if there is more than one dir in the ArtFile that has an accession number (typically means there are two artworks by the same artist)
 	echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-    ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
+    ConfirmInput accession "artwork's accession number" "For new acquisitions, enter accession number in '####.###' format"
 	accession_dir=$(find "${ArtFile%/}" -mindepth 0 -maxdepth 4 -type d -iname "*${accession}*")
 	#defines the accession_dir variable as a directory stored inside the ArtFile that has the accession number in it's name
 	#This is to define a more specific variable, if there is more than one artwork in the ArtFile
@@ -159,7 +161,7 @@ if [[ "$title_dir_results" > 1 ]]; then
 	#if the accession_dir variable is empty
 	#This var will typically be empty if the find command did not return a result
 		while [[ -z "$title" ]] ; do
-            ConfirmInput title
+            ConfirmInput title "artwork's title"
 		done
 		accession_dir=$(find "${ArtFile%/}" -mindepth 0 -maxdepth 4 -type d -iname "*${title}*")
         #defines the accession_dir variable as a directory stored inside the ArtFile that has the title in it's name
@@ -208,7 +210,7 @@ if [[ -z "${accession}" ]]; then
 	if [[ -z "$titledir" ]]; then 
 	#if the $titledir variable is empty, then
         echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-    	ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
+    	ConfirmInput accession "artwork's accession number" "For new acquisitions, enter accession number in '####.###' format"
 	fi
 	acount=$(echo "$titledir" | grep -oE '[0-9]')
 	#this grep command prints every digit it finds in titledir on a new line, and assigns that output to the variable "acount"
@@ -223,7 +225,7 @@ if [[ -z "${accession}" ]]; then
         ParseAccession accession "${titledir}" "8"
 	else 
 		echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-    	ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
+    	ConfirmInput accession "artwork's accession number" "For new acquisitions, enter accession number in '####.###' format"
 	fi
 fi
 unset IFS
@@ -241,7 +243,7 @@ if [[ -z "${FindArtFile}" ]]; then
 		#lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
   		if [[ $artdir = "Input path" ]]
   		then while [[ -z "$ArtFile" ]] ; do 
-			ConfirmInput ArtFile "Feel free to drag and drop Artwork File path below"
+			ConfirmInput ArtFile "path to the artwork file" "Feel free to drag and drop Artwork File path below"
 			if [[ -z "${accession}" ]];
 			then
 				FindAccessionNumber
@@ -356,7 +358,7 @@ AssignDirectory() {
                 "$parent_dir") dir_type_parent="$parent_dir"
                             MakeOutputDirectory
                             break;;
-                "Enter path to parent directory") ConfirmInput dir_type_parent "Enter the path to the parent directory of the new $dir_label directory, use tab complete to help:"
+                "Enter path to parent directory") ConfirmInput dir_type_parent "directory path" "Enter the path to the parent directory of the new $dir_label directory, use tab complete to help:"
                                                     MakeOutputDirectory
                                                     break;;
                 "Quit") echo "Quitting now..."
@@ -426,7 +428,7 @@ function FindTBMADroBoPath {
 			echo "found TBMA DroBo at $TBMADroBoPath"
 			export TBMADroBoPath="${TBMADroBoPath}"
 		else
-			ConfirmInput TBMADroBoPath "Please input the path to the "Time Based Media Artwork" directory on the TBMA DroBo. Feel free to drag and drop the directory into terminal:"
+			ConfirmInput TBMADroBoPath "path to the TBMA DroBo" "Please input the path to the "Time Based Media Artwork" directory on the TBMA DroBo. Feel free to drag and drop the directory into terminal:"
 			export TBMADroBoPath="${TBMADroBoPath}"
 		fi
 	fi
@@ -450,7 +452,7 @@ function FindSDir {
 	# Prompts for either identifying the staging directory or creating one using the function defined earlier. Defines that path as "$SDir"
 	IFS=$'\n'; select SDir_option in $(find "${TBMADroBoPath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Staging Directory" ; do
 		if [[ $SDir_option = "Input path" ]] ; then
-			ConfirmInput SDir "Input path to Staging Directory:"
+			ConfirmInput SDir "staging directory" "Input path to Staging Directory:"
 			export SDir="${SDir}"
 		elif [[ $SDir_option = "Create Staging Directory" ]] ; then 
 			MakeStagingDirectory
@@ -488,21 +490,21 @@ function FindVolume {
 	
 		IFS=$'\n'; select findvolume_option in ${FindVolumes_array[@]} "None of these" ; do
 			if [[ $findvolume_option = "None of these" ]] ; then 
-				ConfirmInput Volume "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
+				ConfirmInput Volume "path to the volume" "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
         	elif [[ -n $findvolume_option ]] ; then
 				Volume=$findvolume_option
 			fi
 		break           
 		done;
 	elif [[ -z "${FindVolumes}" ]]; then
-		ConfirmInput Volume "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
+		ConfirmInput Volume "path to the volume" "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
 	else
 		echo -e "Is this the volume? \n${FindVolumes}"
 		IFS=$'\n'; select found_volume_option in "yes" "no" ; do
 			if [[ $found_volume_option = "yes" ]] ; then 
 				Volume="${FindVolumes}"
         	elif [[ $found_volume_option = "no" ]] ; then
-				ConfirmInput Volume "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
+				ConfirmInput Volume "path to the volume" "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
 			fi
 		break           
 		done;
