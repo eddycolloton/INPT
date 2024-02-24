@@ -109,52 +109,60 @@ find_most_recent_csv() {
         # Extract date and time from the filename
         datetime="${csv_file##*_}"
         datetime="${datetime%.csv}"
+        # Append "+" to $datetime for date command formatting 
+        datetime=$(echo "+${datetime}")
         # Convert date and time to Unix timestamp
-        timestamp=$(date -d "$datetime" +"%s")
+        timestamp=$(date "${datetime}")
         # Check if the current timestamp is greater than the most recent one found
-        if [ $timestamp -gt $most_recent_timestamp ]; then
+        if [[ $timestamp > $most_recent_timestamp ]]; then
             most_recent_timestamp=$timestamp
             most_recent_csv=$csv_file
         fi
     done
     # Print the most recent CSV filename
     logNewLine "Most recent CSV found in Artwork File: $most_recent_csv" "$CYAN"
+    export most_recent_csv="${most_recent_csv}"
 }
 
 function findCSV {
 	set -a
 
-	echo -e "Required input variables for start_output.sh are not set. To define inputs, use start_input.sh.\nIf you would like to run start_output.sh on an artwork that has a completed input.csv, type or drag and drop the path of the artwork file:\n"
+	echo -e "Required input variables for start_output.sh are not set. To define inputs, use start_input.sh.\n\nIf you would like to run start_output.sh on an artwork that has a completed input.csv, type or drag and drop the path of the artwork file:\n"
 	read -e ArtFileInput
 	ArtFile="$(echo -e "${ArtFileInput}" | sed -e 's/[[:space:]]*$//')"
 	#Strips a trailing space from the input. 
 	#If the user drags and drops the directory into terminal, it adds a trailing space, which, if passed to other commands, can result in errors. the sed command above prevents this.
 	#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-	export ArtFile="${ArtFile}"
 
-	allFoundCSVs=$(find "${ArtFile%/}" -type f \( -iname "*.csv" \) | wc -l)
+  export ArtFile="${ArtFile}"
+
+	allFoundCSVs=$(find "${ArtFile}" -type f \( -iname "*.csv" \) | wc -l)
   if [[ ${allFoundCSVs} -lt 1 ]] ; then 
     logNewLine "No input csv found in Artwork File. Either run start_input to create necessary inputs or re-run start_output with input csv.\nUsage: ./start_output.sh <input.csv> <optional_output.csv>" "$RED"
     exit 1
   elif [[ ${allFoundCSVs} -eq 1 ]] ; then
     foundCSV=$(find "${ArtFile%/}" -type f \( -iname "*.csv" \))
     logNewLine "Found ${foundCSV} in ${ArtFile}"
-	elif [[ $(echo ${foundCSV} | wc -l) -gt 1 ]]; then
-		foundCSV=(${foundCSV[@]})
-		most_recent_foundCSV=$(find_most_recent_csv "${foundCSV[@]}")
-		echo "\nMore than one CSV found in Art File. Use most recent?"
+	elif [[ ${allFoundCSVs} -gt 1 ]]; then
+    # Create an array called $foundCSV[@] to iterate over to find most recent 
+    while IFS= read -r -d '' csv_file; do
+      # Append each file to the array
+      foundCSV+=("$csv_file")
+    done < <(find "${ArtFile}" -type f -iname "*.csv" -print0)
+		find_most_recent_csv "${foundCSV[@]}"
+		echo -e "\nMore than one CSV found in Art File. Use most recent?"
 		IFS=$'\n'; select recentCSV_option in "Yes" "No, show all CSVs" ; do
 			if [[ $recentCSV_option = "Yes" ]] ; then
-				foundCSV="${most_recent_foundCSV}"
-        logNewLine "Found "${foundCSV}" in "${ArtFile}"" 
+				foundCSV="${most_recent_csv}"
+        logNewLine "Found ${foundCSV} in ${ArtFile}" "$MAGENTA"
 			elif [[ $recentCSV_option = "No, show all CSVs" ]] ; then 
 				IFS=$'\n'; select selectedCSV in $(find "${ArtFile%/}" -type f \( -iname "*.csv" \)) "None of these" ; do
           if [[ $selectedCSV = "None of these" ]] ; then
             logNewLine "No operable input csv found. Either run start_input to create necessary inputs or re-run start_output with desired input csv.\nUsage: ./start_output.sh <input.csv> <optional_output.csv>" "$RED"
             exit 1
           else
-            foundCSV=$recentCSV_option
-            logNewLine "\nFound ${foundCSV} in ${ArtFile}" 
+            foundCSV=$selectedCSV
+            logNewLine "\nFound ${foundCSV} in ${ArtFile}" "$CYAN"
           fi
         break
         done;
