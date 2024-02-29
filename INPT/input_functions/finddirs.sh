@@ -135,7 +135,7 @@ title_dir_results=$(find "${ArtFile}" -mindepth 0 -maxdepth 4 -type d -iname '*[
 #wc -l counts the lines from the output of the find command, this should give the number of directories found that have an accession number in them
 #The final xargs removes white space from the output of wc so that theoutput can be evalutated by the "if" statement below
 if [[ "$title_dir_results" > 1 ]]; then
-	logNewLine "\nMore than one directory containing an accession number found." "$MAGENTA"
+	logNewLine "\nMore than one directory containing an accession number found." "$RED"
     #If the variable title_dir_results stores more than one result
 	#This is to determine if there is more than one dir in the ArtFile that has an accession number (typically means there are two artworks by the same artist)
 	echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
@@ -414,7 +414,7 @@ function FindTBMADroBoPath {
 			echo "found TBMA DroBo at $TBMADroBoPath"
 			export TBMADroBoPath="${TBMADroBoPath}"
 		else
-			ConfirmInput TBMADroBoPath "path to the TBMA DroBo" "Please input the path to the "Time Based Media Artwork" directory on the TBMA DroBo. Feel free to drag and drop the directory into terminal:"
+			ConfirmInput TBMADroBoPath "path to the TBMA DroBo" "Please input the path to the 'Time Based Media Artwork' directory on the TBMA DroBo. Feel free to drag and drop the directory into terminal:"
 			export TBMADroBoPath="${TBMADroBoPath}"
 		fi
 	fi
