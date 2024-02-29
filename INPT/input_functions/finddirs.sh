@@ -60,11 +60,8 @@ ConfirmInput () {
         fi
 		read -e user_input
         # Read user input as variable $user_input
-        #if [[ -e $user_input ]] ; then
-        # if user_input is a path then, 
         user_input="${user_input%"${user_input##*[![:space:]]}"}"
-            # If the user_input path is dragged and dropped into terminal, the trailing whitespace can eventually be interpreted as a "\" which breaks the CLI tools.
-        #fi
+        # If the user_input path is dragged and dropped into terminal, the trailing whitespace can eventually be interpreted as a "\" which breaks the CLI tools.
 		logNewLine "The ${var_display_name} manually input: ${user_input}" "$CYAN"
         if [[ "$typo_check" == true ]] ; then
         # If typo check option is turned on, then confirm user_input
