@@ -1,12 +1,12 @@
-Artist's First Name,First
-Artist's Last Name,Last
-Artwork Title,title
+Artist's First Name,
+Artist's Last Name,
+Artwork Title,
 Accession Number,
 Path to Artwork File on T: Drive,
-Staging Directory on DroBo,/Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/1999-001_Last
-Path to hard drive,/Users/eddycolloton/git/HMSG_auto/version2/sample_files/
+Staging Directory on DroBo,
+Path to hard drive,
 Path to Technical Info_Specs directory,
 Path to Technical Info_Specs/Sidecars directory,
 Path to Condition_Tmt Reports directory,
-Path Artwork Files parent directory,/Users/eddycolloton/Documents/hmsg_directories/artwork_folders/
-Path to the Time-based Media Artworks directory on the TBMA DroBo,/Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/
+Path Artwork Files parent directory,"/Volumes/Shared/departments/CONSERVATION/ARTWORK FILES"
+Path to the Time-based Media Artworks directory on the TBMA DroBo,"/Volumes/TBMA Drobo/Time Based Media Artwork/"
