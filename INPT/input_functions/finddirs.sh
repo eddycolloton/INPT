@@ -34,16 +34,7 @@ function ConfirmArtistsName {
 #This function finds the Artwork file path
 function FindArtworkFilesPath {
 	if [[ -z "${ArtFilePath}" ]]; then
-		if [[ -d /Volumes/hmsg/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES ]]; then
-			ArtFilePath=/Volumes/hmsg/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES 
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
-		elif [[ -d /Volumes/SHARED/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES ]]; then
-			ArtFilePath=/Volumes/SHARED/DEPARTMENTS/CONSERVATION/ARTWORK\ FILES
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
-		elif [[ -d /Volumes/shared/departments/CONSERVATION/ARTWORK\ FILES ]]; then
-			ArtFilePath=/Volumes/shared/departments/CONSERVATION/ARTWORK\ FILES
-			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
-		elif [[ -d /Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES ]]; then
+		if [[ -d /Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES
 			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
 		else
@@ -65,17 +56,15 @@ ConfirmInput () {
         if [[ ! -z "$prompt_context" ]] ; then
         # Optional additional argument to provide context on prompt for input
             echo "$prompt_context"
+			## vars w/ spaces passed to prompt_context not displaying correctly! 
         fi
 		read -e user_input
         # Read user input as variable $user_input
-        if [[ -e $user_input ]] ; then
+        #if [[ -e $user_input ]] ; then
         # if user_input is a path then, 
-            user_input="$(echo -e "${user_input}" | sed -e 's/[[:space:]]*$//')"
-            # If the user_input path is dragged and dropped into terminal, the trailing whitespace can eventually be interpreted as a "\" which breaks the CLI tools. To prevent this, the sed command above is used.
-	        # I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-            # echo "path had trailing space removed, var is now $user_input"
-            # echo statement here for testing purposes
-        fi
+        user_input="${user_input%"${user_input##*[![:space:]]}"}"
+            # If the user_input path is dragged and dropped into terminal, the trailing whitespace can eventually be interpreted as a "\" which breaks the CLI tools.
+        #fi
 		logNewLine "The ${var_display_name} manually input: ${user_input}" "$CYAN"
         if [[ "$typo_check" == true ]] ; then
         # If typo check option is turned on, then confirm user_input
@@ -149,7 +138,7 @@ title_dir_results=$(find "${ArtFile}" -mindepth 0 -maxdepth 4 -type d -iname '*[
 #wc -l counts the lines from the output of the find command, this should give the number of directories found that have an accession number in them
 #The final xargs removes white space from the output of wc so that theoutput can be evalutated by the "if" statement below
 if [[ "$title_dir_results" > 1 ]]; then
-	logNewLine "More than one directory containing an accession number found." "$MAGENTA"
+	logNewLine "\nMore than one directory containing an accession number found." "$MAGENTA"
     #If the variable title_dir_results stores more than one result
 	#This is to determine if there is more than one dir in the ArtFile that has an accession number (typically means there are two artworks by the same artist)
 	echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
