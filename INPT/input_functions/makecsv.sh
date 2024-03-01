@@ -177,19 +177,23 @@ function findCSV {
 
 ReadCSV () {
   if [[ -n ${1} ]] ; then
-    logNewLine "Reading CSV file: $(basename "${1}")" "$MAGENTA"
-    # Check the content of the file to determine it matches expected first line of input.csv or output.csv
-    first_line=$(head -n 1 "$1")
-    # Check if it's an input CSV file
-    if [[ "$first_line" == "Artist's First Name,"* ]]; then
-      input_csv=$1
-      logNewLine "Input CSV file detected: $input_csv" "$WHITE"
-    # Check if it's an output CSV file
-    elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
-      output_csv=$1
-      logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+    if [[ -f ${1} ]]; then 
+      logNewLine "Reading CSV file: $(basename "${1}")" "$MAGENTA"
+      # Check the content of the file to determine it matches expected first line of input.csv or output.csv
+      first_line=$(head -n 1 "$1")
+      # Check if it's an input CSV file
+      if [[ "$first_line" == "Artist's First Name,"* ]]; then
+        input_csv=$1
+        logNewLine "Input CSV file detected: $input_csv" "$WHITE"
+      # Check if it's an output CSV file
+      elif [[ "$first_line" == "Move all files to staging directory,"* ]]; then
+        output_csv=$1
+        logNewLine "Output CSV file detected: $output_csv" "$WHITE"
+      else
+        logNewLine "Error: Unsupported CSV file format." "$RED"
+      fi
     else
-      logNewLine "Error: Unsupported CSV file format." "$RED"
+      logNewLine "Error: $(basename "${1}") not found." "$RED"
     fi
   fi
 }
