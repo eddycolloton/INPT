@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# fixes for tools: Test newermt option, doesn't seem to be working
+# exclude qctools outputs and other INPT generated files from media only tools
+
+# change "find $SDir" command to only apply to files selected in the select files step? 
+
 #This function runs tree on the Volume sends the output to three text files 
 function RunTree {
 	tree_again=yes
@@ -47,7 +52,7 @@ function RunSF {
 	SECONDS=0  
 	logNewLine "sf started! siegfried will be run on $SDir" "$Bright_Yellow"
 	#prints statement to terminal
-	find "$SDir" -type f \( -iname "*.*" ! -iname "*.md5" ! -iname "*_output.txt" ! -iname "*.DS_Store" ! -iname "*_manifest.txt" ! -iname "*_sf.txt" ! -iname "*_exif.txt" ! -iname "*_mediainfo.txt" ! -iname "*_qctools.mkv" ! -iname "*_framemd5.txt" ! -iname "*.log" \) -print0 | 
+	find "$SDir" -type f \( -iname "*.*" ! -iname "*.md5" ! -iname "*_output.txt" ! -iname "*.DS_Store" ! -iname "*_manifest.txt" ! -iname "*_sf.txt" ! -iname "*_exif.txt" ! -iname "*_mediainfo.txt" ! -iname "*qctools*" ! -iname "*_framemd5.txt" ! -iname "*.log" \) -print0 | 
 	while IFS= read -r -d '' i; do
 		sf "$i" > "${i%.*}_sf."txt 
 		logNewLine "sf run on $(basename ${i})" "$YELLOW"
@@ -96,7 +101,7 @@ function RunMI {
 	do
 	SECONDS=0  
 	logNewLine "MediaInfo started! MediaInfo will be run on audio and video files in $SDir" "$Bright_Yellow"
-	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg -o -iname \*.wav -o -iname \*.mp3 \) -print0 |  
+	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg -o -iname \*.wav -o -iname \*.mp3  \) ! -iname "*qctools*" -print0 |  
 	while IFS= read -r -d '' i;
 		do  
 			mediainfo -f "$i" > "${i%.*}_mediainfo".txt
@@ -144,7 +149,7 @@ function RunExif {
 	do
 	SECONDS=0  
 	logNewLine "Exiftool started! Exiftool will be run on files in $SDir" "$Bright_Yellow"
-	find "$SDir" -type f \( -iname \*.jpg -o -iname \*.jpeg -o -iname \*.png -o -iname \*.tiff -o -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg -o -iname \*.wav -o -iname \*.mp3 \) -print0 |  
+	find "$SDir" -type f \( -iname \*.jpg -o -iname \*.jpeg -o -iname \*.png -o -iname \*.tiff -o -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg -o -iname \*.wav -o -iname \*.mp3  \) ! -iname "*qctools*" -print0 |  
 	while IFS= read -r -d '' i;
 		do  
 			exiftool "$i" > "${i%.*}_exif".txt
@@ -193,11 +198,11 @@ function Make_Framemd5 {
 	do
 	SECONDS=0 
 	logNewLine "framemd5 started! framemd5 will be run on video files in $SDir" "$Bright_Yellow" 
-	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.avi -o -iname \*.VOB -o -iname \*.mpg -o -iname \*.wav -o -iname \*.flac -o -iname \*.mp3 -o -iname \*.aac -o -iname \*.wma -o -iname \*.m4a \) -print0 |  
+	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.avi -o -iname \*.VOB -o -iname \*.mpg -o -iname \*.wav -o -iname \*.flac -o -iname \*.mp3 -o -iname \*.aac -o -iname \*.wma -o -iname \*.m4a  \) ! -iname "*qctools*" -print0 |  
 	while IFS= read -r -d '' i;
 		do   
 			logNewLine "framemd5 running on $(basename ${i})" "$YELLOW" 
-			ffmpeg -nostdin -i "$i" -f framemd5 -an  "${i%.*}_framemd5".txt 
+			ffmpeg -hide_banner -nostdin -i "$i" -f framemd5 -an  "${i%.*}_framemd5".txt 
 	done 
 	find "$SDir" -type f \( -iname "*_framemd5.txt" \) -print0 |
 	while IFS= read -r -d '' t; 
@@ -239,7 +244,7 @@ function Make_QCT {
 	do
 	SECONDS=0  
 	logNewLine "QCTools started! QCTools run on video files in $SDir" "$Bright_Yellow"
-	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg \) -print0 |  
+	find "$SDir" -type f \( -iname \*.mov -o -iname \*.mkv -o -iname \*.mp4 -o -iname \*.VOB -o -iname \*.avi -o -iname \*.mpg  \) ! -iname "*qctools*" -print0 |  
 	while IFS= read -r -d '' i;
 		do qcli -i "$i"
 		logNewLine "qctools run on $(basename ${i})" "$YELLOW"
