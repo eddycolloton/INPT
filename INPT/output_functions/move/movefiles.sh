@@ -22,7 +22,7 @@ function FindcopyitPath {
 		#Asks for user input and assigns it to variable
 		copyitPath="$(echo -e "${copyitPathInput}" | sed -e 's/[[:space:]]*$//')"
 		#Strips a trailing space from the input. 
-		#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
+		#If the user drags and drops the directory into terminal, it adds a trailing space, which, if passed to other commands, can result in errors. the sed command above prevents this.
 		#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
 		echo "The path to the IFI scripts are: $copyitPath"
 	fi
@@ -153,12 +153,12 @@ function RunIndvMD5 {
 	#prints statement to terminal
 	declare -a SelectedFiles
 	#creates an empty array
-	#For whatever reason, the array isn't a golabl variable, so it has to be created again. 
+	#For whatever reason, the array isn't a global variable, so it has to be created again. 
 	let i=0
 	while IFS=$'\n' read -r line_files; do
-    #stipulates a line break as a field seperator, then assigns the variable "line_data" to each field read
+    #stipulates a line break as a field separator, then assigns the variable "line_data" to each field read
     	SelectedFiles[i]="${line_files}"
-    	#states that each line will be an element in the arary
+    	#states that each line will be an element in the array
     	((++i))
     	#adds each new line to the array
 	done < "${techdir}/${accession}_list_of_files.txt"
@@ -166,14 +166,14 @@ function RunIndvMD5 {
 	#got this from https://peniwize.wordpress.com/2011/04/09/how-to-read-all-lines-of-a-file-into-a-bash-array/
 	for eachfile in "${SelectedFiles[@]}"; do 
 	#for each element in the array, do
-    	md5deep -b -e "$eachfile" >> "${SDir}/${accession}_Volume_ manifest.md5"
+    	md5deep -b -e "$eachfile" >> "${SDir}/${accession}_source_manifest.md5"
     	#runs md5deep on each element in the array, and prints it to a manifest text file
 	#maybe run echo statement to print to log?
 	done
 	echo -e "\n***** md5 manifest from ${Volume} ***** \n" >> "${reportdir}/${accession}_appendix.txt"  
-	cat "${SDir}/${accession}_Volume_ manifest.md5" >> "${reportdir}/${accession}_appendix.txt"  
-	cp "${SDir}/${accession}_Volume_ manifest.md5" "$techdir"
-	if [[ -f "${SDir}/${accession}_Volume_ manifest.md5" ]]; then
+	cat "${SDir}/${accession}_source_manifest.md5" >> "${reportdir}/${accession}_appendix.txt"  
+	cp "${SDir}/${accession}_source_manifest.md5" "$techdir"
+	if [[ -f "${SDir}/${accession}_source_manifest.md5" ]]; then
 		echo -e "$(date "+%Y-%m-%d - %H.%M.%S") ******** md5 checksum manifest from ${Volume} completed ******** \n\n\t\tmd5deep Results:\n\t\tcopied to ${SDir} and \n\t\t${reportdir}/${accession}_appendix.txt" >> "${configLogPath}"  
 		#prints timestamp once the command has exited
 		duration=$SECONDS
@@ -232,11 +232,11 @@ function CopyFiles {
 	    #prints a seperate log file for each of the individual files to the  techdir
 	    echo -e "\t${eachfile}" >> "${configLogPath}" 
 	    #prints the name of each file to the log
-	    md5deep -b -e "${SDir}/$(basename $eachfile)" >> "${SDir}/${accession}_SDir_ manifest.md5"
+	    md5deep -b -e "${SDir}/$(basename $eachfile)" >> "${SDir}/${accession}_destination_manifest.md5"
 	done  
 	echo -e "\n***** md5 manifest from ${SDir} ***** \n" >> "${reportdir}/${accession}_appendix.txt"  
-	cat "${SDir}/${accession}_SDir_ manifest.md5" >> "${reportdir}/${accession}_appendix.txt"  
-	if [[ -f "${SDir}/${accession}_SDir_ manifest.md5" ]]; then
+	cat "${SDir}/${accession}_destination_manifest.md5" >> "${reportdir}/${accession}_appendix.txt"  
+	if [[ -f "${SDir}/${accession}_destination_manifest.md5" ]]; then
 		echo -e "\n$(date "+%Y-%m-%d - %H.%M.%S") ******** file copying and md5 checksum manifest from ${SDir} completed ******** \n\n\t\trsync Results:\n\t\tmanifest copied to ${SDir} and \n\t\t${reportdir}/${accession}_appendix.txt \n rsync logs in ${techdir}" >> "${configLogPath}"  
 		#prints timestamp once the command has exited
 		duration=$SECONDS
@@ -261,14 +261,14 @@ function CopyFiles {
 	then echo -e "!! Running copy again !! \n\n"
 	fi
 
-	Md5comp=$(diff "${SDir}/${accession}_Volume_ manifest.md5" "${SDir}/${accession}_SDir_ manifest.md5")
+	Md5comp=$(diff "${SDir}/${accession}_source_manifest.md5" "${SDir}/${accession}_destination_manifest.md5")
 	#Sets the variable Md5comp to be the output of the diff command run on the two md5 manifests created if select individual files is chosen by the user
 	if [ "$Md5comp" != "" ]
 	#if the variable is empty then, (taken from https://stackoverflow.com/questions/3611846/bash-using-the-result-of-a-diff-in-a-if-statement)
 	then
 		echo "The ${Volume} md5 manifest and the ${SDir} md5 manifest do not match!"
 		echo -e "\n xxxxxxxx No manfiest file found in $SDir xxxxxxxx" >> "${configLogPath}"
-		diff -y "${SDir}/${accession}_Volume_ manifest.md5" "${SDir}/${accession}_SDir_ manifest.md5" > "${techdir}/${accession}_$(date "+%Y-%m-%d - %H.%M.%S")_md5_collision.txt"
+		diff -y "${SDir}/${accession}_source_manifest.md5" "${SDir}/${accession}_destination_manifest.md5" > "${techdir}/${accession}_$(date "+%Y-%m-%d - %H.%M.%S")_md5_collision.txt"
 		logNewLine "MD5 comparison printed to ${techdir}" "$Bright_Red"
 	else
 		echo -e "Files moved to ${SDir} and the \nchecksums match!"
