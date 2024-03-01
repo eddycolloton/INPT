@@ -193,7 +193,7 @@ ReadCSV () {
         logNewLine "Error: Unsupported CSV file format." "$RED"
       fi
     else
-      logNewLine "Error: $(basename "${1}") not found." "$RED"
+      logNewLine "Error: $(basename "${1}") not found." "$Bright_Red"
     fi
   fi
 }
