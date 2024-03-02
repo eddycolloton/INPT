@@ -3,6 +3,11 @@
 source "${script_dir}"/output_functions/tools/tools.sh
 
 function RunTools {
+	# if the sidecar directory doesn't exist, create one
+	if [[ ! -d ${sidecardir} ]] ; then
+		mkdir "${sidecardir}"
+	fi
+	
 	if [[ "$Run_meta" = "1" ]] ; then
 		echo -e "\n" 
 		RunTree; RunSF; RunMI; RunExif; Make_Framemd5; Make_QCT 
