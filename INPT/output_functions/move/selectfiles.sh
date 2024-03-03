@@ -4,6 +4,15 @@ source "${script_dir}"/output_functions/move/movefiles.sh
 
 set -a
 
+#This function determines if the list_of_dirs.txt file exists, and if it does, it deletes it.
+function DeleteList {
+#test -f $(find "$techdir" -type f \( -iname "*_list_of_dirs.txt" -o -iname "*_list_of_files.txt" \)) && 
+find "$techdir" -type f \( -iname "*_list_of_dirs.txt" -o -iname "*_list_of_files.txt" \) -print0 |
+	while IFS= read -r -d '' l;
+		do rm "$l"
+	done
+}
+
 function MultiSelection {
 cowsay -s "Select directories from the list below, one at a time. Type the corresponding number and press enter to select one. Repeat as necessary. Once all the directories have been selected, press enter again."
 #The majority of this function comes from here: http://serverfault.com/a/298312
