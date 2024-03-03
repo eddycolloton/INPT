@@ -2,15 +2,6 @@
 
 set -a
 
-#This function determines if the list_of_dirs.txt file exists, and if it does, it deletes it.
-function DeleteList {
-#test -f $(find "$techdir" -type f \( -iname "*_list_of_dirs.txt" -o -iname "*_list_of_files.txt" \)) && 
-find "$techdir" -type f \( -iname "*_list_of_dirs.txt" -o -iname "*_list_of_files.txt" \) -print0 |
-	while IFS= read -r -d '' l;
-		do rm "$l"
-	done
-}
-
 #This function finds the file path to the copyit.py script
 function FindcopyitPath {
 	if [[ -f "${script_dir}"/output_functions/move/copyit.py ]]; then
