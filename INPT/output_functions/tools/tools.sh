@@ -1,6 +1,14 @@
 #!/bin/bash
 
-
+ArrayCheck () {
+    if [[ "$(declare -p var 2>/dev/null)" =~ "declare -a" ]]; then
+        echo "Variable contains an array."
+    elif [[ -d "${var}" ]]; then
+        echo "Variable contains a directory."
+    else
+        echo "Variable does not contain a directory or an array."
+    fi
+}
  
 RunThisTool () {
 	local tool_name="$1"
@@ -14,7 +22,7 @@ RunThisTool () {
 	tool_again=yes
 	while [[ "$tool_again" = yes ]] ; do
 		SECONDS=0  
-		logNewLine "$tool_name started! $tool_name will be run on $input" "$Bright_Yellow"
+		logNewLine "===================> $tool_name started! $tool_name will be run on $input" "$Bright_Yellow"
 		#prints statement to terminal
 		if [[ "$command" == "tree" ]]; then
 			$command "${input}" > ${SDir}/"${accession}_${suffix}".txt
