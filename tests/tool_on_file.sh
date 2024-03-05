@@ -66,14 +66,6 @@ RunToolOnFile () {
     unset tool_again
 }
 
-RunToolOnFileArray () {
-    files=("$@")
-
-    for file in "${files[@]}"; do
-        RunToolOnFile $file "MediaInfo" "mediainfo -f" "mediainfo" 
-    done
-}
-
 #var=("/Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/01-01_AAA/dir1" "/Users/eddycolloton/Documents/hmsg_directories/tbma_drobo/01-01_AAA/dir2")
 
 #var='/Users/eddycolloton/git/INPT/sample_files/dir1'
@@ -104,3 +96,77 @@ for file in "${files[@]}"; do
         mediainfo "$file" > "${file%.*}_test_mi.txt" 
     fi
 done
+
+SelectedFilesForInput () {
+    local List="${1}"
+
+	echo -e "\nRun tools on all files in: \n$SDir \nOr run files only on: \n$List\n"
+	select ArrayInputOption in "All Files" "Selected Files Only"
+	do
+	case $ArrayInputOption in
+		"All Files") ArrayInput = "yes"
+			break;;
+		"Selected Files Only") ArrayInput = "no"
+			break;;
+	esac
+	done
+}
+
+FixSelectedArrayPaths () {
+    local dirs_string="$1"
+    local sdir="$2"
+    local transformed_array=()
+
+    unset input_array
+
+    IFS=' ' read -r -a input_array <<< "$input_string"
+
+    for input in "${input_array[@]}"; do
+        local basename=$(basename "$input")
+        transformed_array+=("$sdir/$basename")
+    done
+    echo "${transformed_array[@]}"
+}
+
+RunToolOnFileArray () {
+    files=("$@")
+
+    for file in "${files[@]}"; do
+        if find "${SDir}" -type f \( $mi_extensions \) -print0 | grep -q "$(basename "$file")"; then
+            RunToolOnFile $file "MediaInfo" "mediainfo -f" "mediainfo" 
+        fi
+    done
+}
+
+RunToolOnDirArray () {
+    directories=("$@")
+
+    for dir in "${directories[@]}"; do
+        echo "searching $dir for files"
+        RunToolOnDir  "MediaInfo" "$dir" "mediainfo -f" "mediainfo" "${mi_extensions}"
+    done
+}
+
+function RunMI {
+	mi_extensions="-iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.VOB -o -iname *.avi -o -iname *.mpg -o -iname *.wav -o -iname *.mp3"
+	if [[ $ArrayInput == "yes" && -n $FilesList ]] ; then
+    # Iterate over each file in the array
+        FixSelectedArrayPaths $FileList
+        for file in "${transformed_array[@]}"; do
+            if find "${SDir}" -type f \( $mi_extensions \) -print0 | grep -q "$(basename "$file")"; then
+                RunToolOnFile $file "MediaInfo" "mediainfo -f" "mediainfo" 
+            fi
+        done
+        unset transformed_array
+    elif [[ $ArrayInput == "yes" && -n $DirsList ]] ; then
+        FixSelectedArrayPaths $DirsList
+        for dir in "${transformed_array[@]}"; do
+            echo "searching $dir for files"
+            RunToolOnDir  "MediaInfo" "$dir" "mediainfo -f" "mediainfo" "${mi_extensions}"
+        done
+        unset transformed_array
+    else
+        RunToolOnDir "MediaInfo" "$SDir" "mediainfo -f" "mediainfo" "${mi_extensions}"
+    fi
+}
+

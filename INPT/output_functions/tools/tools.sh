@@ -10,7 +10,7 @@ ArrayCheck () {
     fi
 }
  
-RunThisTool () {
+RunToolOnDir () {
 	local tool_name="$1"
 	local input="$2"
 	local command="$3"
@@ -91,32 +91,32 @@ RunThisTool () {
 }
 
 function RunTree {
-	RunThisTool "Tree" "$Volume" "tree" "tree_output" "n/a"
+	RunToolOnDir "Tree" "$Volume" "tree" "tree_output" "n/a"
 }
 
 #This function will create siegfried sidecar files for all files in the Staging Directory, the copy output to Tech Specs dir in ArtFile and appendix in ArtFile
 function RunSF {
 	sf_extensions="-iname *.* ! -iname *.md5 ! -iname *_output.txt ! -iname *.DS_Store ! -iname *_manifest.txt ! -iname *_sf.txt ! -iname *_exif.txt ! -iname *_mediainfo.txt ! -iname *qctools* ! -iname *_framemd5.txt ! -iname *.log"
-	RunThisTool "siegfried" $SDir "sf" "sf" "${sf_extensions}"
+	RunToolOnDir "siegfried" $SDir "sf" "sf" "${sf_extensions}"
 }
 
 function RunMI {
 	mi_extensions="-iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.VOB -o -iname *.avi -o -iname *.mpg -o -iname *.wav -o -iname *.mp3"
-	RunThisTool "MediaInfo" "$SDir" "mediainfo -f" "mediainfo" "${mi_extensions}"
+	RunToolOnDir "MediaInfo" "$SDir" "mediainfo -f" "mediainfo" "${mi_extensions}"
 }
 
 #This function will create Exiftool sidecar files for all files with .jpg, .jpeg, .png and .tiff file extensions in the Staging Directory, the copy output to Tech Specs dir in ArtFile and appendix in ArtFile
 function RunExif {
 	exif_extensions="-iname *.jpg -o -iname *.jpeg -o -iname *.png -o -iname *.tiff -o -iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.VOB -o -iname *.avi -o -iname *.mpg -o -iname *.wav -o -iname *.mp3"
-	RunThisTool "ExifTool" "$SDir" "exiftool" "exif" "${exif_extensions}"
+	RunToolOnDir "ExifTool" "$SDir" "exiftool" "exif" "${exif_extensions}"
 }
 
 function Make_Framemd5 {
 	fmd5_extensions="-iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.avi -o -iname *.VOB -o -iname *.mpg -o -iname *.wav -o -iname *.flac -o -iname *.mp3 -o -iname *.aac -o -iname *.wma -o -iname *.m4a"
-	RunThisTool "Frame MD5" "$SDir" "ffmpeg -hide_banner -nostdin -i" "framemd5" "${fmd5_extensions}"
+	RunToolOnDir "Frame MD5" "$SDir" "ffmpeg -hide_banner -nostdin -i" "framemd5" "${fmd5_extensions}"
 }
 
 function Make_QCT {
 	qct_extensions="-iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.VOB -o -iname *.avi -o -iname *.mpg"
-    RunThisTool "QCTools" "$SDir" "qcli -i" "qctools" "${qct_extensions}"
+    RunToolOnDir "QCTools" "$SDir" "qcli -i" "qctools" "${qct_extensions}"
 }
