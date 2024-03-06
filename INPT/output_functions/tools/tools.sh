@@ -45,10 +45,10 @@ RunToolOnDir () {
 				fi
 			done
 			# Search for side car files and, if found, move contents of sidecars to additional outputs (appendix and sidecars directory of the artwork file)
-			find "$input" -type f \( -iname "*_${suffix}.txt" \) -print0 |
+			find "$input" -type f \( -iname "*{$suffix}*" \) -print0 |
 			while IFS= read -r -d '' t; do 
 				cp "$t" "$sidecardir"
-				if [[ "$suffix" != "framemd5" ]] ; then
+				if [[ "$suffix" != "framemd5" && "$suffix" != "qctools" ]] ; then
 					echo -e "\n***** ${tool_name} output ***** \n" >> "${reportdir}/${accession}_appendix.txt"
 					cat "$t" >> "${reportdir}/${accession}_appendix.txt"
 				fi
@@ -63,7 +63,7 @@ RunToolOnDir () {
 		# the -newermt option along with the date command finds files modified within the last 10 seconds. The $(date -v-10S) command generates a timestamp representing the time 10 seconds ago, and the -newermt option filters files modified after that timestamp.
 			duration=$SECONDS
 			logNewLine  "${tool_name} complete! Total Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
-			if [[ "$tool_name" != "FrameMD5" ]] ; then
+			if [[ "$suffix" != "framemd5" && "$suffix" != "qctools" ]] ; then
 				logNewLine  "${tool_name} output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
 			fi
 			tool_again=no
@@ -110,11 +110,11 @@ RunToolOnFile () {
             "${command}" "$file" > "${file%.*}_${suffix}."txt 
             logNewLine  "${tool_name} run on $(basename ${file})" "$YELLOW"
         fi   
-        find "${SDir}" -type f \( -iname "*_${suffix}.txt" \) -print0 |
+        find "${SDir}" -type f \( -iname "*${suffix}*" \) -print0 |
         while IFS= read -r -d '' t; 
             do 
             cp "$t" "$sidecardir"
-			if [[ "$suffix" != "framemd5" ]] ; then
+			if [[ "$suffix" != "framemd5" && "$suffix" != "qctools" ]] ; then
             	echo -e "\n***** ${tool_name} output ***** \n" >> "${reportdir}/${accession}_appendix.txt"
             	cat "$t" >> "${reportdir}/${accession}_appendix.txt"
 			fi
@@ -123,7 +123,7 @@ RunToolOnFile () {
         # the -newermt option along with the date command finds files modified within the last 10 seconds. The $(date -v-10S) command generates a timestamp representing the time 10 seconds ago, and the -newermt option filters files modified after that timestamp.
             duration=$SECONDS
             logNewLine  "${tool_name} run on ${file}! Execution Time: $(($duration / 60)) m $(($duration % 60)) s" "$Bright_Yellow"
-            if [[ "$suffix" != "framemd5" ]] ; then
+            if [[ "$suffix" != "framemd5" && "$suffix" != "qctools" ]] ; then
 				logNewLine  "${tool_name} output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
             fi
 			tool_again=no
@@ -168,25 +168,6 @@ SelectedFilesForInput () {
     export ArrayInput="${ArrayInput}"
 }
 
-# Arrays created from the SelectFiles function store 'source paths', paths from the $Volume. 
-# The files have since been moved to the $SDir, so this function changes the paths to the elements of the array to $SDir paths 
-# This will potentially break on selected directories with subdirectories.
-# Explore using a find command to match file names with those in $SDir
-FixSelectedArrayPaths() {
-    local input_string="$1"
-
-    IFS=' ' read -r -a input_array <<< "$input_string"
-
-    tool_array=()
-    for input in "${input_array[@]}"; do
-        local basename=$(basename "$input")
-        tool_array+=("$SDir/$basename")
-    done
-
-    #logNewLine "Selected files in the staging directory have the following paths: ${tool_array[@]}" "$YELLOW"
-
-}
-
 # RunTool determines if the metadata tool will be run on $SDir, $FileList array or $DirsList array
 # For either array option, this function loops through the individual files or directories in the array, and filters tools by file extension list.
 function RunTool {
@@ -201,13 +182,19 @@ function RunTool {
     if [[ $ArrayInput == "yes" && -n $FileList ]] ; then
     # Iterate over each file in the array
         logNewLine "${tool_name} will be run on selected files" "$Bright_Yellow"
-        FixSelectedArrayPaths "${FileList}"
-        for file in "${tool_array[@]}"; do
-            if find ${SDir} -type f \( $extensions \) -print0 | grep -q "$(basename "$file")"; then
-                RunToolOnFile "${file}" "${tool_name}" "${command}" "${suffix}" 
-            fi
+		IFS=' ' read -r -a input_array <<< "${FileList}"
+		# FileList created from the SelectFiles function store 'source paths', paths from the $Volume. 
+		# So the list is read in an array, and then the Staging Directory is searched for files matching the name of the file from the source
+        for file in "${input_array[@]}"; do
+            find ${SDir} -type f \( $extensions \) -print0 |
+			while IFS= read -r -d '' foundfile; do
+				if [[ $(basename $foundfile) == $(basename $file) ]]; then
+				# if found file matches the file name from the FileList, then run tool on file:
+					RunToolOnFile "${foundfile}" "${tool_name}" "${command}" "${suffix}" 
+				fi
+			done
         done
-        unset transformed_array
+        unset input_array
     elif [[ $ArrayInput == "yes" && -n $DirsList ]] ; then
         FixSelectedArrayPaths $DirsList tool_array
         for dir in "${tool_array[@]}"; do
@@ -235,7 +222,7 @@ function RunSF {
 #This function will create mediainfo sidecar files for all video and audio files in the selected input, then copies output to the Sidecars directory in the ArtFile and appendix in ArtFile
 RunMI () {
     mi_extensions="-iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.VOB -o -iname *.avi -o -iname *.mpg -o -iname *.wav -o -iname *.mp3"
-    RunTool "MediaInfo" "mediainfo -f" "mediainfo" "${mi_extensions}"
+    RunTool "MediaInfo" "mediainfo" "mediainfo" "${mi_extensions}"
 } 
 
 #This function will create Exiftool sidecar files for all files with .jpg, .jpeg, .png and .tiff file extensions in the selected input, the copy output to Tech Specs dir in ArtFile and appendix in ArtFile
