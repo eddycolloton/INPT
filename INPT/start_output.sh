@@ -149,10 +149,22 @@ else
 	fi
 fi
 
+if [[ -n $FileList ]] ; then
+	source "${script_dir}"/output_functions/tools/tools.sh
+	SelectedFilesForInput "${FileList}"
+fi
+
+if [[ -n $DirsList ]] ; then
+	source "${script_dir}"/output_functions/tools/tools.sh
+	SelectedFilesForInput "${DirsList}"
+fi
+
 source "${script_dir}"/output_functions/tools/selecttools.sh
 SelectTools
+
 source "${script_dir}"/output_functions/move/runmovefiles.sh
 RunMoveFiles
+
 source "${script_dir}"/output_functions/tools/runtools.sh
 RunTools
 

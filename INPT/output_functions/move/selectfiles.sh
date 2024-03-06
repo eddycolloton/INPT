@@ -67,6 +67,8 @@ function MultiSelection {
 }
 
 function SelectFiles {
+	local ListName="$1"
+	
 	cowsay -s "Select individual files from the list below, one at a time. Type the corresponding number and press enter to select one. Repeat as necessary. Once all the directories have been selected, press enter again."
 	# The majority of this function comes from here: http://serverfault.com/a/298312
 	options=()
@@ -116,12 +118,13 @@ function SelectFiles {
 	FileList=${SelectedFiles[@]}
 	# lists the contents of the array, populated by the text file
 	logNewLine "The selected files are: ${FileList}" "$CYAN"
-	export FileList="${FileList}"
+	eval "${ListName}=\${FileList}"
+	export ListName="${ListName}"
 }
 
 function UserSelectFiles {
-	 # Prompts user to tranfer files to Staging Driectory
-	 # The following select loops set vairable to either "1" or "0". This allows the script to store the user's selection without running the function till the end. 
+	 # Prompts user to transfer files to Staging Directory
+	 # The following select loops set variable to either "1" or "0". This allows the script to store the user's selection without running the function till the end. 
 	 # At the end fo the script there are if statements that will run the different functions based on the stored answers from the user  
 	echo -e "\nCopy all files from the volume to the staging directory?"
 	select Run_Copyit in "yes" "no, only certain directories" "no, specific files" "none"
@@ -129,10 +132,15 @@ function UserSelectFiles {
 	case $Run_Copyit in
 		yes) Run_Copyit=1 && Run_MultiCopy=0
 			break;;
-		"no, only certain directories") MultiSelect=1 && DeleteList && MultiSelection 
-			 # Runs DeleteList just in case an exisiting list is already in the ArtFile, because the MultiSelection function will create a new one.
+		"no, only certain directories") MultiSelect=1 
+		DeleteList 
+		# Runs DeleteList just in case an existing list is already in the ArtFile, because the MultiSelection function will create a new one.
+		MultiSelection
 			break;;
-		"no, specific files") IndvFiles=1 && DeleteList && SelectFiles
+		"no, specific files") IndvFiles=1 
+		DeleteList
+		# Runs DeleteList just in case an existing list is already in the ArtFile, because the MultiSelection function will create a new one.
+		SelectFiles FileList
 			break;;
 		none) Run_Copyit=0 && Run_MultiCopy=0
 			break;;
