@@ -31,7 +31,7 @@ RunToolOnDir () {
 	local suffix="$4"
 	local extension_list_string="$5"
 
-	IFS=' ' read -r -a extension_list <<< "${extension_list_string}"
+	IFS=' ' read -r -a extension_list <<< "${extension_list_string}"  
 
 	tool_again=yes
 	while [[ "$tool_again" = yes ]] ; do
