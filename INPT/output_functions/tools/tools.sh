@@ -9,6 +9,20 @@ ArrayCheck () {
         echo "Variable does not contain a directory or an array."
     fi
 }
+
+function get_user_choice {
+    local options="$1"
+    local choice
+    while true; do
+        read -r -p "Enter your choice: " choice </dev/tty
+        if [[ " $options " =~ " $choice " ]]; then
+            echo "$choice"
+            return
+        else
+            echo "Invalid choice. Please enter one of the options: $options"
+        fi
+    done
+}
  
 RunToolOnDir () {
 	local tool_name="$1"
@@ -22,7 +36,7 @@ RunToolOnDir () {
 	tool_again=yes
 	while [[ "$tool_again" = yes ]] ; do
 		SECONDS=0  
-		logNewLine  "$tool_name started! $tool_name will be run on $input" "$Bright_Yellow"
+		logNewLine  "$tool_name started! $tool_name will be run on files in $input" "$Bright_Yellow"
 		#prints statement to terminal
 		if [[ "$command" == "tree" ]]; then
 			$command "${input}" > ${SDir}/"${accession}_${suffix}".txt
@@ -34,10 +48,10 @@ RunToolOnDir () {
 			while IFS= read -r -d '' i; do
 				# conditional statements below account for different command structures of different tools
 				if [[ "$command" == "ffmpeg -hide_banner -nostdin -i" ]]; then
-					ffmpeg -hide_banner -nostdin -i "$i" -f framemd5 -an  "${i%.*}_${suffix}".txt
+					${command} "$i" -f framemd5 -an  "${i%.*}_${suffix}".txt
 					logNewLine  "${tool_name} run on $(basename ${i})" "$YELLOW"
 				elif [[ "$command" == "qcli -i" ]]; then
-					qcli -i "$i"
+					${command} "$i"
 					logNewLine  "${tool_name} run on $(basename ${i})" "$YELLOW"
 				else
 					$command "$i" > "${i%.*}_${suffix}."txt 
@@ -45,9 +59,9 @@ RunToolOnDir () {
 				fi
 			done
 			# Search for side car files and, if found, move contents of sidecars to additional outputs (appendix and sidecars directory of the artwork file)
-			find "$input" -type f \( -iname "*{$suffix}*" \) -print0 |
+			find "$SDir" -type f \( -iname "*${suffix}*" \) -print0 |
 			while IFS= read -r -d '' t; do 
-				cp "$t" "$sidecardir"
+				cp "${t}" "${sidecardir}"
 				if [[ "$suffix" != "framemd5" && "$suffix" != "qctools" ]] ; then
 					echo -e "\n***** ${tool_name} output ***** \n" >> "${reportdir}/${accession}_appendix.txt"
 					cat "$t" >> "${reportdir}/${accession}_appendix.txt"
@@ -67,20 +81,22 @@ RunToolOnDir () {
 				logNewLine  "${tool_name} output written to ${accession}_appendix.txt and saved as a sidecar file" "$YELLOW"
 			fi
 			tool_again=no
-		else 
-			logNewLine  "No ${tool_name} files found in $input" "$Bright_Red"
-			echo -e "\n Run ${tool_name} again? (Choose a number 1-2)"
-			select tool_again_option in "yes" "no"
-			do
-				case $tool_again_option in
-					yes) tool_again=yes
-					# set again variable to enable loop
-					break;;
-					no) tool_again=no
-					break;;
-					esac
-			done
-		fi
+		else
+			# The select option  
+			unset tool_again_option
+            unset tool_again
+            logNewLine  "\nNo ${tool_name} files found in $input" "$Bright_Red"
+            echo -e "\nRun ${tool_name} again? (Enter '1' for yes and '2' for no)"
+            tool_again_option=$(get_user_choice "1 2")
+            case $tool_again_option in
+                1) 
+                    tool_again=yes
+                    ;;
+                2) 
+                    tool_again=no
+                    ;;
+            esac
+        fi
 
 		# if the user selects to run the tool again the "while [[ "$tool_again" = yes ]] ; do" will loop through again
 		if [[ "$tool_again" = yes ]]; then
@@ -88,6 +104,9 @@ RunToolOnDir () {
 		fi
 
 	done
+
+	unset tool_again
+	unset tool_again_option
 }
 
 #This function runs tree on the Volume sends the output to three text files 
@@ -149,6 +168,7 @@ RunToolOnFile () {
     done
 
     unset tool_again
+	unset tool_again_option
 }
 
 # Prompt to determine if tools should be run on all files in the staging directory or only on selected files
@@ -196,12 +216,17 @@ function RunTool {
         done
         unset input_array
     elif [[ $ArrayInput == "yes" && -n $DirsList ]] ; then
-        FixSelectedArrayPaths $DirsList tool_array
-        for dir in "${tool_array[@]}"; do
+        IFS=' ' read -r -a input_array <<< "${DirsList}"
+        for dir in "${input_array[@]}"; do
             echo "searching $dir for files"
-            RunToolOnDir  "${tool_name}" "${dir}" "${command}" "${suffix}" "${extensions}"
+			find ${SDir} -type d -print0 |
+			while IFS= read -r -d '' founddir; do
+				if [[ $(basename $founddir) == $(basename $dir) ]]; then
+           			RunToolOnDir  "${tool_name}" "${founddir}" "${command}" "${suffix}" "${extensions}"
+				fi
+			done
         done
-        unset transformed_array
+        unset input_array
     else
         RunToolOnDir "${tool_name}" "${SDir}" "${command}" "${suffix}" "${extensions}"
     fi
@@ -209,12 +234,12 @@ function RunTool {
 
 # Tree is different from the other tools, as it is run on the $Volume and is not run on files with (or without) specific file extensions 
 # So, tree uses the RunToolOnDir function instead of RunTool. 
-function RunTree {
+RunTree () {
 	RunToolOnDir "Tree" "$Volume" "tree" "tree_output" "n/a"
 }
 
 #This function will create siegfried sidecar files for all files in the selected input, then copies output to the Sidecars directory in the ArtFile and appendix in ArtFile
-function RunSF {
+RunSF () {
 	sf_extensions=" ! -iname *.md5 ! -iname *_output.txt ! -iname *.DS_Store ! -iname *_manifest.txt ! -iname *_sf.txt ! -iname *_exif.txt ! -iname *_mediainfo.txt ! -iname *qctools* ! -iname *_framemd5.txt ! -iname *.log"
 	RunTool "siegfried" "sf" "sf" "${sf_extensions}"
 }
@@ -222,7 +247,8 @@ function RunSF {
 #This function will create mediainfo sidecar files for all video and audio files in the selected input, then copies output to the Sidecars directory in the ArtFile and appendix in ArtFile
 RunMI () {
     mi_extensions="-iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.VOB -o -iname *.avi -o -iname *.mpg -o -iname *.wav -o -iname *.mp3"
-    RunTool "MediaInfo" "mediainfo" "mediainfo" "${mi_extensions}"
+    # Known issue here, I would like to be able to run "mediainfo -f" but for some reason this results in an error message saying 'command not found', so just using regular mediainfo for now
+	RunTool "MediaInfo" "mediainfo" "mediainfo" "${mi_extensions}"
 } 
 
 #This function will create Exiftool sidecar files for all files with .jpg, .jpeg, .png and .tiff file extensions in the selected input, the copy output to Tech Specs dir in ArtFile and appendix in ArtFile
