@@ -22,16 +22,17 @@ RunToolOnDir () {
 		else
 			find "${input}" -type f  \( "${extension_list[@]}" \) ! -iname "*qctools*" -print0 | 
 			while IFS= read -r -d '' i; do
+				filename="$(basename $i)"
 				# conditional statements below account for different command structures of different tools
 				if [[ "$command" == "ffmpeg -hide_banner -nostdin -i" ]]; then
 					${command} "$i" -f framemd5 -an  "${i%.*}_${suffix}".txt
-					logNewLine "${tool_name} run on $(basename $i)" "$YELLOW"
+					logNewLine "${tool_name} run on ${filename}" "$YELLOW"
 				elif [[ "$command" == "qcli -i" ]]; then
 					${command} "$i"
-					logNewLine "${tool_name} run on $(basename $i)" "$YELLOW"
+					logNewLine "${tool_name} run on ${filename}" "$YELLOW"
 				else
 					${command} "$i" > "${i%.*}_${suffix}."txt 
-					logNewLine "${tool_name} run on $(basename $i)" "$YELLOW"
+					logNewLine "${tool_name} run on ${filename}" "$YELLOW"
 				fi
 			done
 			# Search for side car files and, if found, move contents of sidecars to additional outputs (appendix and sidecars directory of the artwork file)
