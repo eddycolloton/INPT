@@ -227,7 +227,7 @@ ParseArgs() {
                     export stop_input="{$stop_input}"
                 fi
                 if [[ "$arg" == "-h" ]] || [[ "$arg" == "--help" ]]; then
-                    echo -e "INPT is a bash scripting project created for TBMA processing at HMSG.\n\n./start_input [options] [optional input.csv] [optional output.csv]\n\nOptions:\n--help, -h\n\tDisplay this text.\n--stop, -s\n\tStop process after start_input.sh, do not proceed to start_output.sh\n--typos, -t\n\tConfirm manually input text\n"
+                    echo -e "INPT is a bash scripting project created for TBMA processing at HMSG.\n\n▇ ▅ █ ▅ ▇ ▂ ▃ ▁ ▁ ▅ ▃ ▅ ▅ ▄ ▅ ▇\n\n./start_input [options] [optional input.csv] [optional output.csv]\n\nOptions:\n--help, -h\n\tDisplay this text.\n--stop, -s\n\tStop process after start_input.sh, do not proceed to start_output.sh\n--typo, -t\n\tConfirm manually input text\n\n./start_output [optional input.csv] [optional output.csv]\n\n"
                     exit 1
                 fi
             else
