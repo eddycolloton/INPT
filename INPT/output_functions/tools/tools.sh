@@ -35,7 +35,7 @@ RunToolOnDir () {
 				fi
 			done
 			# Search for side car files and, if found, move contents of sidecars to additional outputs (appendix and sidecars directory of the artwork file)
-			find "$SDir" -type f \( -iname "*${suffix}*" \) -print0 |
+			find "${SDir}" -type f \( -iname "*${suffix}*" \) -print0 |
 			while IFS= read -r -d '' t; do 
 				cp "$t" "$sidecardir"
 				if [[ "$suffix" != "framemd5" && "$suffix" != "qctools" ]] ; then
@@ -46,7 +46,7 @@ RunToolOnDir () {
 		fi
 		# because the input for tree will be the $volume, need to reassign the input variable to work with the find command below, which will ensure find is searching where tree output is sent
 		if [[ "$command" == "tree" ]]; then
-			input="$SDir"
+			input="${SDir}"
 		fi
 		# Search sidecars if recent output is found, log timing and outputs, otherwise report no output and offer to run tool again 
 		if [[ -n $(find "${input}" -name "*${suffix}*" -newermt "$(date -v-10S '+%Y-%m-%d %H:%M:%S')") ]] ; then
@@ -58,7 +58,7 @@ RunToolOnDir () {
 			fi
 			tool_again=no
 		else 
-			logNewLine "No ${tool_name} files found in $input" "$Bright_Red"
+			logNewLine "No ${tool_name} files found in "${input}"" "$Bright_Red"
 			echo -e "\n Run ${tool_name} again? (Choose a number 1-2)"
 			select tool_again_option in "yes" "no"
 			do
