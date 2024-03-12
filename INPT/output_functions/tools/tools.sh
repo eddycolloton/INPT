@@ -1,14 +1,4 @@
 #!/bin/bash
-
-ArrayCheck () {
-    if [[ "$(declare -p var 2>/dev/null)" =~ "declare -a" ]]; then
-        echo "Variable contains an array."
-    elif [[ -d "${var}" ]]; then
-        echo "Variable contains a directory."
-    else
-        echo "Variable does not contain a directory or an array."
-    fi
-}
  
 RunToolOnDir () {
 	local tool_name="$1"
@@ -25,10 +15,10 @@ RunToolOnDir () {
 		logNewLine "===================> $tool_name started! $tool_name will be run on $input" "$Bright_Yellow"
 		#prints statement to terminal
 		if [[ "$command" == "tree" ]]; then
-			$command "${input}" > ${SDir}/"${accession}_${suffix}".txt
+			$command "${input}" > "${SDir}"/"${accession}_${suffix}".txt
 			echo -e "\n***** ${tool_name} output ***** \n" >> "${reportdir}/${accession}_appendix.txt"
-			cat ${SDir}/"${accession}_${suffix}.txt" >> "${reportdir}/${accession}_appendix.txt"  
-			cp ${SDir}/"${accession}_${suffix}.txt" "$sidecardir"
+			cat "${SDir}"/"${accession}_${suffix}.txt" >> "${reportdir}/${accession}_appendix.txt"  
+			cp "${SDir}"/"${accession}_${suffix}.txt" "$sidecardir"
 		else
 			find "${input}" -type f  \( "${extension_list[@]}" \) ! -iname "*qctools*" -print0 | 
 			while IFS= read -r -d '' i; do
