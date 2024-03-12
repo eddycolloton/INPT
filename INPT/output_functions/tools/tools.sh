@@ -22,7 +22,7 @@ RunToolOnDir () {
 		else
 			find "${input}" -type f  \( "${extension_list[@]}" \) ! -iname "*qctools*" -print0 | 
 			while IFS= read -r -d '' i; do
-				filename="$(basename $i)"
+				filename=$(basename "${i}")
 				# conditional statements below account for different command structures of different tools
 				if [[ "$command" == "ffmpeg -hide_banner -nostdin -i" ]]; then
 					${command} "$i" -f framemd5 -an  "${i%.*}_${suffix}".txt
