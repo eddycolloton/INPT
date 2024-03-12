@@ -12,7 +12,7 @@ RunToolOnDir () {
 	tool_again=yes
 	while [[ "$tool_again" = yes ]] ; do
 		SECONDS=0  
-		logNewLine "===================> $tool_name started! $tool_name will be run on $input" "$Bright_Yellow"
+		logNewLine "===================> $tool_name started! $tool_name will be run on "${input}"" "$Bright_Yellow"
 		#prints statement to terminal
 		if [[ "$command" == "tree" ]]; then
 			$command "${input}" > "${SDir}"/"${accession}_${suffix}".txt
@@ -74,7 +74,7 @@ RunToolOnDir () {
 
 		# if the user selects to run the tool again the "while [[ "$tool_again" = yes ]] ; do" will loop through again
 		if [[ "$tool_again" = yes ]]; then
-			logNewLine "Re-running ${tool_name} on $input" "$Bright_Red"
+			logNewLine "Re-running ${tool_name} on "${input}"" "$Bright_Red"
 		fi
 
 	done
