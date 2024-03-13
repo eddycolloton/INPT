@@ -93,7 +93,7 @@ function RunSF {
 
 function RunMI {
 	mi_extensions="-iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.VOB -o -iname *.avi -o -iname *.mpg -o -iname *.wav -o -iname *.mp3"
-	RunToolOnDir "MediaInfo" "${SDir}" "mediainfo -f" "mediainfo" "${mi_extensions}"
+	RunToolOnDir "MediaInfo" "${SDir}" "mediainfo" "mediainfo" "${mi_extensions}"
 }
 
 #This function will create Exiftool sidecar files for all files with .jpg, .jpeg, .png and .tiff file extensions in the Staging Directory, the copy output to Tech Specs dir in ArtFile and appendix in ArtFile
