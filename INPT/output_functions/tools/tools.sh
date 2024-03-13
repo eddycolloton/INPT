@@ -85,28 +85,33 @@ function RunTree {
 	RunToolOnDir "Tree" "$Volume" "tree" "tree_output" "n/a"
 }
 
-#This function will create siegfried sidecar files for all files in the Staging Directory, the copy output to Tech Specs dir in ArtFile and appendix in ArtFile
+# This function will create siegfried sidecar files for all files in the staging directory, the copy output to Technical Info_Specs directory in the artwork file and appendix in artwork file
 function RunSF {
 	sf_extensions="-iname *.* ! -iname *.md5 ! -iname *_output.txt ! -iname *.DS_Store ! -iname *_manifest.txt ! -iname *_sf.txt ! -iname *_exif.txt ! -iname *_mediainfo.txt ! -iname *qctools* ! -iname *_framemd5.txt ! -iname *.log"
 	RunToolOnDir "siegfried" "${SDir}" "sf" "sf" "${sf_extensions}"
 }
 
+# This function will create MediaInfo sidecar files for all video abd audio files (based on file extensions) in the staging directory, the copy output to the Technical Info_Specs directory in the artwork file and appendix in the artwork file
 function RunMI {
 	mi_extensions="-iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.VOB -o -iname *.avi -o -iname *.mpg -o -iname *.wav -o -iname *.mp3"
 	RunToolOnDir "MediaInfo" "${SDir}" "mediainfo" "mediainfo" "${mi_extensions}"
 }
 
-#This function will create Exiftool sidecar files for all files with .jpg, .jpeg, .png and .tiff file extensions in the Staging Directory, the copy output to Tech Specs dir in ArtFile and appendix in ArtFile
+# This function will create Exiftool sidecar files for all video, audio, and still image files (based on file extensions) in the staging directory, the copy output to the Technical Info_Specs directory in the artwork file and appendix in the artwork file
 function RunExif {
 	exif_extensions="-iname *.jpg -o -iname *.jpeg -o -iname *.png -o -iname *.tiff -o -iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.VOB -o -iname *.avi -o -iname *.mpg -o -iname *.wav -o -iname *.mp3"
 	RunToolOnDir "ExifTool" "${SDir}" "exiftool" "exif" "${exif_extensions}"
 }
 
+# This function will create md5 checksums per frame saved to sidecar files for all video and audio files (based on file extensions) in the staging directory, the copy output to the Technical Info_Specs directory in the artwork file
+# I'm having issues passing the command to the function for some reason, so the command is currently 'hard coded'. Changing the command here will not change how the command is run, it must be changed directly from RunToolOnDir
 function Make_Framemd5 {
 	fmd5_extensions="-iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.avi -o -iname *.VOB -o -iname *.mpg -o -iname *.wav -o -iname *.flac -o -iname *.mp3 -o -iname *.aac -o -iname *.wma -o -iname *.m4a"
 	RunToolOnDir "Frame MD5" "${SDir}" "ffmpeg -hide_banner -nostdin -i" "framemd5" "${fmd5_extensions}"
 }
 
+# This function will a QCTools report for all video and audio files (based on file extensions) in the staging directory, the copy output to the Technical Info_Specs directory in the artwork file
+# I'm having issues passing the command to the function for some reason, so the command is currently 'hard coded'. Changing the command here will not change how the command is run, it must be changed directly from RunToolOnDir
 function Make_QCT {
 	qct_extensions="-iname *.mov -o -iname *.mkv -o -iname *.mp4 -o -iname *.VOB -o -iname *.avi -o -iname *.mpg"
     RunToolOnDir "QCTools" "${SDir}" "qcli -i" "qctools" "${qct_extensions}"
