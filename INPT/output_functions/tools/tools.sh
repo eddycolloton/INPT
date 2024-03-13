@@ -25,13 +25,13 @@ RunToolOnDir () {
 				filename=$(basename "${i}")
 				# conditional statements below account for different command structures of different tools
 				if [[ "$command" == "ffmpeg -hide_banner -nostdin -i" ]]; then
-					${command} "$i" -f framemd5 -an  "${i%.*}_${suffix}".txt
+					$command "$i" -f framemd5 -an  "${i%.*}_${suffix}".txt
 					logNewLine "${tool_name} run on ${filename}" "$YELLOW"
 				elif [[ "$command" == "qcli -i" ]]; then
-					${command} "$i"
+					$command "$i"
 					logNewLine "${tool_name} run on ${filename}" "$YELLOW"
 				else
-					${command} "$i" > "${i%.*}_${suffix}."txt 
+					"${command}" "$i" > "${i%.*}_${suffix}."txt 
 					logNewLine "${tool_name} run on ${filename}" "$YELLOW"
 				fi
 			done
