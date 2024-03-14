@@ -1,13 +1,13 @@
 #!/bin/bash
 
-#Bash script for checking if the dependencies for HMSG_auto are correctly installed.
+#Bash script for checking if the dependencies for INPT are correctly installed.
 #The "if statement" is lifted from this stackoverflow post: https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script#:~:text=It%20was%20previously%20mentioned%20at,exists%20from%20a%20Bash%20script%3F&text=Non%2Dverbose%20way%20to%20do,part%20of%20util%2Dlinux).
 
 
 if ! command -v brew &> /dev/null
 	#if the command "brew" is not(!) found in /dev/null
 then
-	echo -e "homebrew is not installed! All dependencies of HMSG_auto are installed via homebrew.\n Go to https://brew.sh/ to install homebrew."
+	echo -e "homebrew is not installed! All dependencies of INPT are installed via homebrew.\n Go to https://brew.sh/ to install homebrew."
 	exit
 	#if brew is not installed the script exits, because all subsequent if statements run brew
 else
