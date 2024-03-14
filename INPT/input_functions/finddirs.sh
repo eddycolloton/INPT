@@ -5,10 +5,10 @@ set -a
 function InputArtistsName {
     echo -e "\n*************************************************\nInput artist's first name"
     read -e ArtistFirstName
-    #Asks for user input and assigns it to variable
+    # Asks for user input and assigns it to variable
     echo -e "\n*************************************************\nInput artist's last name"
     read -e ArtistLastName
-    #Asks for user input and assigns it to variable
+    # Asks for user input and assigns it to variable
 	logNewLine "Artist name manually input: ${ArtistFirstName} ${ArtistLastName}" "$CYAN"
 }
 
@@ -31,10 +31,16 @@ function ConfirmArtistsName {
     done
 }
 
-#This function finds the Artwork file path
+# This function finds the Artwork file path
 function FindArtworkFilesPath {
 	if [[ -z "${ArtFilePath}" ]]; then
 		if [[ -d /Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES ]]; then
+			ArtFilePath=/Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
+		elif [[ -d /Volumes/Shared-1/departments/CONSERVATION/ARTWORK\ FILES ]]; then
+			ArtFilePath=/Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES
+			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
+		elif [[ -d /Volumes/Shared-2/departments/CONSERVATION/ARTWORK\ FILES ]]; then
 			ArtFilePath=/Volumes/Shared/departments/CONSERVATION/ARTWORK\ FILES
 			logNewLine "found ARTWORK FILES directory at $ArtFilePath" "$MAGENTA"
 		else
@@ -55,7 +61,7 @@ ConfirmInput () {
 		echo -e "\nManually input the ${var_display_name}"
         if [[ ! -z "$prompt_context" ]] ; then
         # Optional additional argument to provide context on prompt for input
-            echo "$prompt_context"
+            echo -e "$prompt_context"
 			## vars w/ spaces passed to prompt_context not displaying correctly! 
         fi
 		read -e user_input
@@ -88,10 +94,10 @@ ConfirmInput () {
 	done
 }
 
-#This function makes the nested directories of a Time-based Media Artwork File
+# This function makes the nested directories of a Time-based Media Artwork File
 function MakeArtworkFile {
 	while [[ -z "$accession" ]] ; do
-		ConfirmInput accession "artwork's accession number" "For new acquisitions, enter accession number in '####.###' format"
+		ConfirmInput accession "artwork's accession number" "Accession number format:\nPre-2016 Accession: YY.# ->  ex. 08.20\nPost-2016 Accession: YYYY.### -> ex. 2017.001"
 		export accession="${accession}"
 	done
 	while [[ -z "$title" ]] ; do
@@ -99,11 +105,11 @@ function MakeArtworkFile {
 		export title="${title}"
 	done
 	mkdir -p "${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/"time-based media"/"$accession""_""$title"/{"Acquisition and Registration","Artist Interaction","Cataloging","Conservation"/{"Condition_Tmt Reports","DAMS","Equipment Reports"},"Iteration Reports_Exhibition Info"/"Equipment Reports","Photo-Video Documentation","Research"/"Correspondence","Technical Info_Specs"/{"Past installations_Pics","Sidecars"},"Trash"}
-	#creates Artwork File directories
-	#I've removed the path to the HMSG shared drive below for security reasons
+	# creates Artwork File directories
+	# I've removed the path to the HMSG shared drive below for security reasons
 	ArtFile="${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/
-	#assigns the ArtFile variable to the artwork file just created 
-	#I've removed the path to the HMSG shared drive below for security reasons
+	# assigns the ArtFile variable to the artwork file just created 
+	# I've removed the path to the HMSG shared drive below for security reasons
 	logNewLine "The artwork file has been created: ${ArtFile}" "$YELLOW"
 	mkArtFile=True
 	export ArtFile="${ArtFile}"
@@ -122,62 +128,62 @@ ParseAccession () {
         logNewLine "The accession number is ${parsed_accession} found in the artwork folder ${found_dir}" "$MAGENTA"
         export accession="${parsed_accession}"
     else
-        ConfirmInput accession "artwork's accession number" "For new acquisitions, enter accession number in '####.###' format"
+        ConfirmInput accession "artwork's accession number" "Accession number format:\nPre-2016 Accession: YY.# ->  ex. 08.20\nPost-2016 Accession: YYYY.### -> ex. 2017.001"
     fi
 }
 
-#this function searches the artwork folder for the accession number, if there is one, it retrieves it, if there isn't it requests one from the user
+# this function searches the artwork folder for the accession number, if there is one, it retrieves it, if there isn't it requests one from the user
 function FindAccessionNumber {
 IFS=$'\n'
 title_dir_results=$(find "${ArtFile}" -mindepth 0 -maxdepth 4 -type d -iname '*[0-9]*' \( -iname "*.*" -o -iname "*-*" \) -print0 | xargs -0 -L 1  | wc -l | xargs)
-#uses find command to identify directories that have numbers in the name AND a . OR a -, then prints them. The first xargs command creates line breaks between the results
-#I don't know how xargs works, I got that bit from https://stackoverflow.com/questions/20165321/operating-on-multiple-results-from-find-command-in-bash
-#wc -l counts the lines from the output of the find command, this should give the number of directories found that have an accession number in them
-#The final xargs removes white space from the output of wc so that theoutput can be evalutated by the "if" statement below
+# uses find command to identify directories that have numbers in the name AND a . OR a -, then prints them. The first xargs command creates line breaks between the results
+# I don't know how xargs works, I got that bit from https://stackoverflow.com/questions/20165321/operating-on-multiple-results-from-find-command-in-bash
+# wc -l counts the lines from the output of the find command, this should give the number of directories found that have an accession number in them
+# The final xargs removes white space from the output of wc so that theoutput can be evalutated by the "if" statement below
 if [[ "$title_dir_results" > 1 ]]; then
 	logNewLine "\nMore than one directory containing an accession number found." "$RED"
-    #If the variable title_dir_results stores more than one result
-	#This is to determine if there is more than one dir in the ArtFile that has an accession number (typically means there are two artworks by the same artist)
+    # If the variable title_dir_results stores more than one result
+	# This is to determine if there is more than one dir in the ArtFile that has an accession number (typically means there are two artworks by the same artist)
 	echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-    ConfirmInput accession "artwork's accession number" "For new acquisitions, enter accession number in '####.###' format"
+    ConfirmInput accession "artwork's accession number" "Accession number format:\nPre-2016 Accession: YY.# ->  ex. 08.20\nPost-2016 Accession: YYYY.### -> ex. 2017.001"
 	accession_dir=$(find "${ArtFile%/}" -mindepth 0 -maxdepth 4 -type d -iname "*${accession}*")
-	#defines the accession_dir variable as a directory stored inside the ArtFile that has the accession number in it's name
-	#This is to define a more specific variable, if there is more than one artwork in the ArtFile
+	# defines the accession_dir variable as a directory stored inside the ArtFile that has the accession number in it's name
+	# This is to define a more specific variable, if there is more than one artwork in the ArtFile
 	if [[ -z "${accession_dir}" ]]; then
-	#if the accession_dir variable is empty
-	#This var will typically be empty if the find command did not return a result
+	# if the accession_dir variable is empty
+	# This var will typically be empty if the find command did not return a result
 		while [[ -z "$title" ]] ; do
             ConfirmInput title "artwork's title"
 		done
 		accession_dir=$(find "${ArtFile%/}" -mindepth 0 -maxdepth 4 -type d -iname "*${title}*")
-        #defines the accession_dir variable as a directory stored inside the ArtFile that has the title in it's name
-		#This is to define a more specific variable, if there is more than one artwork in the ArtFile, or the directory is named in a way that is unexpected (i.e. with no accession number or accession number written ##-##)
+        # defines the accession_dir variable as a directory stored inside the ArtFile that has the title in it's name
+		# This is to define a more specific variable, if there is more than one artwork in the ArtFile, or the directory is named in a way that is unexpected (i.e. with no accession number or accession number written ##-##)
 		if [[ -z "${accession_dir}" ]]; then
-		#if the accession_dir variable is empty
+		# if the accession_dir variable is empty
 			echo -e "\n*************************************************\n \nThe artwork file does not match expected directory structure.\nCannot find the parent directory from the title or accession number directory.\nChoose the directory that will store the Technical Info_Specs directory and the Condition_Tmt Reports directory.\nSee directories listed below:\n"
 			sleep 1
 			tree "$ArtFile"
 			sleep 2
 			cowsay "Select a directory, or choose to quit:"
-			#prompt for select command
+			# prompt for select command
 			IFS=$'\n'; select parentdir_option in "$ArtFile" "Enter path to parent directory" "Quit" ; do
-			#lists options for select command. The IFS statment stops it from escaping when it hits spaces in directory names
+			# lists options for select command. The IFS statment stops it from escaping when it hits spaces in directory names
 			case $parentdir_option in 
 				"$ArtFile") accession_dir="$ArtFile"
-				#if ArtFile is selected, it is assigned the variable $accession_dir
+				# if ArtFile is selected, it is assigned the variable $accession_dir
 					logNewLine "The Artwork File is $accession_dir" "$MAGENTA"
 				break;;
 				"Enter path to parent directory") echo "Enter path to parent directory, use tab complete to help:" &&
 					read -e parentdir_input &&
-					#reads user input and assigns it to the variable $reportdir_parent
+					# reads user input and assigns it to the variable $reportdir_parent
 					accession_dir="$(echo -e "${parentdir_input}" | sed -e 's/[[:space:]]*$//')"
-					#Strips a trailing space from the input. 
-					#If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
-					#I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+					# Strips a trailing space from the input. 
+					# If the user drags and drops the directory into terminal, it adds a trailling space, which, if passed to other commands, can result in errors. the sed command above prevents this.
+					# I find sed super confusing, I lifted this command from https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
 					logNewLine "The Artwork File is now $accession_dir" "$MAGENTA"
 				break;;
 				"Quit") echo "Quitting now..." && exit 1
-				#ends the script, exits
+				# ends the script, exits
 			esac	
 		    done;
 		    unset IFS
@@ -190,28 +196,29 @@ if [[ "$title_dir_results" > 1 ]]; then
 fi
 
 if [[ -z "${accession}" ]]; then
-#if the accession variable is not assigned, and there are numbers in the titledir name 
+# if the accession variable is not assigned, and there are numbers in the titledir name 
 	titledir=$(find "${ArtFile%/}" -mindepth 0 -maxdepth 4 -type d -iname '*[0-9]*' \( -iname "*.*" -o -iname "*-*" \))
-	#looks in the ArtFile for a directory with numbers in the name, if it finds one, AND it has a period OR a dash in the directory name, it assigns that to the titledir variable
+	# looks in the ArtFile for a directory with numbers in the name, if it finds one, AND it has a period OR a dash in the directory name, it assigns that to the titledir variable
 	if [[ -z "$titledir" ]]; then 
-	#if the $titledir variable is empty, then
+	# if the $titledir variable is empty, then
         echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-    	ConfirmInput accession "artwork's accession number" "For new acquisitions, enter accession number in '####.###' format"
-	fi
-	acount=$(echo "$titledir" | grep -oE '[0-9]')
-	#this grep command prints every digit it finds in titledir on a new line, and assigns that output to the variable "acount"
-	if [[ $(echo "$acount" | wc -l) =~ 3 ]]; then
-	#pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 3, then
-	    ParseAccession accession "${titledir}" "4"
-	elif [[ $(echo "$acount" | wc -l) =~ 4 ]]; then
-	#pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 4, then
-        ParseAccession accession "${titledir}" "5"
-	elif [[ $(echo "$acount" | wc -l) =~ 7 ]]; then
-	#pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 7, then
-        ParseAccession accession "${titledir}" "8"
-	else 
-		echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
-    	ConfirmInput accession "artwork's accession number" "For new acquisitions, enter accession number in '####.###' format"
+    	ConfirmInput accession "artwork's accession number" "Accession number format:\nPre-2016 Accession: YY.# ->  ex. 08.20\nPost-2016 Accession: YYYY.### -> ex. 2017.001"
+	else
+		acount=$(echo "$titledir" | grep -oE '[0-9]')
+		# this grep command prints every digit it finds in titledir on a new line, and assigns that output to the variable "acount"
+		if [[ $(echo "$acount" | wc -l) =~ 3 ]]; then
+		# pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 3, then
+			ParseAccession accession "${titledir}" "4"
+		elif [[ $(echo "$acount" | wc -l) =~ 4 ]]; then
+		# pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 4, then
+			ParseAccession accession "${titledir}" "5"
+		elif [[ $(echo "$acount" | wc -l) =~ 7 ]]; then
+		# pipes the contents of the acount variable to wc -l, which counts the number of lines. if the number of lines equals 7, then
+			ParseAccession accession "${titledir}" "8"
+		else 
+			echo -e "\n*************************************************\n \nCannot find accession number in Artwork File directories"
+			ConfirmInput accession "artwork's accession number" "Accession number format:\nPre-2016 Accession: YY.# ->  ex. 08.20\nPost-2016 Accession: YYYY.### -> ex. 2017.001"
+		fi
 	fi
 fi
 unset IFS
@@ -219,21 +226,21 @@ unset IFS
 
 function FindArtworkFile {
 FindArtFile="$(find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*")"
-#searches artwork files directory for Artists Last Name
+# searches artwork files directory for Artists Last Name
 if [[ -z "${FindArtFile}" ]]; then
-#if the find command returns nothing then  
+# if the find command returns nothing then  
 		echo -e "\n*************************************************\n The Artwork File was not found!\n"
 		cowsay -W 30 "Enter a number to set the path to the Artwork File on the T:\ drive:"
-		#prompt for select command
+		# prompt for select command
 		IFS=$'\n'; select artdir in $(find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*") "Input path" "Create Artwork File" ; do
-		#lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
+		# lists options for select command - the IFS statment stops it from escaping when it hits spaces in directory names
   		if [[ $artdir = "Input path" ]]
   		then while [[ -z "$ArtFile" ]] ; do 
 			ConfirmInput ArtFile "path to the artwork file" "Feel free to drag and drop Artwork File path below"
 			if [[ -z "${accession}" ]];
 			then
 				FindAccessionNumber
-				#searches the Artwork File for the accession number, and assigns it to the $accession variable
+				# searches the Artwork File for the accession number, and assigns it to the $accession variable
 				sleep 1
 			fi
   		done
@@ -241,13 +248,13 @@ if [[ -z "${FindArtFile}" ]]; then
   		then MakeArtworkFile 
 		else
 			ArtFile=$artdir
-			#assigns variable to the users selection from the select menu
+			# assigns variable to the users selection from the select menu
 			logNewLine "The artwork file is ${ArtFile}" "$Bright_Magenta"
 			export ArtFile="${ArtFile}"
 			if [[ -z "${accession}" ]];
 			then
 				FindAccessionNumber
-				#searches the Artwork File for the accession number, and assigns it to the $accession variable
+				# searches the Artwork File for the accession number, and assigns it to the $accession variable
 				sleep 1
 			fi
 		fi
@@ -275,12 +282,12 @@ elif [[ $(echo "${FindArtFile}" | wc -l) > 1 ]];
 		done
 else
 	ArtFile="${FindArtFile}"
-	#assigns variable to the results of the find command "find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*""
+	# assigns variable to the results of the find command "find "${ArtFilePath%/}" -maxdepth 1 -type d -iname "*$ArtistLastName*""
 	logNewLine "The artwork file is ${ArtFile}" "$Bright_Magenta"
 	export ArtFile="${ArtFile}"
 	if [[ -z "${accession}" ]]; then
 		FindAccessionNumber
-		#searches the Artwork File for the accession number, and assigns it to the $accession variable
+		# searches the Artwork File for the accession number, and assigns it to the $accession variable
 		sleep 1
 	fi
 fi
@@ -315,12 +322,14 @@ ParseArtFile () {
 
 MakeOutputDirectory() {
     if [[ "$dir_type" == "techdir" ]]; then
-        sidecardir=$(find "${!dir_type%/}" -maxdepth 2 -type d -iname "*Sidecars*")
-        if [[ -z "$sidecardir" ]]; then
+		sidecardir_match=$(find "${!dir_type%/}" -maxdepth 2 -type d -iname "*Sidecars*" | wc -l | xargs)
+        if [[ "$sidecardir_match" -lt 1 ]]; then
             mkdir -p "${dir_type_parent%/}/${dir_label}/Sidecars"
             dir_path="${dir_type_parent%/}/${dir_label}"
 			eval "$dir_type=\"\$dir_path\""
             sidecardir="${dir_type_parent%/}/${dir_label}/Sidecars" 
+		else
+			sidecardir=$(find "${!dir_type%/}" -maxdepth 2 -type d -iname "*Sidecars*")
         fi
 	fi
     mkdir -p "${dir_type_parent%/}/${dir_label}"
@@ -335,7 +344,7 @@ AssignDirectory() {
 
     if [[ -z "${!dir_type}" ]]; then
         echo -e "\n*************************************************\n \nThe artwork file does not match expected directory structure. \nCannot find $dir_label directory\nSee directories listed below \n"
-        sleep 1
+        sleep 2
 		tree "$parent_dir"
 		sleep 1
         cowsay "Select a directory to create the $dir_label directory, or choose to quit:"
@@ -360,31 +369,59 @@ AssignDirectory() {
 
 function FindConditionDir {
 if [[ -z "$accession_dir" ]]; then
-	# if the $accession_dir variable is empty (unassigned - which would mean there was only one artwork found in the Art File, then) 
-	reportdir=$(find "${ArtFile%/}" -maxdepth 4 -type d -iname "*Condition*")
-	# looks for a directory with Condition in the name that is a subdirectory of $ArtFile and, if found, assigns it to the $reportdir variable
-	# The "%/" removes the trailing "/" on the end of the ArtFile
-	AssignDirectory "reportdir" "Condition_Tmt Reports" "${ArtFile%/}"
+# if the $accession_dir variable is empty (unassigned - which would mean there was only one artwork found in the Art File, then)	 
+	reportdir_match=$(find "${ArtFile%/}" -maxdepth 4 -type d -iname "*Condition*" | wc -l | xargs)
+    # looks for directories with Condition in the name that is a subdirectory of $ArtFile and, if found, counts it. $reportdir_match stores the number of directories that have the word "Condition" in the name
+    if [[ "${reportdir_match}"  -gt 1 ]]; then
+    # if the number of directories that have the word "Condition" in the name is greater than 1, then
+	    AssignDirectory "reportdir" "Condition_Tmt Reports" "${ArtFile%/}"
+    else
+        reportdir=$(find "${ArtFile%/}" -maxdepth 4 -type d -iname "*Condition*")
+	    # looks for a directory with Condition in the name that is a subdirectory of $ArtFile and, if found, assigns it to the $reportdir variable
+	    # The "%/" removes the trailing "/" on the end of the ArtFile
+        AssignDirectory "reportdir" "Condition_Tmt Reports" "${ArtFile%/}"
+    fi
 else
-	reportdir=$(find "${accession_dir%/}" -maxdepth 4 -type d -iname "*Condition*")
-	# looks for a directory with Condition in the name that is a subdirectory $accession_dir, if found, assigns it to the $reportdir variable
-	# The "%/" removes the trailing "/" on the end of the ArtFile
-	AssignDirectory "reportdir" "Condition_Tmt Reports" "${accession_dir%/}"
+	reportdir_match=$(find "${accession_dir%/}" -maxdepth 4 -type d -iname "*Condition*" | wc -l | xargs)
+    # looks for directories with Condition in the name that is a subdirectory of $ArtFile and, if found, counts it. $reportdir_match stores the number of directories that have the word "Condition" in the name
+    if [[ "${reportdir_match}"  -gt 1 ]]; then
+    # if the number of directories that have the word "Condition" in the name is greater than 1, then
+	    AssignDirectory "reportdir" "Condition_Tmt Reports" "${accession_dir%/}"
+	else
+		reportdir=$(find "${accession_dir%/}" -maxdepth 4 -type d -iname "*Condition*")
+		# looks for a directory with Condition in the name that is a subdirectory $accession_dir, if found, assigns it to the $reportdir variable
+		# The "%/" removes the trailing "/" on the end of the ArtFile
+		AssignDirectory "reportdir" "Condition_Tmt Reports" "${accession_dir%/}"
+	fi
 fi
 export reportdir="${reportdir}"
 }
 
 function FindTechDir {
 if [[ -z "$accession_dir" ]]; then
-	techdir=$(find "${ArtFile%/}" -maxdepth 4 -type d -iname "*Technical Info*")
-	# looks for the Technical Info_Specs directory
-	# The "%/" removes the trailing "/" on the end of the ArtFile
-	AssignDirectory  "techdir" "Technical Info_Specs" "${ArtFile%/}"
+	techdir_match=$(find "${ArtFile%/}" -maxdepth 4 -type d -iname "*Technical Info*" | wc -l | xargs)
+    # looks for directories with Technical Info in the name that is a subdirectory of $ArtFile and, if found, counts it. $techdir_match stores the number of directories that have the words "Technical Info" in the name
+    if [[ "${techdir_match}"  -gt 1 ]]; then
+    # if the number of directories that have the word "Technical Info" in the name is greater than 1, then
+		AssignDirectory  "techdir" "Technical Info_Specs" "${ArtFile%/}"
+	else
+		techdir=$(find "${ArtFile%/}" -maxdepth 4 -type d -iname "*Technical Info*")
+		# looks for the Technical Info_Specs directory
+		# The "%/" removes the trailing "/" on the end of the ArtFile
+		AssignDirectory  "techdir" "Technical Info_Specs" "${ArtFile%/}"
+	fi
 else
-	techdir=$(find "${accession_dir%/}" -maxdepth 4 -type d -iname "*Technical Info*")
-	# looks for the Technical Info_Specs directory
-	# The "%/" removes the trailing "/" on the end of the ArtFile
-	AssignDirectory  "techdir" "Technical Info_Specs"  "${accession_dir%/}"
+	techdir_match=$(find "${accession_dir%/}" -maxdepth 4 -type d -iname "*Technical Info*" | wc -l | xargs)
+    # looks for directories with Technical Info in the name that is a subdirectory of $ArtFile and, if found, counts it. $techdir_match stores the number of directories that have the words "Technical Info" in the name
+    if [[ "${techdir_match}"  -gt 1 ]]; then
+    # if the number of directories that have the word "Technical Info" in the name is greater than 1, then
+		AssignDirectory  "techdir" "Technical Info_Specs" "${accession_dir%/}"
+	else
+		techdir=$(find "${accession_dir%/}" -maxdepth 4 -type d -iname "*Technical Info*")
+		# looks for the Technical Info_Specs directory
+		# The "%/" removes the trailing "/" on the end of the ArtFile
+		AssignDirectory  "techdir" "Technical Info_Specs"  "${accession_dir%/}"
+	fi
 fi
 
 if [[ -z "$sidecardir" ]]; then
@@ -423,7 +460,7 @@ function FindTBMADroBoPath {
 # This function makes the staging directory if one does not exist
 function MakeStagingDirectory {
 	if [ -z "${accession+x}" ]; then
-		ConfirmInput accession "For new acquisitions, enter accession number in '####.###' format"
+		ConfirmInput accession "Accession number format:\nPre-2016 Accession: YY.# ->  ex. 08.20\nPost-2016 Accession: YYYY.### -> ex. 2017.001"
 	fi
 	SDir_Accession=`echo "$accession" | sed 's/\./-/g'` ;
 	# The sed command replaces the period in the accession variable with a dash. Found it here: https://stackoverflow.com/questions/6123915/search-and-replace-with-sed-when-dots-and-underscores-are-present 
@@ -453,6 +490,9 @@ function FindSDir {
 	done;
 }
 
+
+
+
 function FindVolume {
 	if [[ -z "${title}" ]] ; then
 	# fi the variable $title has not been assigned then:
@@ -465,7 +505,7 @@ function FindVolume {
 		FindVolumes=$(find "/Volumes" -maxdepth 1 -type d -iname "*${ArtistLastName}*" -o -iname "*${title}*")
 	fi
 
-	if [ "${VolumesMatch}" \> 1 ]; then
+	if [ "${VolumesMatch}"  -gt 1 ]; then
 	# If there is more than 1 line in the $FindVolumes variable, then
 		declare -a FindVolumes_array
 		IFS=$'\n'
