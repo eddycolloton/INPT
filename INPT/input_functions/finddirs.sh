@@ -490,50 +490,51 @@ function FindSDir {
 	done;
 }
 
-
+# Function to check permissions
+# Recently got some error when running 'find' on the /Volumes/ directory, adding this check to (hopefully) avoid confusing error messages
+check_permissions() {
+    if [ -r "$1" ] && [ -x "$1" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
 
 
 function FindVolume {
-	if [[ -z "${title}" ]] ; then
-	# fi the variable $title has not been assigned then:
-		VolumesMatch=$(find "/Volumes" -maxdepth 1 -type d -iname "*$ArtistLastName*" | wc -l | xargs)
-		# Gives number of results in the /Volumes/ directory that contain either the artist's last name or the title of the artwork
-		FindVolumes=$(find "/Volumes" -maxdepth 1 -type d -iname "*${ArtistLastName}*")
-	else
-		VolumesMatch=$(find "/Volumes" -maxdepth 1 -type d -iname "*$ArtistLastName*"  -o -iname "*$title*" | wc -l | xargs)
-		# Gives number of results in the /Volumes/ directory that contain either the artist's last name or the title of the artwork
-		FindVolumes=$(find "/Volumes" -maxdepth 1 -type d -iname "*${ArtistLastName}*" -o -iname "*${title}*")
-	fi
+	# Loop through directories in /Volumes
+	for dir in /Volumes/*; do
+		if [[ -d "$dir" ]]; then
+			if check_permissions "$dir"; then
+			# check permissions on each directory in /Volumes/ (if you have read and execute permissions)
+				if [[ -z "${title}" ]] ; then
+					FindVolumes=$(find "$dir" -maxdepth 0 -type d -iname "*${ArtistLastName}*")
+				else
+					FindVolumes=$(find "$dir" -maxdepth 1 -type d -iname "*${ArtistLastName}*" -o -iname "*${title}*")
+				fi
+				# check if volume in /Volumes/ contains the artist's last name or the title
+				if [[ -n "$FindVolumes" ]] ; then
+					echo -e "Is this the volume? \n${FindVolumes}"
+					# if a volume has the artist's last name or the title, prompt the use to assign it to $Volume (or not)
+					IFS=$'\n'; select found_volume_option in "yes" "no" ; do
+						if [[ $found_volume_option = "yes" ]] ; then 
+							Volume="${FindVolumes}"
+							logNewLine "The path to the volume is: ${Volume}" "$Bright_Magenta"
+							break 2 # Break out of both select and for loops
+						elif [[ $found_volume_option = "no" ]] ; then
+							echo "Not the volume!"
+							break # Break out of select loop
+						fi
+					break           
+					done;
+				fi
+			fi
+		fi
+	done
 
-	if [ "${VolumesMatch}"  -gt 1 ]; then
-	# If there is more than 1 line in the $FindVolumes variable, then
-		declare -a FindVolumes_array
-		IFS=$'\n'
-    	for line in $(find "/Volumes" -maxdepth 1 -type d -iname "*${ArtistLastName}*" -o -iname "*${title}*"); do
-			# Store each line in the array
-			FindVolumes_array+=("$line")
-		done
-	
-		IFS=$'\n'; select findvolume_option in ${FindVolumes_array[@]} "None of these" ; do
-			if [[ $findvolume_option = "None of these" ]] ; then 
-				ConfirmInput Volume "path to the volume" "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
-        	elif [[ -n $findvolume_option ]] ; then
-				Volume=$findvolume_option
-			fi
-		break           
-		done;
-	elif [[ -z "${FindVolumes}" ]]; then
+	if [[ -z $Volume ]] ; then
+	# if $Volume is unassigned, then no volumes matches find criteria, or were declined by user, so user is prompted to input the path to the volume
 		ConfirmInput Volume "path to the volume" "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
-	else
-		echo -e "Is this the volume? \n${FindVolumes}"
-		IFS=$'\n'; select found_volume_option in "yes" "no" ; do
-			if [[ $found_volume_option = "yes" ]] ; then 
-				Volume="${FindVolumes}"
-        	elif [[ $found_volume_option = "no" ]] ; then
-				ConfirmInput Volume "path to the volume" "Path to the volume should begin with '/Volumes/' (use tab complete to help)"
-			fi
-		break           
-		done;
 	fi
 
 	export Volume="${Volume}"
