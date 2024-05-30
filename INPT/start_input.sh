@@ -30,6 +30,7 @@ if [[ -n "${input_csv}" ]] ; then
                 "Artist's Last Name") key="ArtistLastName" ;;
                 "Artwork Title") key="title" ;;
                 "Accession Number") key="accession" ;;
+                "Lab Number") key="labnumber" ;;
                 "Path to Artwork File on T: Drive") key="ArtFile" ;;
                 "Staging Directory on DroBo") key="SDir" ;;
                 "Path to hard drive") key="Volume" ;;
@@ -139,6 +140,53 @@ else
         fi 
         FindAccessionNumber 
         logNewLine "The accession number manually input: ${accession}" "$CYAN"
+    fi
+fi
+
+if [[ -n "${input_csv}" ]] ; then
+    if [[ -z "${labnumber}" ]] ; then
+        echo "No Lab Number number in input csv"
+        source "${script_dir}"/input_functions/finddirs.sh
+        if [[ -z "${ArtFilePath}" ]] ;
+        then
+            FindArtworkFilesPath
+        fi 
+        if [[ -z "${sidecardir}" ]] ; then
+            ConfirmInput labnumber "artwork's lab number" "Lab number format:\n###-YYYY"
+            export labnumber="${labnumber}"
+            logNewLine "The accession number manually input: ${accession}" "$CYAN"
+        else
+            ExtractLabnumber "${sidecardir}"
+            if [[ -z "${labnumber}" ]] ; then
+                ConfirmInput labnumber "artwork's lab number" "Lab number format:\n###-YYYY"
+                export labnumber="${labnumber}"
+                logNewLine "The accession number manually input: ${accession}" "$CYAN"
+            fi
+        fi
+    elif [[ -z "${accession_dir}" ]] && [[ -z "${titledir}" ]] && [[ -z "${mkArtFile}" ]] ; then
+    # if these variables are empty then FindAccessionNumber or MakeArtworkFile didn't run, but lab number is known, so the lab number was found in the CSV
+        logNewLine "The lab number from CSV: ${labnumber}" "$WHITE"
+    fi
+else
+    if [[ -z "${labnumber}" ]] ; then
+        echo "No Lab Number number in input csv"
+        source "${script_dir}"/input_functions/finddirs.sh
+        if [[ -z "${ArtFilePath}" ]] ;
+        then
+            FindArtworkFilesPath
+        fi 
+        if [[ -z "${sidecardir}" ]] ; then
+            ConfirmInput labnumber "artwork's lab number" "Lab number format:\n###-YYYY"
+            export labnumber="${labnumber}"
+            logNewLine "The accession number manually input: ${accession}" "$CYAN"
+        else
+            ExtractLabnumber "${sidecardir}"
+            if [[ -z "${labnumber}" ]] ; then
+                ConfirmInput labnumber "artwork's lab number" "Lab number format:\n###-YYYY"
+                export labnumber="${labnumber}"
+                logNewLine "The accession number manually input: ${accession}" "$CYAN"
+            fi
+        fi
     fi
 fi
 

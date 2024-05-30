@@ -104,7 +104,11 @@ function MakeArtworkFile {
     	ConfirmInput title "artwork's title"
 		export title="${title}"
 	done
-	mkdir -p "${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/"time-based media"/"$accession""_""$title"/{"Acquisition and Registration","Artist Interaction","Cataloging","Conservation"/{"Condition_Tmt Reports","DAMS","Equipment Reports"},"Iteration Reports_Exhibition Info"/"Equipment Reports","Photo-Video Documentation","Research"/"Correspondence","Technical Info_Specs"/{"Past installations_Pics","Sidecars"},"Trash"}
+	while [[ -z "$labunmber" ]] ; do
+		ConfirmInput labnumber "artwork's lab number" "Lab number format:\n###-YYYY"
+        export labnumber="${labnumber}"
+	done
+	mkdir -p "${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/"time-based media"/"$accession""_""$title"/{"Acquisition and Registration","Artist Interaction","Cataloging","Conservation"/{"Condition_Tmt Reports","DAMS","Equipment Reports"},"Iteration Reports_Exhibition Info"/"Equipment Reports","Photo-Video Documentation","Research"/"Correspondence","Technical Info_Specs"/{"Past installations_Pics","Sidecars_""$labnumber"},"Trash"}
 	# creates Artwork File directories
 	# I've removed the path to the HMSG shared drive below for security reasons
 	ArtFile="${ArtFilePath%/}"/"$ArtistLastName"", ""$ArtistFirstName"/
@@ -324,10 +328,10 @@ MakeOutputDirectory() {
     if [[ "$dir_type" == "techdir" ]]; then
 		sidecardir_match=$(find "${!dir_type%/}" -maxdepth 2 -type d -iname "*Sidecars*" | wc -l | xargs)
         if [[ "$sidecardir_match" -lt 1 ]]; then
-            mkdir -p "${dir_type_parent%/}/${dir_label}/Sidecars"
+            mkdir -p "${dir_type_parent%/}/${dir_label}/Sidecars_${labnumber}"
             dir_path="${dir_type_parent%/}/${dir_label}"
 			eval "$dir_type=\"\$dir_path\""
-            sidecardir="${dir_type_parent%/}/${dir_label}/Sidecars" 
+            sidecardir="${dir_type_parent%/}/${dir_label}/Sidecars_${labnumber}" 
 		else
 			sidecardir=$(find "${!dir_type%/}" -maxdepth 2 -type d -iname "*Sidecars*")
         fi
@@ -429,7 +433,7 @@ if [[ -z "$sidecardir" ]]; then
 	sidecardir=$(find "${techdir%/}" -maxdepth 2 -type d -iname "*Sidecars*")
 	# if the find command fails to find a directory called "sidecars" in the techdir, then
 	if [[ -z "$sidecardir" ]]; then
-		mkdir -p "${techdir%/}/Sidecars"
+		mkdir -p "${techdir%/}/Sidecars_${labnumber}"
 		sidecardir="${techdir%/}/Sidecars" 
 		logNewLine "Metadata output will be written to sidecar files in $sidecardir" "$MAGENTA"
 	else
@@ -441,6 +445,17 @@ fi
 
 export techdir="${techdir}"
 export sidecardir="${sidecardir}"
+}
+
+function ExtractLabnumber {
+    local found_sidecardir="$1"
+
+    # Extract the potential lab number from the end of the sidecardir
+    if [[ "$found_sidecardir" =~ /Sidecars_([0-9]{3}-[0-9]{4})$ ]]; then
+        labnumber="${BASH_REMATCH[1]}"
+		export labnumber="${labnumber}"
+        logNewLine "Lab number found in $(basename ${found_sidecardir}): $labnumber" "$MAGENTA"
+    fi
 }
 
 # This function finds the Staging Directory file path
