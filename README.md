@@ -12,6 +12,23 @@ In each of these locations, files are organized using a directory structure that
 
 # Installation
 
+Ensure that Homebrew is installed (Homebrew-4.2.19.pkg)
+
+1. Copy the INPT-main folder to desired location
+
+2. Open Terminal and change directory to the folder location
+
+`cd /INPT-main`
+
+3. Make the file ‘dependency_check.sh’ executable with the chmod command:
+
+`chmod +x dependency_check.sh`
+
+4. Run the dependency check script:
+	`./dependency_check.sh`
+
+The dependency check script cycles through each command line tool used in INPT, and if the tool is not installed, dependency_check.sh will install it using homebrew.
+
 INPT has the following dependencies:
 * Cowsay
 * Disktype
@@ -23,6 +40,13 @@ INPT has the following dependencies:
 * QCTools for CLI, aka QCLI
 * Siegfried
 * Tree
+
+5. Once all dependencies are installed, make every file in the scripts subdirectory executable:
+`chmod -R +x INPT`
+
+6. You can now run INPT by navigating to the INPT scripts directory and running:
+
+`./start_input.sh`
 
 Each of these is a CLI application that is available from the package manager Homebrew. 
 
